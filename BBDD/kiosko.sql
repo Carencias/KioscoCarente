@@ -1,0 +1,54 @@
+CREATE TABLE USUARIOS(
+    User VARCHAR(20),
+    Password VARCHAR(50) NOT NULL,
+    Tipo VARCHAR(10) NOT NULL,
+    CONSTRAINT pk_usuarios PRIMARY KEY(User)
+    );
+
+CREATE TABLE CLIENTES(
+    Nombre VARCHAR(20) NOT NULL,
+    Apellidos VARCHAR(30) NOT NULL,
+    Email VARCHAR(35) NOT NULL,
+    Puntos INT,
+    User VARCHAR(20),
+    CONSTRAINT fk_usuario_cliente FOREIGN KEY(User) REFERENCES USUARIOS(User),
+    CONSTRAINT pk_clientes PRIMARY KEY (User)
+    );
+
+CREATE TABLE ADMINISTRADORES(
+    Nombre VARCHAR(20) NOT NULL,
+    Apellidos VARCHAR(30) NOT NULL,
+    Email VARCHAR(35) NOT NULL,
+    User VARCHAR(20),
+    CONSTRAINT fk_usuario_administrador FOREIGN KEY(User) REFERENCES USUARIOS(User),
+    CONSTRAINT pk_administradores PRIMARY KEY (User)
+    );
+
+CREATE TABLE ALBUMES(
+        ID INT AUTO_INCREMENT,
+    	Nombre VARCHAR(20) NOT NULL,
+    	Estado BOOLEAN,
+    	CONSTRAINT pk_albumes PRIMARY KEY(ID)
+    );
+
+CREATE TABLE CROMOS(
+    ID INT AUTO_INCREMENT,
+	Nombre VARCHAR(20) NOT NULL,
+    RutaImagen VARCHAR(50),
+    Precio INT UNSIGNED NOT NULL,
+    Estado VARCHAR(10) NOT NULL,
+    Cantidad SMALLINT UNSIGNED NOT NULL,
+    Album INT,
+    CONSTRAINT pk_cromos PRIMARY KEY(ID),
+    CONSTRAINT fk_albumes FOREIGN KEY(Album) REFERENCES ALBUMES(ID)
+    );
+
+
+CREATE TABLE CLIENTE_CROMO(
+    ID_Cromo INT,
+    User_Cliente VARCHAR(20),
+    CONSTRAINT fk_user_cromo FOREIGN KEY(User_Cliente) REFERENCES CLIENTES(User),
+    CONSTRAINT fk_id_cromo FOREIGN KEY(ID_Cromo) REFERENCES CROMOS(ID),
+    CONSTRAINT pk_cliente_cromo PRIMARY KEY(ID_Cromo, User_Cliente)
+    );
+
