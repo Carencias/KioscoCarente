@@ -1,0 +1,80 @@
+html {
+    font-size: 12px;
+  }
+  
+  ul {
+    list-style-type: none;
+  }
+  
+  span {
+    font-weight: bold;
+  }
+  
+  .cromo {
+    padding: 5px;
+    width: 328px;
+  }
+  
+  .decoracion {
+    /*background: linear-gradient(to bottom right, red, yellow);*/
+    background: linear-gradient(to bottom right, #4C4F54, #C6C6C6);
+    border-radius: 4px;
+    border: 1px black;
+    box-shadow: 3px 3px 6px 1px rgba(0, 0, 0, 0.36);
+    padding: 5px;
+  }
+  
+  .nombreCromo {
+    border: solid black 2px;
+    border-radius: 4px;
+    background-color: rgba(77, 51, 25, 0.3);
+    /*   box-shadow: 3px 3px 6px 1px rgba(0, 0, 0, 0.36); */
+    color: white;
+    display: inline-block;
+    padding: 11px;
+    box-sizing: border-box;
+    margin-left: 83px;
+  }
+  
+  .top img {
+    height: 300px;
+    width: 300px;
+    border-radius: 4px;
+    box-shadow: 3px 3px 2px 0px rgba(0, 0, 0, 0.17);
+    border: solid black 2px;
+    margin: 5px;
+  }
+  
+  .bottom {
+    border: solid black 2px;
+    border-radius: 5px;
+    box-shadow: 3px 3px 2px 0px rgba(0, 0, 0, 0.17);
+    padding: 2px;
+    margin: 7px;
+    color: white;
+    /*background-color: rgba(77, 51, 25, 0.69);*/
+    background-color: #4C4F54;
+  }
+  
+  .dato {
+    font-style: italic;
+  }
+  
+  h3.nombreCromo {
+    color: white;
+    font-size: 20px;
+    margin: 11px 0 0 78px;
+    padding-top: 2px;
+    text-align: center;
+    /* width: 151px; */
+    height: 26px;
+    font-family: "papyrus";
+  }
+  
+  .nombreCromo h3 {
+    font-size: 25px;
+    font-family: "Papyrus";
+    /* text-align: center; */
+    display: inline-block;
+    margin: 0 auto;
+  }
