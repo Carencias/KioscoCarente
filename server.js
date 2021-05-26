@@ -18,10 +18,9 @@ app.listen(port, () => {
 });
 
 const connection = mysql.createConnection({
-  //host: "sistemas.casasoladerueda.es:30000",
   host: 'sistemas.casasoladerueda.es',
   port: 30000,
-  user: "kiosco_carente",
+  user: "kiosko_carente",
   password: "carencias",
   database: "kiosko",
 });
@@ -32,7 +31,7 @@ function pruebaBaseDatos() {
     "SELECT * FROM ALBUMES ",
     function (err, result, fields) {
       if (err) throw err;
-      console.log("The solution is: ", result[0]);
+      console.log("The solution is: ", result[0].ID);
     }
   );
 
