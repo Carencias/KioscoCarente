@@ -33,7 +33,7 @@ CREATE TABLE USUARIOS(
 
 CREATE TABLE COLECCIONES(
     	Nombre VARCHAR(20),
-    	Estado ENUM('Activa','Agotada') NOT NULL, #No se si se puede poner not null aqui
+    	Estado ENUM('Activa','Agotada') DEFAULT 'Activa' NOT NULL, #No se si se puede poner not null aqui
     	CONSTRAINT pk_colecciones PRIMARY KEY(Nombre)
 );
 
@@ -42,7 +42,7 @@ CREATE TABLE ALBUMES(
         User VARCHAR(20),
         Coleccion VARCHAR(20),
     	Nombre VARCHAR(20) NOT NULL,
-    	Estado ENUM('No iniciada', 'Completada parcialmente','Finalizada'),
+    	Estado ENUM('No iniciada', 'Completada parcialmente','Finalizada') DEFAULT 'No iniciada',
     	CONSTRAINT pk_albumes PRIMARY KEY(ID),
         CONSTRAINT fk_coleccion FOREIGN KEY(Coleccion) REFERENCES COLECCIONES(Nombre),
 		CONSTRAINT fk_user FOREIGN KEY(User) REFERENCES USUARIOS(User),
@@ -103,6 +103,42 @@ INSERT INTO `CROMOS` (`ID`, `Nombre`, `Coleccion`, `RutaImagen`, `Precio`, `Cant
     
 INSERT INTO `CROMOS` (`ID`, `Nombre`, `Coleccion`, `RutaImagen`, `Precio`, `Cantidad`, `Descripcion`, `DatoInteresante`, `Frecuencia`) 
 	VALUES (NULL, 'NoClassDefFoundError', 'Java', './resources/colecciones/java/imagenes/NoClassDefFoundError.JPG', '2', '2', 'Lanzada cuando la Java Virtual Machine no consigue encontrar un fichero .class concreto durante la ejecucion que si fue compilado previamente', 'Vuelve a compilar, crack!', 'Raro');
+    
+    
+INSERT INTO `CROMOS` (`ID`, `Nombre`, `Coleccion`, `RutaImagen`, `Precio`, `Cantidad`, `Descripcion`, `DatoInteresante`, `Frecuencia`) 
+	VALUES (NULL, 'var_undeclared', 'C', './resources/colecciones/C/imagenes/var_undeclared.JPG', '1', '3', 'Mostrado cuando en el codigo desarrollado en C se utiliza una variable que no ha sido declarada previamente', 'Vayamos por partes... Lo primero es delcarar las variables!', 'Comun');
+    
+INSERT INTO `CROMOS` (`ID`, `Nombre`, `Coleccion`, `RutaImagen`, `Precio`, `Cantidad`, `Descripcion`, `DatoInteresante`, `Frecuencia`) 
+	VALUES (NULL, 'implicit_declaration_of_function', 'C', './resources/colecciones/C/imagenes/implicit_declaration_of_function.JPG', '1', '3', 'Mostrado cuando en el codigo desarrollado en C se utiliza una funcion que no ha sido declarada previamente o que ha sido definida posterior a su llamada', 'Estas programando en C melon, esto no es Java', 'Comun');
+    
+INSERT INTO `CROMOS` (`ID`, `Nombre`, `Coleccion`, `RutaImagen`, `Precio`, `Cantidad`, `Descripcion`, `DatoInteresante`, `Frecuencia`) 
+	VALUES (NULL, 'undefined_reference_to', 'C', './resources/colecciones/C/imagenes/undefined_reference_to.JPG', '2', '2', 'Mostrado cuando en el codigo desarrollado en C se utiliza una funcion propia de una libreria que no se ha indicado al compilar', 'Compilando en consola es lo que hay', 'Raro');
+  
+INSERT INTO `CROMOS` (`ID`, `Nombre`, `Coleccion`, `RutaImagen`, `Precio`, `Cantidad`, `Descripcion`, `DatoInteresante`, `Frecuencia`) 
+	VALUES (NULL, 'conflicting_types_for', 'C', './resources/colecciones/C/imagenes/conflicting_types_for.JPG', '2', '2', 'Normalmente se muestra cuando en la declaracion de una funcion los parametros entran en conflicto con los de su definicion', 'Copia y pega, pones ; al final y listo!', 'Raro');    
+    
+ INSERT INTO `CROMOS` (`ID`, `Nombre`, `Coleccion`, `RutaImagen`, `Precio`, `Cantidad`, `Descripcion`, `DatoInteresante`, `Frecuencia`) 
+	VALUES (NULL, 'segmentation_fault(core_dumped)', 'C', './resources/colecciones/C/imagenes/segmentation_fault(core_dumped).JPG', '1', '3', 'Mostrado cuando una aplicacion intenta acceder a recursos en memoria que no le han sido asignados. Los permisos concedidos a esta aplicacion por el sistema no permitiran dicho acceso', 'Cuidado con el core dump que la puedes liar parda', 'Comun');    
+   
+  INSERT INTO `CROMOS` (`ID`, `Nombre`, `Coleccion`, `RutaImagen`, `Precio`, `Cantidad`, `Descripcion`, `DatoInteresante`, `Frecuencia`) 
+	VALUES (NULL, 'integer_from_pointer_without_a_cast', 'C', './resources/colecciones/C/imagenes/integer_from_pointer_without_a_cast.JPG', '1', '3', 'Cuando se intenta utilizar un puntero en un contexto en el que se espera un entero, se muestra este error', 'Aunque lo diga el error, no tiene pinta de que castear sea la solucion', 'Comun');    
+    
+INSERT INTO `CROMOS` (`ID`, `Nombre`, `Coleccion`, `RutaImagen`, `Precio`, `Cantidad`, `Descripcion`, `DatoInteresante`, `Frecuencia`) 
+	VALUES (NULL, 'dereferencing_pointer_to_incomplete_type', 'C', './resources/colecciones/C/imagenes/dereferencing_pointer_to_incomplete_type.JPG', '3', '1', 'Aparece cuando se utiliza un puntero a una estructura de datos para acceder a alguno de sus campos, pero el compilador no tiene información suficiente sobre esa estructura de datos', 'Puede que tengas la definicion de la estructura en otro fichero, espabila!', 'Excepcional');  
+    
+INSERT INTO `CROMOS` (`ID`, `Nombre`, `Coleccion`, `RutaImagen`, `Precio`, `Cantidad`, `Descripcion`, `DatoInteresante`, `Frecuencia`) 
+	VALUES (NULL, 'unused_variable', 'C', './resources/colecciones/C/imagenes/unused_variable.JPG', '1', '3', 'Advertencia que se muestra cuando se ha declarado una variable que no se usa posteriormente', 'Si el programa funciona, borra sin miedo', 'Comun');  
+    
+INSERT INTO `CROMOS` (`ID`, `Nombre`, `Coleccion`, `RutaImagen`, `Precio`, `Cantidad`, `Descripcion`, `DatoInteresante`, `Frecuencia`) 
+	VALUES (NULL, 'syntax_error_before_token', 'C', './resources/colecciones/C/imagenes/syntax_error_before_token.JPG', '1', '3', 'Hay algun error en algun punto anterior al token que se te indica, normalmente previo a ; o }', 'El error puede estar en cualquier sitio anterior al token, a buscar!', 'Comun');  
+     
+ INSERT INTO `CROMOS` (`ID`, `Nombre`, `Coleccion`, `RutaImagen`, `Precio`, `Cantidad`, `Descripcion`, `DatoInteresante`, `Frecuencia`) 
+	VALUES (NULL, 'invalid_operands', 'C', './resources/colecciones/C/imagenes/invalid_operands.JPG', '2', '2', 'Este error indica que se esta intentando operar con dos operandos que no son compatibles entre si para dicha operacion', 'Procura fijarte en los tipos de las variables que operas', 'Raro');  
+   
+    
+    
+    
+    
     
     
     
