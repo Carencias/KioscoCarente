@@ -72,8 +72,10 @@ CREATE TABLE CROMOS_ALBUMES(
     CONSTRAINT pk_cromos_albumes PRIMARY KEY(CromoID, AlbumID)
 );
 
+#INSERTAR LAS COLECCIONES JAVA Y C
 INSERT INTO `COLECCIONES` (`Nombre`, `Estado`) VALUES ('Java', 'Activa'), ('C', 'Activa');
 
+#INSERTAR LOS CROMOS DE LA COLECCION DE JAVA
 INSERT INTO `CROMOS` (`ID`, `Nombre`, `Coleccion`, `RutaImagen`, `Precio`, `Cantidad`, `Descripcion`, `DatoInteresante`, `Frecuencia`) 
 	VALUES (NULL, 'ArrayIndexOutOfBoundsException', 'Java', './resources/colecciones/java/imagenes/ArrayIndexOutOfBoundsException.JPG', '1', '3', 'Se lanza para indicar que se esta intentando acceder a una posicion fuera de un array. El indice elegido es negativo o mayor que la longitud del array', 'Parece que te falta algun elemento en el array amigo', 'Comun');
 
@@ -102,9 +104,9 @@ INSERT INTO `CROMOS` (`ID`, `Nombre`, `Coleccion`, `RutaImagen`, `Precio`, `Cant
 	VALUES (NULL, 'StackOverflowError', 'Java', './resources/colecciones/java/imagenes/StackOverflowError.JPG', '1', '3', 'Lanzada cuando una aplicacion intenta acceder a recursos en memoria que no le han sido asignados. Los permisos concedidos a esta aplicacion por el sistema no permitiran dicho acceso', 'Este error da nombre a la Biblia de la informatica', 'Comun');    
     
 INSERT INTO `CROMOS` (`ID`, `Nombre`, `Coleccion`, `RutaImagen`, `Precio`, `Cantidad`, `Descripcion`, `DatoInteresante`, `Frecuencia`) 
-	VALUES (NULL, 'NoClassDefFoundError', 'Java', './resources/colecciones/java/imagenes/NoClassDefFoundError.JPG', '2', '2', 'Lanzada cuando la Java Virtual Machine no consigue encontrar un fichero .class concreto durante la ejecucion que si fue compilado previamente', 'Vuelve a compilar, crack!', 'Raro');
-    
-    
+	VALUES (NULL, 'NoClassDefFoundError', 'Java', './resources/colecciones/java/imagenes/NoClassDefFoundError.JPG', '2', '2', 'Lanzada cuando la Java Virtual Machine no consigue encontrar un fichero .class concreto durante la ejecucion que si fue compilado previamente', 'Vuelve a compilar, crack!', 'Raro');    
+ 
+ #INSERTAR LOS CROMOS DE LA COLECCCION DE C
 INSERT INTO `CROMOS` (`ID`, `Nombre`, `Coleccion`, `RutaImagen`, `Precio`, `Cantidad`, `Descripcion`, `DatoInteresante`, `Frecuencia`) 
 	VALUES (NULL, 'var_undeclared', 'C', './resources/colecciones/C/imagenes/var_undeclared.JPG', '1', '3', 'Mostrado cuando en el codigo desarrollado en C se utiliza una variable que no ha sido declarada previamente', 'Vayamos por partes... Lo primero es delcarar las variables!', 'Comun');
     
