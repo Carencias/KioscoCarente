@@ -60,6 +60,7 @@ CREATE TABLE CROMOS(
     DatoInteresante VARCHAR(100),
     Frecuencia ENUM('Comun','Raro','Excepcional') DEFAULT 'Comun',
     CONSTRAINT pk_cromos PRIMARY KEY(ID),
+	CONSTRAINT fk_coleccionCromos FOREIGN KEY(Coleccion) REFERENCES COLECCIONES(Nombre),
     CONSTRAINT u_cromos UNIQUE(Nombre, Coleccion) #No puede haber dos cromos con el mismo nombre en la misma coleccion
 );
 
