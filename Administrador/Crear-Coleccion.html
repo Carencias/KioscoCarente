@@ -10,6 +10,9 @@
     <link rel="stylesheet" href="Crear-Coleccion.css" media="screen">
     <link id="u-theme-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i|Arvo:400,400i,700,700i">   
     <meta name="theme-color" content="#132c33">
+
+    <script src="crearColeccion.js"></script>
+
   </head>
   <body class="u-body"><header class="u-clearfix u-header u-palette-1-light-1 u-header" id="sec-3af5"><div class="u-clearfix u-sheet u-sheet-1">
         <a href="" class="u-image u-logo u-image-1" data-image-width="419" data-image-height="196">
@@ -39,18 +42,18 @@
           <form action="#" method="POST" class="u-clearfix u-form-spacing-15 u-form-vertical u-inner-form" style="padding: 0;" source="custom" name="form">
             <div class="u-form-group u-form-partition-factor-2 u-form-group-1">
               <label for="phone-447e" class="u-label u-label-1">Titulo colección</label>
-              <input pattern="\+?\d{0,2}[\s\(\-]?([0-9]{3})[\s\)\-]?([\s\-]?)([0-9]{3})[\s\-]?([0-9]{2})[\s\-]?([0-9]{2})" placeholder="Titulo" id="phone-447e" name="text-1" class="u-border-2 u-border-no-left u-border-no-right u-border-no-top u-border-palette-2-base u-input u-input-rectangle" required="required" type="text">
+              <input id="nombreColeccion" pattern="\+?\d{0,2}[\s\(\-]?([0-9]{3})[\s\)\-]?([\s\-]?)([0-9]{3})[\s\-]?([0-9]{2})[\s\-]?([0-9]{2})" placeholder="Titulo" name="text-1" class="u-border-2 u-border-no-left u-border-no-right u-border-no-top u-border-palette-2-base u-input u-input-rectangle" required="required" type="text">
             </div>
             <div class="u-form-group u-form-partition-factor-2 u-form-group-2">
               <label for="text-9cf8" class="u-label u-label-2">Precio Album</label>
-              <input type="text" id="text-9cf8" name="text" class="u-border-2 u-border-no-left u-border-no-right u-border-no-top u-border-palette-2-base u-input u-input-rectangle" placeholder="Precio">
+              <input type="text" id="precioAlbum" name="text" class="u-border-2 u-border-no-left u-border-no-right u-border-no-top u-border-palette-2-base u-input u-input-rectangle" placeholder="Precio">
             </div>
             <div class="u-form-group u-form-name u-form-group-3">
               <label for="name-f2a8" class="u-label u-label-3">Foto album</label>
               <input type="text" placeholder="Foto album" id="name-f2a8" name="image" class="u-border-2 u-border-no-left u-border-no-right u-border-no-top u-border-palette-2-base u-input u-input-rectangle" required="">
             </div>
             <div class="u-align-center u-form-group u-form-submit u-form-group-4">
-              <a href="#" class="u-btn u-btn-rectangle u-btn-submit u-button-style u-palette-2-base u-btn-1">CREAR</a>
+              <a href="#" class="u-btn u-btn-rectangle u-btn-submit u-button-style u-palette-2-base u-btn-1" onclick="crearColeccion()">CREAR</a>
               <input type="submit" value="submit" class="u-form-control-hidden">
             </div>
             <div class="u-form-send-message u-form-send-success"> Thank you! Your message has been sent. </div>
