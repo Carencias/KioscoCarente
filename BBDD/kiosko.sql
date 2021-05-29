@@ -44,6 +44,7 @@ CREATE TABLE COLECCIONES(
     	Nombre VARCHAR(20),
     	Estado ENUM('Activa','Agotada') DEFAULT 'Activa' NOT NULL, #No se si se puede poner not null aqui
         PrecioAlbum INT DEFAULT 1,
+        FotoAlbum VARCHAR(50),
     	CONSTRAINT pk_colecciones PRIMARY KEY(Nombre)
 );
 
