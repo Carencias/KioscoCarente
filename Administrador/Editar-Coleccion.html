@@ -11,8 +11,10 @@
     <link id="u-theme-google-font" rel="stylesheet" href="https://fonts.googleapis.com/css?family=Raleway:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i|Arvo:400,400i,700,700i">
     <meta property="og:title" content="Editar Coleccion">
     <meta name="theme-color" content="#132c33">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="admin.js"></script>
   </head>
-  <body class="u-body"><header class="u-clearfix u-header u-palette-1-light-1 u-header" id="sec-3af5"><div class="u-clearfix u-sheet u-sheet-1">
+  <body class="u-body" ><header class="u-clearfix u-header u-palette-1-light-1 u-header" id="sec-3af5" ><div class="u-clearfix u-sheet u-sheet-1">
         <a href="" class="u-image u-logo u-image-1" data-image-width="419" data-image-height="196">
           <img src="images/logo.png" class="u-logo-image u-logo-image-1" data-image-width="146.4">
         </a><span class="u-icon u-icon-rectangle u-icon-1"><svg class="u-svg-link" preserveAspectRatio="xMidYMin slice" viewBox="0 0 53 53" style=""><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#svg-ffc0"></use></svg><svg class="u-svg-content" viewBox="0 0 53 53" x="0px" y="0px" id="svg-ffc0" style="enable-background:new 0 0 53 53;"><path style="fill:#E7ECED;" d="M18.613,41.552l-7.907,4.313c-0.464,0.253-0.881,0.564-1.269,0.903C14.047,50.655,19.998,53,26.5,53
@@ -41,16 +43,16 @@
           <form action="#" method="POST" class="u-clearfix u-form-spacing-15 u-form-vertical u-inner-form" style="padding: 0;" source="custom" name="form">
             <div class="u-form-group u-form-partition-factor-3 u-form-group-1">
               <label for="date-4441" class="u-label u-label-1">Titulo Coleccion</label>
-              <input type="text" placeholder="Nombre" id="date-4441" name="text" class="u-border-2 u-border-no-left u-border-no-right u-border-no-top u-border-palette-2-base u-input u-input-rectangle" required="required">
+              <input type="text" placeholder="Nombre" id="nombreColeccion" name="text" class="u-border-2 u-border-no-left u-border-no-right u-border-no-top u-border-palette-2-base u-input u-input-rectangle" required="required">
             </div>
             <div class="u-form-group u-form-partition-factor-3 u-form-phone u-form-group-2">
               <label for="phone-447e" class="u-label u-label-2">Precio album</label>
-              <input type="tel" pattern="\+?\d{0,2}[\s\(\-]?([0-9]{3})[\s\)\-]?([\s\-]?)([0-9]{3})[\s\-]?([0-9]{2})[\s\-]?([0-9]{2})" placeholder="Precio" id="phone-447e" name="Precio" class="u-border-2 u-border-no-left u-border-no-right u-border-no-top u-border-palette-2-base u-input u-input-rectangle" required="">
+              <input type="tel" pattern="\+?\d{0,2}[\s\(\-]?([0-9]{3})[\s\)\-]?([\s\-]?)([0-9]{3})[\s\-]?([0-9]{2})[\s\-]?([0-9]{2})" placeholder="Precio" id="precioAlbum" name="Precio" class="u-border-2 u-border-no-left u-border-no-right u-border-no-top u-border-palette-2-base u-input u-input-rectangle" required="">
             </div>
             <div class="u-form-group u-form-partition-factor-3 u-form-select u-form-group-3">
               <label for="select-be06" class="u-label u-label-3">Estado Colección</label>
               <div class="u-form-select-wrapper">
-                <select id="select-be06" name="select" class="u-border-2 u-border-no-left u-border-no-right u-border-no-top u-border-palette-2-base u-input u-input-rectangle" required="required">
+                <select id="estado" name="select" class="u-border-2 u-border-no-left u-border-no-right u-border-no-top u-border-palette-2-base u-input u-input-rectangle" required="required">
                   <option value="Activa">Activa</option>
                   <option value="Agotada">Agotada</option>
                 </select>
@@ -59,10 +61,10 @@
             </div>
             <div class="u-form-group u-form-partition-factor-2 u-form-group-4">
               <label for="message-f2a8" class="u-label u-label-4">Foto album</label>
-              <input placeholder="Foto portada" rows="4" cols="50" id="message-f2a8" name="image" class="u-border-2 u-border-no-left u-border-no-right u-border-no-top u-border-palette-2-base u-input u-input-rectangle" required="required" type="text">
+              <input placeholder="Foto portada" rows="4" cols="50" id="foto" name="image" class="u-border-2 u-border-no-left u-border-no-right u-border-no-top u-border-palette-2-base u-input u-input-rectangle" required="required" type="text">
             </div>
             <div class="u-align-center u-form-group u-form-submit u-form-group-5">
-              <a href="#" class="u-btn u-btn-rectangle u-btn-submit u-button-style u-palette-2-base u-btn-1">GUARDAR</a>
+              <a href="#" class="u-btn u-btn-rectangle u-btn-submit u-button-style u-palette-2-base u-btn-1" onclick="editarColeccion()">GUARDAR</a>
               <input type="submit" value="submit" class="u-form-control-hidden">
             </div>
             <div class="u-form-send-message u-form-send-success"> Thank you! Your message has been sent. </div>

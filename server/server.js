@@ -191,20 +191,71 @@ app.post("/crearColeccion", function (req, res) {
   //TODO comprobar entrada??
   let nombre = req.body.nombre;
   let precioAlbum = req.body.precio;
-  
+  let foto = req.body.foto;
+
   connection.connect();
-  let string =  "INSERT INTO COLECCIONES (Nombre,PrecioAlbum) VALUES ('" +nombre + "'," +
-  precioAlbum +
-  ")"
-  console.log(string);
-  connection.query(string
-   ,
-    function (err, result, fields) {
-      if (err){
-          response.send(err)
-      };
+  let string =
+    "INSERT INTO COLECCIONES (Nombre,PrecioAlbum,FotoAlbum) VALUES ('" +
+    nombre +
+    "'," +
+    precioAlbum +
+    ",'" +
+    foto +
+    "'" +
+    ")";
+  connection.query(string, function (err, result, fields) {
+    if (err) {
+      response.send(err);
     }
-  );
+  });
 
   connection.end();
+});
+
+app.post("/crearColeccion", function (req, res) {
+  //TODO comprobar entrada??
+  let nombre = req.body.nombre;
+  let precioAlbum = req.body.precio;
+  let foto = req.body.foto;
+
+  let string =
+    "INSERT INTO COLECCIONES (Nombre,PrecioAlbum,FotoAlbum) VALUES ('" +
+    nombre +
+    "'," +
+    precioAlbum +
+    ",'" +
+    foto +
+    "'" +
+    ")";
+  connection.query(string, function (err, result, fields) {
+    if (err) {
+      response.send(err);
+    }
+  });
+});
+
+app.post("/editarColeccion", function (req, res) {
+  //TODO comprobar entrada??
+  let nombre = req.body.nombre;
+  let precioAlbum = req.body.precio;
+  let foto = req.body.foto;
+  let estado = req.body.estado;
+
+  let string =
+    "UPDATE COLECCIONES SET PrecioAlbum =" +
+    precioAlbum +
+    ",FotoAlbum= '" +
+    foto +
+    "', Estado = '" +
+    estado +
+    "' WHERE  Nombre= '" +
+    nombre +
+    "'";
+
+  console.log(string);
+  connection.query(string, function (err, result, fields) {
+    if (err) {
+      throw err;
+    }
+  });
 });
