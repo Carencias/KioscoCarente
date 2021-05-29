@@ -5,19 +5,18 @@ use kiosko;*/
 /*
 *Primero borra todas las tablas por si existieran en la bbdd
 */
-/*SET FOREIGN_KEY_CHECKS = 0;
-SET GROUP_CONCAT_MAX_LEN=32768;
-SET @tables = NULL;
-SELECT GROUP_CONCAT('`', table_name, '`') INTO @tables
-  FROM information_schema.tables
-  WHERE table_schema = (SELECT DATABASE());
-SELECT IFNULL(@tables,'dummy') INTO @tables;
+SET FOREIGN_KEY_CHECKS = 0;
 
-SET @tables = CONCAT('DROP TABLE IF EXISTS ', @tables);
-PREPARE stmt FROM @tables;
-EXECUTE stmt;
-DEALLOCATE PREPARE stmt;
-SET FOREIGN_KEY_CHECKS = 1;*/
+DROP TABLE IF EXISTS USUARIOS;
+DROP TABLE IF EXISTS CLIENTES;
+DROP TABLE IF EXISTS ADMINISTRADORES;
+DROP TABLE IF EXISTS ALBUMES;
+DROP TABLE IF EXISTS COLECCIONES;
+DROP TABLE IF EXISTS CROMOS;
+DROP TABLE IF EXISTS CROMOS_ALBUMES;
+
+
+SET FOREIGN_KEY_CHECKS = 1;
 
 CREATE TABLE USUARIOS(
     User VARCHAR(20),
@@ -25,9 +24,19 @@ CREATE TABLE USUARIOS(
     Nombre VARCHAR(20) NOT NULL,
     Apellidos VARCHAR(30) NOT NULL,
     Email VARCHAR(35) NOT NULL,
-    Puntos INT DEFAULT 0,
-    Admin BOOLEAN DEFAULT FALSE,
+    Admin BOOLEAN DEFAULT FALSE, #TODO LO DEJO DE MOMENTO PARA QUE FUNCIONE LOGIN
 	CONSTRAINT pk_usuarios PRIMARY KEY(User)
+);
+
+CREATE TABLE CLIENTES(
+	User VARCHAR(20),
+	Puntos INT DEFAULT 0,
+    CONSTRAINT fk_clientes FOREIGN KEY(User) REFERENCES USUARIOS(User) 
+);
+
+CREATE TABLE ADMINISTRADORES(
+	User VARCHAR(20),
+	CONSTRAINT fk_clientes FOREIGN KEY(User) REFERENCES USUARIOS(User) 
 );
 
 
@@ -45,7 +54,7 @@ CREATE TABLE ALBUMES(
     	Estado ENUM('No iniciada', 'Completada parcialmente','Finalizada') DEFAULT 'No iniciada',
     	CONSTRAINT pk_albumes PRIMARY KEY(ID),
         CONSTRAINT fk_coleccion FOREIGN KEY(Coleccion) REFERENCES COLECCIONES(Nombre),
-		CONSTRAINT fk_user FOREIGN KEY(User) REFERENCES USUARIOS(User),
+		CONSTRAINT fk_user FOREIGN KEY(User) REFERENCES CLIENTES(User),
         CONSTRAINT u_coleccion UNIQUE(User, Coleccion) #Teniendo en cuenta que un usuario solo pueda tener un album por coleccion
 );
 
