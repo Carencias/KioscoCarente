@@ -229,7 +229,7 @@ app.post("/crearColeccion", function (req, res) {
     ")";
   connection.query(string, function (err, result, fields) {
     if (err) {
-      response.send(err);
+      res.send(err);
     }
   });
 });
@@ -253,6 +253,43 @@ app.post("/editarColeccion", function (req, res) {
     "'";
 
   console.log(string);
+  connection.query(string, function (err, result, fields) {
+    if (err) {
+      throw err;
+    }
+  });
+});
+
+app.post("/crearCromo", function (req, res) {
+  //TODO comprobar entrada??
+  let nombre = req.body.nombre;
+  let coleccion = req.body.coleccion;
+  let rutaImagen = req.body.rutaImagen;
+  let precio = req.body.precio;
+  let cantidad = req.body.cantidad;
+  let descripcion = req.body.descripcion;
+  let datoInteresante = req.body.datoInteresante;
+  let frecuencia = req.body.frecuencia;
+
+
+  let string =
+    "INSERT INTO CROMOS (Nombre, Coleccion, RutaImagen, Precio, Cantidad, Descripcion, DatoInteresante, Frecuencia) VALUES ('" +
+    nombre +
+    "','" +
+    coleccion +
+    "','" +
+    rutaImagen +
+    "'," +
+    precio +
+    "," +
+    cantidad +
+    ",'" +
+    descripcion +
+    "','" +
+    datoInteresante +
+    "'," +
+    frecuencia +
+    ")";
   connection.query(string, function (err, result, fields) {
     if (err) {
       throw err;
