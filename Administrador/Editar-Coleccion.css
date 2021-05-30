@@ -801,7 +801,13 @@
     display: inline-block;
     padding: 11px;
     box-sizing: border-box;
-    margin-left: 83px;
+    /*min-width: 310px;
+    max-width: 310px; */
+    width: 308px;
+    word-wrap: break-word;
+    margin: 0 auto;
+    display:inline-block
+    /*margin-left: 83px;*/
   }
   
   .top img {
@@ -811,6 +817,7 @@
     box-shadow: 3px 3px 2px 0px rgba(0, 0, 0, 0.17);
     border: solid black 2px;
     margin: 5px;
+   
   }
   
   .bottom {
@@ -834,7 +841,8 @@
     margin: 11px 0 0 78px;
     padding-top: 2px;
     text-align: center;
-    /* width: 151px; */
+    
+    display: block;
     height: 26px;
     font-family: "papyrus";
   }
@@ -842,7 +850,7 @@
   .nombreCromo h3 {
     font-size: 25px;
     font-family: "Papyrus";
-    /* text-align: center; */
-    display: inline-block;
+    text-align: center; 
     margin: 0 auto;
+    display: block;
   }
