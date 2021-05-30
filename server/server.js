@@ -287,9 +287,9 @@ app.post("/crearCromo", function (req, res) {
     descripcion +
     "','" +
     datoInteresante +
-    "'," +
+    "','" +
     frecuencia +
-    ")";
+    "')";
   connection.query(string, function (err, result, fields) {
     if (err) {
       throw err;
