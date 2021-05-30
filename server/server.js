@@ -240,16 +240,19 @@ app.post("/editarColeccion", function (req, res) {
   let precioAlbum = req.body.precio;
   let foto = req.body.foto;
   let estado = req.body.estado;
+  let coleccion = req.body.coleccion;
 
   let string =
     "UPDATE COLECCIONES SET PrecioAlbum =" +
     precioAlbum +
     ",FotoAlbum= '" +
     foto +
+    "',Nombre= '" +
+    nombre +
     "', Estado = '" +
     estado +
     "' WHERE  Nombre= '" +
-    nombre +
+    coleccion +
     "'";
 
   console.log(string);
@@ -294,5 +297,16 @@ app.post("/crearCromo", function (req, res) {
     if (err) {
       throw err;
     }
+  });
+});
+
+app.post("/cargarCromos", function (req, res){
+  let coleccion = req.body.coleccion;
+  let string= "SELECT * FROM CROMOS WHERE Coleccion = '"+ coleccion +"'";
+  connection.query(string, function (err, result, fields) {
+    if (err) {
+      throw err;
+    }
+    res.send(result);
   });
 });
