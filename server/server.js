@@ -9,8 +9,16 @@ const app = express();
 const port = 8000;
 const mysql = require("mysql");
 const session = require("express-session");
-const { response } = require("express");
+const {
+  response
+} = require("express");
 app.use(express.urlencoded());
+const jsdom = require("jsdom");
+const fs = require('fs');
+const ejs = require('ejs');
+app.set('view engine', 'ejs');
+var path = require('path');
+
 
 app.use(express.json());
 app.use((req, res, next) => {
@@ -79,8 +87,8 @@ var adminAuth = function (req, res, next) {
 //TODO
 //Permite acceder a los recursos de una carpeta. El primer parametro es la ruta virtual sobre la que se monta, el segundo el real.
 app.use("/", express.static(__dirname + "/webpage"));
-app.use("/dashboard/admin", adminAuth);
-app.use("/dashboard/user", userAuth);
+//app.use("/dashboard/admin", adminAuth);
+//app.use("/dashboard/user", userAuth);
 app.use("/dashboard/user", express.static(__dirname + "/dashboard/user"));
 app.use("/dashboard/admin", express.static(__dirname + "/dashboard/admin"));
 
@@ -124,8 +132,8 @@ app.post("/login", function (req, res) {
       //TODO Con javascript del lado del cliente se avisa si no introduce usuario o contraseña
       res.send(
         "Usuario o contraseña no introducido" +
-          req.body.username +
-          req.body.password
+        req.body.username +
+        req.body.password
       );
     } else {
       comprobarCredenciales(req, res);
@@ -172,13 +180,15 @@ function abrirSesionIniciada(req, res) {
       //res.send("Bienvenido al dashboard de ADMIN");
 
       //res.sendFile(__dirname + "/webpage/admin/index.html");
-      res.redirect("/dashboard/admin");
+      res.redirect("/dashboard/admin/");
     }
   }
 }
 app.get("/dashboard/logout", auth, function (req, res) {
   req.session.destroy();
   res.redirect("/index.html");
+  // This prints "My First JSDOM!"
+
   //res.send("Sesión Finalizada correctamente");
 });
 
@@ -263,6 +273,31 @@ app.post("/editarColeccion", function (req, res) {
   });
 });
 
+app.set('views', path.join(__dirname, '/dashboard/views'));
+app.use("/dashboard/resources/colecciones/java/imagenes/", express.static(__dirname + "/dashboard/resources/colecciones/java/imagenes/"));
+app.use("/dashboard/resources/media", express.static(__dirname + "/dashboard/resources/media"));
+
+app.get("/dashboard/admin/editarColeccion", function (req, res) {
+  //TODO comprobar entrada??
+  let coleccion = req.query.nombreColeccion;
+
+
+  let string = "SELECT * FROM CROMOS WHERE Coleccion = '" + coleccion + "'";
+  connection.query(string, function (err, result, fields) {
+    if (err) {
+      throw err;
+    }
+
+    res.render('admin/Editar-Coleccion', {
+      cromos: result
+    });
+
+
+  });
+
+
+});
+
 app.post("/crearCromo", function (req, res) {
   //TODO comprobar entrada??
   let nombre = req.body.nombre;
@@ -297,16 +332,5 @@ app.post("/crearCromo", function (req, res) {
     if (err) {
       throw err;
     }
-  });
-});
-
-app.post("/cargarCromos", function (req, res){
-  let coleccion = req.body.coleccion;
-  let string= "SELECT * FROM CROMOS WHERE Coleccion = '"+ coleccion +"'";
-  connection.query(string, function (err, result, fields) {
-    if (err) {
-      throw err;
-    }
-    res.send(result);
   });
 });
