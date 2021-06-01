@@ -342,7 +342,8 @@ app.post("/comprarCromo", function (req, res) {
   //TODO comprobar entrada??
   let idCromo = req.body.idCromo;
   let idAlbum = req.body.idAlbum;
-  let idUser = "user";
+  //let idUser = "user";
+  let idUser = req.session.user
   try {
     connection.query("SELECT * FROM CROMOS WHERE ID = ?", [idCromo], function (err, result) {
       if (err) {
@@ -416,7 +417,49 @@ app.post("/comprarCromo", function (req, res) {
   //connection.query("SELECT * FROM CLIENTES WHERE ID = ?");
 });
 
-function puedeComprar(idCromo, idAlbum) {
-  let idUser = "user";
 
-}
+app.post("/comprarAlbum", function (req, res) {
+  //TODO comprobar entrada??
+  let nombreColeccion = req.body.nombreColeccion;
+  //let idUser = "user";
+  let idUser = req.session.user
+  try {
+    connection.query("SELECT * FROM COLECCION WHERE ID = ?", [nombreColeccion], function (err, result) {
+      if (err) {
+        //TODO ERROR BBDD
+        //throw err;
+        return;
+      }
+      let precio = result[0].PrecioAlbum;
+      let estado = result[0].Estado;
+      if(estado ==="Agotado"){
+        return;
+      }
+      connection.query("SELECT * FROM CLIENTES WHERE User = ?", [idUser], function (err, result) {
+        if (err) {
+          //TODO ERROR BBDD
+          //throw err;
+          return;
+        }
+
+        let puntos = result[0].Puntos;
+        if (puntos < precio) {
+          //TODO send post error
+          //throw new Error("Puntos insuficientes");
+          return;
+        }
+        connection.query("INSERT INTO ALBUMES (User, Coleccion) VALUES (?, ?)", [idUser, nombreColeccion], function (err, result) {
+          if (err) {
+            //TODO ERROR BBDD
+            //throw err;
+            return;
+          }
+
+        });
+      });
+    });
+  } catch (error) {
+    res.send(error);
+  }
+
+});
