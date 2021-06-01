@@ -51,15 +51,13 @@ CREATE TABLE COLECCIONES(
 );
 
 CREATE TABLE ALBUMES(
-        ID INT AUTO_INCREMENT, #Se podria quitar
         User VARCHAR(20),
         Coleccion VARCHAR(20),
     	Nombre VARCHAR(20) NOT NULL,
     	Estado ENUM('No iniciada', 'Completada parcialmente','Finalizada') DEFAULT 'No iniciada',
-    	CONSTRAINT pk_albumes PRIMARY KEY(ID),
         CONSTRAINT fk_coleccion FOREIGN KEY(Coleccion) REFERENCES COLECCIONES(Nombre),
 		CONSTRAINT fk_user FOREIGN KEY(User) REFERENCES CLIENTES(User),
-        CONSTRAINT u_coleccion UNIQUE(User, Coleccion) #Teniendo en cuenta que un usuario solo pueda tener un album por coleccion
+        CONSTRAINT pk_album PRIMARY KEY(User, Coleccion) #Teniendo en cuenta que un usuario solo pueda tener un album por coleccion
 );
 
 CREATE TABLE CROMOS(
@@ -79,10 +77,11 @@ CREATE TABLE CROMOS(
 
 CREATE TABLE CROMOS_ALBUMES(
 	CromoID INT,
-    AlbumID INT,
+    AlbumUser VARCHAR(20),
+    AlbumColeccion VARCHAR(20),
 	CONSTRAINT fk_cromo FOREIGN KEY(CromoID) REFERENCES CROMOS(ID),
-    CONSTRAINT fk_album FOREIGN KEY(AlbumID) REFERENCES ALBUMES(ID),
-    CONSTRAINT pk_cromos_albumes PRIMARY KEY(CromoID, AlbumID)
+    CONSTRAINT fk_album FOREIGN KEY(AlbumUser, AlbumColeccion) REFERENCES ALBUMES(User, Coleccion),
+    CONSTRAINT pk_cromos_albumes PRIMARY KEY(CromoID, AlbumUser, AlbumColeccion)
 );
 
 #INSERTAR LAS COLECCIONES JAVA Y C
