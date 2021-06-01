@@ -53,7 +53,6 @@ CREATE TABLE COLECCIONES(
 CREATE TABLE ALBUMES(
         User VARCHAR(20),
         Coleccion VARCHAR(20),
-    	Nombre VARCHAR(20) NOT NULL,
     	Estado ENUM('No iniciada', 'Completada parcialmente','Finalizada') DEFAULT 'No iniciada',
         CONSTRAINT fk_coleccion FOREIGN KEY(Coleccion) REFERENCES COLECCIONES(Nombre)  ON UPDATE CASCADE ON DELETE CASCADE,
 		CONSTRAINT fk_user FOREIGN KEY(User) REFERENCES CLIENTES(User)  ON UPDATE CASCADE ON DELETE CASCADE,
