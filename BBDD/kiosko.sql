@@ -231,6 +231,12 @@ CREATE TABLE CROMOS_ALBUMES(
     CONSTRAINT pk_cromos_albumes PRIMARY KEY(CromoID, AlbumID)
 );
 
+#Insertar usuarios y admins
+INSERT INTO `USUARIOS` (`User`, `Password`, `Nombre`, `Apellidos`, `Email`, `Admin`) VALUES ('admin', 'admin', 'Alejandro', 'Perez Fernandez', 'aperef04@estudiantes.unileon.es', '1'), ('user', 'user', 'Diego', 'Simon Gonzalez', 'dsimog01@estudiantes.unileon.es', '0');
+INSERT INTO `ADMINISTRADORES` (`User`) VALUES ('admin');
+INSERT INTO `CLIENTES` (`User`, `Puntos`) VALUES ('user', '100');
+
+
 #INSERTAR LAS COLECCIONES JAVA Y C
 INSERT INTO `COLECCIONES` (`Nombre`, `Estado`) VALUES ('Java', 'Activa'), ('C', 'Activa');
 
