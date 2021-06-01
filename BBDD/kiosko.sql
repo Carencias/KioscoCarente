@@ -31,13 +31,13 @@ CREATE TABLE USUARIOS(
 CREATE TABLE CLIENTES(
 	User VARCHAR(20),
 	Puntos INT DEFAULT 0,
-    CONSTRAINT fk_clientes FOREIGN KEY(User) REFERENCES USUARIOS(User),
+    CONSTRAINT fk_clientes FOREIGN KEY(User) REFERENCES USUARIOS(User) ON UPDATE CASCADE ON DELETE CASCADE,
     CONSTRAINT pk_clientes PRIMARY KEY(User)
 );
 
 CREATE TABLE ADMINISTRADORES(
 	User VARCHAR(20),
-	CONSTRAINT fk_administradores FOREIGN KEY(User) REFERENCES USUARIOS(User),
+	CONSTRAINT fk_administradores FOREIGN KEY(User) REFERENCES USUARIOS(User) ON UPDATE CASCADE ON DELETE CASCADE,
 	CONSTRAINT pk_administradores PRIMARY KEY(User)
 );
 
@@ -55,8 +55,8 @@ CREATE TABLE ALBUMES(
         Coleccion VARCHAR(20),
     	Nombre VARCHAR(20) NOT NULL,
     	Estado ENUM('No iniciada', 'Completada parcialmente','Finalizada') DEFAULT 'No iniciada',
-        CONSTRAINT fk_coleccion FOREIGN KEY(Coleccion) REFERENCES COLECCIONES(Nombre),
-		CONSTRAINT fk_user FOREIGN KEY(User) REFERENCES CLIENTES(User),
+        CONSTRAINT fk_coleccion FOREIGN KEY(Coleccion) REFERENCES COLECCIONES(Nombre)  ON UPDATE CASCADE ON DELETE CASCADE,
+		CONSTRAINT fk_user FOREIGN KEY(User) REFERENCES CLIENTES(User)  ON UPDATE CASCADE ON DELETE CASCADE,
         CONSTRAINT pk_album PRIMARY KEY(User, Coleccion) #Teniendo en cuenta que un usuario solo pueda tener un album por coleccion
 );
 
@@ -71,7 +71,7 @@ CREATE TABLE CROMOS(
     DatoInteresante VARCHAR(100),
     Frecuencia ENUM('Comun','Raro','Excepcional') DEFAULT 'Comun',
     CONSTRAINT pk_cromos PRIMARY KEY(ID),
-	CONSTRAINT fk_coleccionCromos FOREIGN KEY(Coleccion) REFERENCES COLECCIONES(Nombre),
+	CONSTRAINT fk_coleccionCromos FOREIGN KEY(Coleccion) REFERENCES COLECCIONES(Nombre)  ON UPDATE CASCADE ON DELETE CASCADE,
     CONSTRAINT u_cromos UNIQUE(Nombre, Coleccion) #No puede haber dos cromos con el mismo nombre en la misma coleccion
 );
 
@@ -79,8 +79,8 @@ CREATE TABLE CROMOS_ALBUMES(
 	CromoID INT,
     AlbumUser VARCHAR(20),
     AlbumColeccion VARCHAR(20),
-	CONSTRAINT fk_cromo FOREIGN KEY(CromoID) REFERENCES CROMOS(ID),
-    CONSTRAINT fk_album FOREIGN KEY(AlbumUser, AlbumColeccion) REFERENCES ALBUMES(User, Coleccion),
+	CONSTRAINT fk_cromo FOREIGN KEY(CromoID) REFERENCES CROMOS(ID)  ON UPDATE CASCADE ON DELETE CASCADE,
+    CONSTRAINT fk_album FOREIGN KEY(AlbumUser, AlbumColeccion) REFERENCES ALBUMES(User, Coleccion)  ON UPDATE CASCADE ON DELETE CASCADE,
     CONSTRAINT pk_cromos_albumes PRIMARY KEY(CromoID, AlbumUser, AlbumColeccion)
 );
 
