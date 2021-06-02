@@ -302,6 +302,42 @@ app.post("/crearCromo", function (req, res) {
   });
 });
 
+app.post("/borrarCromo", function (req, res) {
+  let nombre = req.body.nombre;
+  let coleccion = req.body.coleccion;
+
+  let string =
+    "DELETE FROM CROMOS WHERE Nombre = '" + nombre +"' AND Coleccion='"+ coleccion +"'";
+  try {
+    connection.query(string, function (err, result, fields) {
+      if (err) {
+        throw err;
+      }
+    });
+  } catch (error) {
+    console.log(error);
+  }
+    res.send("El cromo ha sido borrado");
+});
+
+app.post("/borrarColeccion", function (req, res) {
+  let nombre = req.body.nombre;
+  
+  let string =
+    "DELETE FROM COLECCIONES WHERE Nombre = '" + nombre +"'";
+  try {
+    connection.query(string, function (err, result, fields) {
+      if (err) {
+        throw err;
+      }
+    });
+  } catch (error) {
+    console.log(error);
+  }
+  res.send("La coleccion ha sido borrada");
+
+});
+
 app.post("/comprarCromo", function (req, res) {
   //TODO comprobar entrada??
   let idCromo = req.body.idCromo;
