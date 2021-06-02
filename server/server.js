@@ -306,67 +306,77 @@ app.post("/comprarCromo", function (req, res) {
   //TODO comprobar entrada??
   let idCromo = req.body.idCromo;
   let idAlbum = req.body.idAlbum;
-  let idUser = req.session.user
+  //let idUser = req.session.user
+  let idUser = "user";
   try {
     connection.query("SELECT * FROM CROMOS WHERE ID = ?", [idCromo], function (err, result) {
       if (err) {
-        //throw err;
-        return;
+        throw new Error("No existe ningun cromo con el ID indicado");
+        //return;
       }
       let precio = result[0].Precio;
       let cantidad = result[0].Cantidad;
       if (cantidad <= 0) {
-        //TODO send post error
-        return;
+        throw new Error("No hay existencias de ese cromo");
+        //return;
       }
 
-      connection.query("SELECT * FROM CLIENTES WHERE User = ?", [idUser], function (err, result) {
-        if (err) {
-          //TODO ERROR BBDD
-          //throw err;
-          return;
-        }
-
-        let puntos = result[0].Puntos;
-        if (puntos < precio) {
-          //TODO send post error
-          //throw new Error("Puntos insuficientes");
-          return;
-        }
-
-        actualizarBBDDCromoComprado(idUser, idCromo, idAlbum, puntos, precio, cantidad);
-
-      });
+      try {
+        connection.query("SELECT * FROM CLIENTES WHERE User = ?", [idUser], function (err, result) {
+          if (err) {
+            throw new Error("No existe ningun cliente con ese nombre de usuario");
+            //throw err;
+            //return;
+          }
+  
+          let puntos = result[0].Puntos;
+          if (puntos < precio) {
+            throw new Error("Puntos insuficientes para comprar el cromo");
+            //return;
+          }
+  
+          try {
+            actualizarBBDDCromoComprado(idUser, idCromo, idAlbum, puntos, precio, cantidad);
+          } catch (error) {
+            console.log(error);
+          }
+  
+        });
+      } catch (error) {
+        console.log(error);
+      }
+      
     });
   } catch (error) {
-    res.send(error);
+    console.log(error);
+    //res.send(error);
   }
 
-
-  //connection.query("SELECT * FROM CLIENTES WHERE ID = ?");
 });
 
 
 function actualizarBBDDCromoComprado(idUser,idCromo,idAlbum,puntos,precio,cantidad){
   connection.query("SELECT * FROM CROMOS_ALBUMES WHERE CromoID = ? AND AlbumID = ?", [idCromo, idAlbum], function (err, result) {
     if (result.length !== 0) {
-      //TODO send post error. Cromo ya comprado
-      //throw new Error("Cromo ya comprado");
-      return;
+      throw new Error("Cromo ya comprado");
+      //return;
     }
 
-    actualizarPuntosCliente(puntos-precio, idUser);
-    actualizarCantidadCromo(--cantidad, idCromo);
-    agregarCromoAAlbum(idCromo, idAlbum);
+    try{
+      actualizarPuntosCliente(puntos-precio, idUser);
+      actualizarCantidadCromo(--cantidad, idCromo);
+      agregarCromoAAlbum(idCromo, idAlbum);
+    }catch(err){
+      console.log(err);
+    }
   });
 }
 
 function agregarCromoAAlbum(idCromo, idAlbum){
   connection.query("INSERT INTO CROMOS_ALBUMES (CromoID, AlbumID) VALUES (?, ?)", [idCromo, idAlbum], function (err, result) {
     if (err) {
-      //TODO ERROR BBDD
-      //throw err;
-      return;
+      throw new Error("No se ha podido agregar el cromo al album");
+      //return;
     }
 
   });
@@ -375,9 +385,8 @@ function agregarCromoAAlbum(idCromo, idAlbum){
 function actualizarCantidadCromo(nuevaCantidad, idCromo){
   connection.query("UPDATE CROMOS SET Cantidad = ? WHERE ID = ?", [nuevaCantidad, idCromo], function (err, result) {
     if (err) {
-      //TODO ERROR BBDD
-      //throw err;
-      return;
+      throw new Error("No se ha podido actualizar la cantidad de los cromos");
+      //return;
     }
 
   });
@@ -386,9 +395,8 @@ function actualizarCantidadCromo(nuevaCantidad, idCromo){
 function actualizarPuntosCliente(nuevosPuntos, idUser){
   connection.query("UPDATE CLIENTES SET Puntos = ? WHERE User = ?", [nuevosPuntos, idUser], function (err, result) {
     if (err) {
-      //TODO ERROR BBDD
-      //throw err;
-      return;
+      throw new Error("No se han podido actualizar los puntos del cliente");
+      //return;
     }
 
   });
