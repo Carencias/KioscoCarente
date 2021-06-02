@@ -190,6 +190,29 @@ app.get("/content", auth, function (req, res) {
   res.send("You can only see this after you've logged in.");
 });
 
+app.post("/registro", function (req, res) {
+  let nombre = req.body.nombre;
+  let username = req.body.username;
+  let password = req.body.password;
+  let apellidos = req.body.apellidos;
+  let email = req.body.email;
+  
+  connection.connect();
+  let string = "INSERT INTO USUARIOS (User, Password, Nombre, Apellidos, Email, Admin) VALUES ('"+
+  username +"','"+
+  password + "','" +
+  nombre + "','" +
+  apellidos + "','" +
+  email + "','0')";
+  connection.query(string, function (err, result, fields) {
+    if (err) {
+      response.send(err);
+    }
+  });
+
+  res.send("Se ha creado el usuario exitosamente");
+});
+
 //METODOS PARA LA GESTION DE CROMOS
 app.post("/crearColeccion", function (req, res) {
   //TODO comprobar entrada??
