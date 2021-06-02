@@ -43,16 +43,6 @@ const connection = mysql.createConnection({
   database: "kiosko",
 });
 
-function pruebaBaseDatos() {
-  connection.connect();
-  connection.query("SELECT * FROM ALBUMES ", function (err, result, fields) {
-    if (err) throw err;
-    console.log("The solution is: ", result[0].ID);
-  });
-
-  connection.end();
-}
-
 //AUTENTICACION
 app.use(
   session({
@@ -195,11 +185,12 @@ app.get("/dashboard/logout", auth, function (req, res) {
   //res.send("Sesión Finalizada correctamente");
 });
 
-//PARA REQUERIR LA AUTENTICACION AL ACCEDER A LAS PAGINAS HAY QUE AGREGAR auth COMO AQUI
+//Para requerir la autenticacion al acceder a las paginas hay que agregar auth como aqui
 app.get("/content", auth, function (req, res) {
   res.send("You can only see this after you've logged in.");
 });
 
+//METODOS PARA LA GESTION DE CROMOS
 app.post("/crearColeccion", function (req, res) {
   //TODO comprobar entrada??
   let nombre = req.body.nombre;
@@ -207,15 +198,10 @@ app.post("/crearColeccion", function (req, res) {
   let foto = req.body.foto;
 
   connection.connect();
-  let string =
-    "INSERT INTO COLECCIONES (Nombre,PrecioAlbum,FotoAlbum) VALUES ('" +
-    nombre +
-    "'," +
-    precioAlbum +
-    ",'" +
-    foto +
-    "'" +
-    ")";
+  let string = "INSERT INTO COLECCIONES (Nombre,PrecioAlbum,FotoAlbum) VALUES ('" +
+    nombre + "'," +
+    precioAlbum + ",'" +
+    foto +"')";
   connection.query(string, function (err, result, fields) {
     if (err) {
       response.send(err);
@@ -231,15 +217,10 @@ app.post("/crearColeccion", function (req, res) {
   let precioAlbum = req.body.precio;
   let foto = req.body.foto;
 
-  let string =
-    "INSERT INTO COLECCIONES (Nombre,PrecioAlbum,FotoAlbum) VALUES ('" +
-    nombre +
-    "'," +
-    precioAlbum +
-    ",'" +
-    foto +
-    "'" +
-    ")";
+  let string = "INSERT INTO COLECCIONES (Nombre,PrecioAlbum,FotoAlbum) VALUES ('" +
+    nombre + "'," +
+    precioAlbum + ",'" +
+    foto + "')";
   connection.query(string, function (err, result, fields) {
     if (err) {
       res.send(err);
@@ -256,17 +237,11 @@ app.post("/editarColeccion", function (req, res) {
   let coleccion = req.body.coleccion;
 
   let string =
-    "UPDATE COLECCIONES SET PrecioAlbum =" +
-    precioAlbum +
-    ",FotoAlbum= '" +
-    foto +
-    "',Nombre= '" +
-    nombre +
-    "', Estado = '" +
-    estado +
-    "' WHERE  Nombre= '" +
-    coleccion +
-    "'";
+    "UPDATE COLECCIONES SET PrecioAlbum =" + precioAlbum +
+    ",FotoAlbum= '" + foto +
+    "',Nombre= '" + nombre +
+    "', Estado = '" + estado +
+    "' WHERE  Nombre= '" + coleccion +"'";
 
   console.log(string);
   connection.query(string, function (err, result, fields) {
@@ -284,7 +259,6 @@ app.get("/dashboard/admin/editarColeccion", function (req, res) {
   //TODO comprobar entrada??
   let coleccion = req.query.nombreColeccion;
 
-
   let string = "SELECT * FROM CROMOS WHERE Coleccion = '" + coleccion + "'";
   connection.query(string, function (err, result, fields) {
     if (err) {
@@ -295,9 +269,7 @@ app.get("/dashboard/admin/editarColeccion", function (req, res) {
       cromos: result
     });
 
-
   });
-
 
 });
 
@@ -315,22 +287,14 @@ app.post("/crearCromo", function (req, res) {
 
   let string =
     "INSERT INTO CROMOS (Nombre, Coleccion, RutaImagen, Precio, Cantidad, Descripcion, DatoInteresante, Frecuencia) VALUES ('" +
-    nombre +
-    "','" +
-    coleccion +
-    "','" +
-    rutaImagen +
-    "'," +
-    precio +
-    "," +
-    cantidad +
-    ",'" +
-    descripcion +
-    "','" +
-    datoInteresante +
-    "','" +
-    frecuencia +
-    "')";
+    nombre +"','" +
+    coleccion +"','" +
+    rutaImagen +"'," +
+    precio +"," +
+    cantidad +",'" +
+    descripcion +"','" +
+    datoInteresante +"','" +
+    frecuencia +"')";
   connection.query(string, function (err, result, fields) {
     if (err) {
       throw err;
@@ -342,92 +306,114 @@ app.post("/comprarCromo", function (req, res) {
   //TODO comprobar entrada??
   let idCromo = req.body.idCromo;
   let idAlbum = req.body.idAlbum;
-  //let idUser = "user";
-  let idUser = req.session.user
+  //let idUser = req.session.user
+  let idUser = "user";
   try {
     connection.query("SELECT * FROM CROMOS WHERE ID = ?", [idCromo], function (err, result) {
       if (err) {
-        //throw err;
-        return;
+        throw new Error("No existe ningun cromo con el ID indicado");
+        //return;
       }
       let precio = result[0].Precio;
       let cantidad = result[0].Cantidad;
       if (cantidad <= 0) {
-        //TODO send post error
-        return;
+        throw new Error("No hay existencias de ese cromo");
+        //return;
       }
 
-      connection.query("SELECT * FROM CLIENTES WHERE User = ?", [idUser], function (err, result) {
-        if (err) {
-          //TODO ERROR BBDD
-          //throw err;
-          return;
-        }
-
-        let puntos = result[0].Puntos;
-        if (puntos < precio) {
-          //TODO send post error
-          //throw new Error("Puntos insuficientes");
-          return;
-        }
-
-
-        connection.query("SELECT * FROM CROMOS_ALBUMES WHERE CromoID = ? AND AlbumID = ?", [idCromo, idAlbum], function (err, result) {
-          if (result.length !== 0) {
-            //TODO send post error. Cromo ya comprado
-            //throw new Error("Cromo ya comprado");
-            return;
+      try {
+        connection.query("SELECT * FROM CLIENTES WHERE User = ?", [idUser], function (err, result) {
+          if (err) {
+            throw new Error("No existe ningun cliente con ese nombre de usuario");
+            //throw err;
+            //return;
           }
-          let nuevosPuntos = puntos - precio;
-          connection.query("UPDATE CLIENTES SET Puntos = ? WHERE User = ?", [nuevosPuntos, idUser], function (err, result) {
-            if (err) {
-              //TODO ERROR BBDD
-              //throw err;
-              return;
-            }
-
-          });
-          let nuevaCantidad = --cantidad;
-          connection.query("UPDATE CROMOS SET Cantidad = ? WHERE ID = ?", [nuevaCantidad, idCromo], function (err, result) {
-            if (err) {
-              //TODO ERROR BBDD
-              //throw err;
-              return;
-            }
-
-          });
-          connection.query("INSERT INTO CROMOS_ALBUMES (CromoID, AlbumID) VALUES (?, ?)", [idCromo, idAlbum], function (err, result) {
-            if (err) {
-              //TODO ERROR BBDD
-              //throw err;
-              return;
-            }
-
-          });
+  
+          let puntos = result[0].Puntos;
+          if (puntos < precio) {
+            throw new Error("Puntos insuficientes para comprar el cromo");
+            //return;
+          }
+  
+          try {
+            actualizarBBDDCromoComprado(idUser, idCromo, idAlbum, puntos, precio, cantidad);
+          } catch (error) {
+            console.log(error);
+          }
+  
         });
-
-
-      });
+      } catch (error) {
+        console.log(error);
+      }
+      
     });
   } catch (error) {
-    res.send(error);
+    console.log(error);
+    //res.send(error);
   }
 
-
-  //connection.query("SELECT * FROM CLIENTES WHERE ID = ?");
 });
+
+
+function actualizarBBDDCromoComprado(idUser,idCromo,idAlbum,puntos,precio,cantidad){
+  connection.query("SELECT * FROM CROMOS_ALBUMES WHERE CromoID = ? AND AlbumID = ?", [idCromo, idAlbum], function (err, result) {
+    if (result.length !== 0) {
+      throw new Error("Cromo ya comprado");
+      //return;
+    }
+
+    try{
+      actualizarPuntosCliente(puntos-precio, idUser);
+      actualizarCantidadCromo(--cantidad, idCromo);
+      agregarCromoAAlbum(idCromo, idAlbum);
+    }catch(err){
+      console.log(err);
+    }
+  });
+}
+
+function agregarCromoAAlbum(idCromo, idAlbum){
+  connection.query("INSERT INTO CROMOS_ALBUMES (CromoID, AlbumID) VALUES (?, ?)", [idCromo, idAlbum], function (err, result) {
+    if (err) {
+      throw new Error("No se ha podido agregar el cromo al album");
+      //return;
+    }
+
+  });
+}
+
+function actualizarCantidadCromo(nuevaCantidad, idCromo){
+  connection.query("UPDATE CROMOS SET Cantidad = ? WHERE ID = ?", [nuevaCantidad, idCromo], function (err, result) {
+    if (err) {
+      throw new Error("No se ha podido actualizar la cantidad de los cromos");
+      //return;
+    }
+
+  });
+}
+
+function actualizarPuntosCliente(nuevosPuntos, idUser){
+  connection.query("UPDATE CLIENTES SET Puntos = ? WHERE User = ?", [nuevosPuntos, idUser], function (err, result) {
+    if (err) {
+      throw new Error("No se han podido actualizar los puntos del cliente");
+      //return;
+    }
+
+  });
+}
 
 
 app.post("/comprarAlbum", function (req, res) {
   //TODO comprobar entrada??
   let nombreColeccion = req.body.nombreColeccion;
-  //let idUser = "user";
-  let idUser = req.session.user
+  let idUser = "user";
+  //let idUser = req.session.user
   try {
-    connection.query("SELECT * FROM COLECCION WHERE ID = ?", [nombreColeccion], function (err, result) {
+    connection.query("SELECT * FROM COLECCIONES WHERE Nombre = ?", [nombreColeccion], function (err, result) {
       if (err) {
         //TODO ERROR BBDD
         //throw err;
+        let mal;
         return;
       }
       let precio = result[0].PrecioAlbum;
