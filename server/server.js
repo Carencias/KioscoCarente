@@ -369,96 +369,95 @@ app.post("/comprarCromo", function (req, res) {
   let idUser = "user";
   try {
     connection.query("SELECT * FROM CROMOS WHERE ID = ?", [idCromo], function (err, result) {
-      if (err) {
-        throw new Error("No existe ningun cromo con el ID indicado");
-        //return;
-      }
+      if (err) throw new Error("No existe ningun cromo con el ID indicado");
+
       let precio = result[0].Precio;
       let cantidad = result[0].Cantidad;
-      if (cantidad <= 0) {
-        throw new Error("No hay existencias de ese cromo");
-        //return;
-      }
 
-      try {
+      if (cantidad <= 0) throw new Error("No hay existencias de ese cromo");
+
         connection.query("SELECT * FROM CLIENTES WHERE User = ?", [idUser], function (err, result) {
-          if (err) {
-            throw new Error("No existe ningun cliente con ese nombre de usuario");
-            //throw err;
-            //return;
-          }
+          if (err) throw new Error("No existe ningun cliente con ese nombre de usuario");
   
           let puntos = result[0].Puntos;
-          if (puntos < precio) {
-            throw new Error("Puntos insuficientes para comprar el cromo");
-            //return;
-          }
-  
-          try {
-            actualizarBBDDCromoComprado(idUser, idCromo, idAlbum, puntos, precio, cantidad);
-          } catch (error) {
-            console.log(error);
-          }
+          if (puntos < precio) throw new Error("Puntos insuficientes para comprar el cromo");
+          
+          actualizarBBDDCromoComprado(idCromo, idAlbum)
+            .then(function(result){
+              actualizarPuntosCliente(puntos-precio, idUser);
+              actualizarCantidadCromo(--cantidad, idCromo);
+              agregarCromoAAlbum(idCromo, idAlbum);
+            });
   
         });
-      } catch (error) {
-        console.log(error);
-      }
       
     });
   } catch (error) {
     console.log(error);
-    //res.send(error);
   }
 
 });
 
+function actualizarBBDDCromoComprado(idCromo,idAlbum){
 
-function actualizarBBDDCromoComprado(idUser,idCromo,idAlbum,puntos,precio,cantidad){
-  connection.query("SELECT * FROM CROMOS_ALBUMES WHERE CromoID = ? AND AlbumID = ?", [idCromo, idAlbum], function (err, result) {
-    if (result.length !== 0) {
-      throw new Error("Cromo ya comprado");
-      //return;
-    }
+  return new Promise(function(resolve, reject){
+    connection.query("SELECT * FROM CROMOS_ALBUMES WHERE CromoID = ? AND AlbumID = ?", [idCromo, idAlbum], function (err, result) {
+      if(err){
+        reject (Error("No se ha podido agregar el cromo al album"));
+      }else if(result){
+        if (result.length !== 0) {
+          reject( Error("Cromo ya comprado"));
+        }else{
+          resolve("Query exitosa");
+        }
 
-    try{
-      actualizarPuntosCliente(puntos-precio, idUser);
-      actualizarCantidadCromo(--cantidad, idCromo);
-      agregarCromoAAlbum(idCromo, idAlbum);
-    }catch(err){
-      console.log(err);
-    }
+      }
+  
+    });
   });
+
 }
 
 function agregarCromoAAlbum(idCromo, idAlbum){
-  connection.query("INSERT INTO CROMOS_ALBUMES (CromoID, AlbumID) VALUES (?, ?)", [idCromo, idAlbum], function (err, result) {
-    if (err) {
-      throw new Error("No se ha podido agregar el cromo al album");
-      //return;
-    }
-
+  return new Promise(function(resolve, reject){
+    connection.query("INSERT INTO CROMOS_ALBUMES (CromoID, AlbumID) VALUES (?, ?)", [idCromo, idAlbum], function (err, result) {
+      if(err){
+        reject (Error("No se ha podido agregar el cromo al album"));
+      }else if(result){
+        resolve("Query ejecutada con exito");
+      }
+  
+    });
   });
 }
 
 function actualizarCantidadCromo(nuevaCantidad, idCromo){
-  connection.query("UPDATE CROMOS SET Cantidad = ? WHERE ID = ?", [nuevaCantidad, idCromo], function (err, result) {
-    if (err) {
-      throw new Error("No se ha podido actualizar la cantidad de los cromos");
-      //return;
-    }
 
+  return new Promise(function(resolve, reject){
+    connection.query("UPDATE CROMOS SET Cantidad = ? WHERE ID = ?", [nuevaCantidad, idCromo], function (err, result) {
+      if(err){
+        reject (Error("No se ha podido actualizar la cantidad de los cromos"));
+      }else if(result){
+        resolve("Query ejecutada con exito");
+      }
+  
+    });
   });
 }
 
 function actualizarPuntosCliente(nuevosPuntos, idUser){
-  connection.query("UPDATE CLIENTES SET Puntos = ? WHERE User = ?", [nuevosPuntos, idUser], function (err, result) {
-    if (err) {
-      throw new Error("No se han podido actualizar los puntos del cliente");
-      //return;
-    }
 
+  return new Promise(function(resolve, reject){
+    connection.query("UPDATE CLIENTES SET Puntos = ? WHERE User = ?", [nuevosPuntos, idUser], function (err, result) {
+      if(err){
+        reject (Error("No se han podido actualizar los puntos del cliente"));
+      }else if(result){
+        resolve("Query ejecutada con exito");
+      }
+  
+    });
   });
+
 }
 
 
