@@ -82,3 +82,19 @@ h3.nombreCromo {
   margin: 0 auto;
 }
 
+.columnas_cromos {
+  min-width: 350px;
+}
+
+.columnas_coleccion {
+  width: 300px;
+  height: 320px;
+  margin-bottom: 20px;
+}
+
+.columnas_coleccion_tienda {
+  width: 300px;
+  height: 340px;
+  margin-bottom: 20px;
+}
+
