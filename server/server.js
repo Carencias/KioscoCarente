@@ -13,7 +13,7 @@ const {
   response
 } = require("express");
 app.use(express.urlencoded());
-const jsdom = require("jsdom");
+//const jsdom = require("jsdom");
 const fs = require('fs');
 const ejs = require('ejs');
 app.set('view engine', 'ejs');
@@ -390,76 +390,40 @@ app.post("/comprarCromo", function (req, res) {
   //let idUser = req.session.user
   let idUser = "user";
 
-  buscarCromo(idCromo)
-    .then(function(cromo, precio, cantidad){
-      buscarCliente(idUser, precio)
-        .then(function(cliente, puntos){
-            
-          consultarCromoAlbum(idCromo, idUser, coleccionAlbum)
-            .then(function(){
-                agregarCromoAAlbumAtomico(idCromo, coleccionAlbum, idUser, precio, cantidad, puntos)
-                  .then(
-                    console.log("Cromo comprado correctamente")
-                  )
-                  .catch(function(error){
-                      console.log(error);
-                    }
-                  )
-              }
-            )
-            .catch(function(error){
-                console.log(error);
-              }
-            );
-          }
-        )
-        .catch(function(error){
-            console.log(error);
-          }
-        );
-      }
-    )
-    .catch(function(error){
-        console.log(error);
-      }
-    );
+  var cromo, cliente;
+
+  obtenerCromo(idCromo).then(function(cromo, precio, cantidad){
+    cromo = cromo;
+    if (cantidad > 0){
+      obtenerCliente(idUser, precio).then(function(cliente){  
+        cliente = cliente;
+        if (cliente.Puntos > cromo.Precio){
+          consultarCromoAlbum(idCromo, idUser, coleccionAlbum).then(function(){
+            agregarCromoAAlbumAtomico(idCromo, coleccionAlbum, idUser, cromo.Precio, cromo.Cantidad, cliente.Puntos).then(function(){
+                console.log("Cromo comprado correctamente");
+              }, function (error){res.send(error)});
+          }, function(error){res.send(error)});
+        } else{res.send("Puntos insuficientes para comprar el cromo")};
+        }, function(error){res.send(error)});
+    } else{res.send("No hay existencias de ese cromo")}
+    }, function(error){res.send(error)});
 });
 
-function buscarCliente(idUser, precio){
+function obtenerCliente(idUser, precio){
   return new Promise(function(resolve, reject){
     connection.query("SELECT * FROM CLIENTES WHERE User = ?", [idUser], function (err, result) {
-      
       if (err) reject(Error("No existe ningun cliente con ese nombre de usuario"));
-      else if(result){
-
-        let cliente = result[0];
-        let puntos = cliente.Puntos;
-
-        if (puntos < precio) reject(Error("Puntos insuficientes para comprar el cromo"));
-
-        resolve(cliente, puntos);
-
-      }
+      else if(result) resolve(result[0])
       else (reject(Error("Resultado inesperado buscando cliente")));
     });
   });
 }
 
-function buscarCromo(idCromo){
+function obtenerCromo(idCromo){
   return new Promise(function(resolve, reject){
     connection.query("SELECT * FROM CROMOS WHERE ID = ?", [idCromo], function (err, result) {
-
       if(err) reject(Error("No existe ningun cromo con el ID indicado"));
-      else if(result){
-        console.log(result);
-        let cromo = result[0];
-        let precio = cromo.Precio;
-        let cantidad = cromo.Cantidad;
-
-        if (cantidad <= 0) reject(Error("No hay existencias de ese cromo"));
-        
-        resolve(cromo, precio, cantidad);
-      }
+      else if(result) resolve(result[0])
       else(reject(Error("Resultado inesperado buscando cromo")));
     });
   });
@@ -468,45 +432,29 @@ function buscarCromo(idCromo){
 function consultarCromoAlbum(idCromo, idUser, coleccionAlbum){
   return new Promise(function(resolve, reject){
     connection.query("SELECT * FROM CROMOS_ALBUMES WHERE CromoID = ? AND AlbumUser = ? AND AlbumColeccion = ?", [idCromo, idUser, coleccionAlbum], function (err, result) {
-
       if(err) reject (Error("No se ha podido consultar si está o no el cromo en el álbum"));
       else if(result){
-
         if (result.length !== 0) reject( Error("Cromo ya comprado"));
-
         else resolve("El cromo no está comprado");
       }
     });
   });
-
 }
 
 function agregarCromoAAlbumAtomico(idCromo, coleccionAlbum, idUser, precio, cantidad, puntos){
   return new Promise(function(resolve, reject){
     actualizarPuntosCliente(puntos-precio, idUser)
-    .then(
-        actualizarCantidadCromo(cantidad-1, idCromo)
-        .then(
-            agregarCromoAAlbum(idCromo, idUser, coleccionAlbum)
-            .then(resolve())
-            .catch(function(){
-                actualizarCantidadCromo(cantidad+1, idCromo)
-                .then(reject(Error("(Revertido restar cantidad cromo) Ha fallado la operacion atomica en agregar cromo")))
-                .catch(reject(Error("No se ha podido revertir el cambio de cantidad del cromo")));
-
-                actualizarPuntosCliente(puntos+precio, idUser)
-                .then(reject(Error("(Revertido restar puntos) Ha fallado la operacion atomica en agregar cromo")))
-                .catch(reject(Error("No se ha podido revertir el cambio de puntos del cliente")))
-            })
-        )
-        .catch(actualizarCantidadCromo(cantidad+1, idCromo)
-          .then(reject(Error("(Revertido restar puntos) Ha fallado la operacion atomica en actualizar cantidad cromo")))
-          .catch(reject(Error("No se ha podido revertir el cambio de puntos del cliente")))
-        )
-
-        .catch(function(error){reject(Error(error));})
-    )
-    .catch(function(error){reject(Error(error));});
+    .then(function(){
+      actualizarCantidadCromo(cantidad-1, idCromo)
+        .then(function(){
+          agregarCromoAAlbum(idCromo, idUser, coleccionAlbum)
+            .then(function (){resolve()},
+            function(error){
+              actualizarCantidadCromo(cantidad+1, idCromo);
+              actualizarPuntosCliente(puntos+precio, idUser);
+            });
+        }, function(error){actualizarPuntosCliente(puntos+precio, idUser);});
+    }, function(error){reject(error);});
   });
 }
 
@@ -515,7 +463,7 @@ function agregarCromoAAlbum(idCromo, idUser, coleccionAlbum){
     connection.query("INSERT INTO CROMOS_ALBUMES (CromoID, AlbumUser, AlbumColeccion) VALUES (?, ?, ?)", [idCromo,idUser,coleccionAlbum], function (err, result) {
       if(err) reject (Error("No se ha podido agregar el cromo al album"));
       else if(result) resolve("Query ejecutada con exito");
-      else(reject(Error("Resultado agregando cromo al album")));
+      else(reject(Error("Resultado inesperado agregando cromo al album")));
     });
   });
 }
@@ -538,56 +486,54 @@ function actualizarPuntosCliente(nuevosPuntos, idUser){
       else(reject(Error("Resultado inesperado actualizando los puntos del cliente")));
     });
   });
-
 }
 
+function obtenerColeccion(nombreColeccion){
+  return new Promise(function(resolve, reject){
+    connection.query("SELECT * FROM COLECCIONES WHERE Nombre = ?", [nombreColeccion], function (err, result) {
+      if (err) reject(Error("No existe ninguna coleccion con ese nombre"));
+      else if(result) resolve(result[0])
+      else (reject(Error("Resultado inesperado buscando coleccion")));
+    });
+  });
+}
+
+function agregarAlbumCliente(idUser, nombreColeccion){
+  return new Promise(function(resolve, reject){
+    connection.query("INSERT INTO ALBUMES (User, Coleccion) VALUES (?, ?)", [idUser, nombreColeccion], function (err, result) {
+      if(err) reject (Error("No se ha podido agregar el album al usuario"));
+      else if(result) resolve("Query ejecutada con exito");
+      else(reject(Error("Resultado inesperado agregando album a cliente")));
+    });
+  });
+}
 
 app.post("/comprarAlbum", function (req, res) {
   //TODO comprobar entrada??
   let nombreColeccion = req.body.nombreColeccion;
   let idUser = "user";
   //let idUser = req.session.user
-  try {
-    connection.query("SELECT * FROM COLECCIONES WHERE Nombre = ?", [nombreColeccion], function (err, result) {
-      if (err) {
-        //TODO ERROR BBDD
-        //throw err;
-        let mal;
-        return;
-      }
-      let precio = result[0].PrecioAlbum;
-      let estado = result[0].Estado;
-      if(estado ==="Agotado"){
-        return;
-      }
-      connection.query("SELECT * FROM CLIENTES WHERE User = ?", [idUser], function (err, result) {
-        if (err) {
-          //TODO ERROR BBDD
-          //throw err;
-          return;
-        }
+  var coleccion, cliente;
 
-        let puntos = result[0].Puntos;
-        if (puntos < precio) {
-          //TODO send post error
-          //throw new Error("Puntos insuficientes");
-          return;
-        }
-        connection.query("INSERT INTO ALBUMES (User, Coleccion) VALUES (?, ?)", [idUser, nombreColeccion], function (err, result) {
-          if (err) {
-            //TODO ERROR BBDD
-            //throw err;
-            return;
-          }
+//TODO, comprobar que el cliente no tiene ya el album de la coleccion comprada
 
-        });
-      });
-    });
-  } catch (error) {
-    res.send(error);
-  }
-
+  obtenerColeccion(nombreColeccion).then(function(coleccion){
+    coleccion = coleccion;
+    if(coleccion.Estado !== "Agotado"){
+      obtenerCliente(idUser).then(function(cliente){  
+        cliente = cliente;
+        if (cliente.Puntos > coleccion.PrecioAlbum){
+          actualizarPuntosCliente(cliente.Puntos-coleccion.PrecioAlbum, idUser).then(function(){},
+          function(error){res.send(error);});
+          agregarAlbumCliente(idUser, coleccion.Nombre).then(function(){
+            res.send("Álbum comprado correctamente");},
+          function(error){res.send(error);});
+        } else{res.send("Puntos insuficientes para comprar el album")};
+        },function(error){res.send(error)});
+    }else{res.send("No hay existencias en álbumes de esa colección")}
+  },function(error){res.send(error);});
 });
+
 var svgCaptcha = require('svg-captcha');
 app.get("/captcha", function (req, res) {
   svgCaptcha.options.width=1600;
