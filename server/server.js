@@ -226,32 +226,13 @@ app.post("/registro", function (req, res) {
   res.send("Se ha creado el usuario exitosamente");
 });
 
-//METODOS PARA LA GESTION DE CROMOS
-app.post("/crearColeccion", function (req, res) {
-  //TODO comprobar entrada??
-  let nombre = req.body.nombre;
-  let precioAlbum = req.body.precio;
-  let foto = req.body.foto;
 
-  connection.connect();
-  let string = "INSERT INTO COLECCIONES (Nombre,PrecioAlbum,FotoAlbum) VALUES ('" +
-    nombre + "'," +
-    precioAlbum + ",'" +
-    foto +"')";
-  connection.query(string, function (err, result, fields) {
-    if (err) {
-      response.send(err);
-    }
-  });
-
-  connection.end();
-});
 
 app.post("/crearColeccion", function (req, res) {
   //TODO comprobar entrada??
-  let nombre = req.body.nombre;
-  let precioAlbum = req.body.precio;
-  let foto = req.body.foto;
+  let nombre = req.body.titulo_coleccion;
+  let precioAlbum = req.body.precio_coleccion;
+  let foto = req.body.imagen_album;
 
   let string = "INSERT INTO COLECCIONES (Nombre,PrecioAlbum,FotoAlbum) VALUES ('" +
     nombre + "'," +
@@ -260,8 +241,11 @@ app.post("/crearColeccion", function (req, res) {
   connection.query(string, function (err, result, fields) {
     if (err) {
       res.send(err);
+    }else{
+      res.send("Añadido correctamente")
     }
   });
+  
 });
 
 app.post("/editarColeccion", function (req, res) {
@@ -364,11 +348,10 @@ app.post("/crearCromo", function (req, res) {
 });
 
 app.post("/borrarCromo", function (req, res) {
-  let nombre = req.body.nombre;
-  let coleccion = req.body.coleccion;
+  let id = req.body.id;
 
   let string =
-    "DELETE FROM CROMOS WHERE Nombre = '" + nombre +"' AND Coleccion='"+ coleccion +"'";
+    "DELETE FROM CROMOS WHERE ID =" + id ;
   try {
     connection.query(string, function (err, result, fields) {
       if (err) {
