@@ -288,14 +288,32 @@ app.post("/editarColeccion", function (req, res) {
 });
 
 app.set('views', path.join(__dirname, '/dashboard/views'));
-app.use("/dashboard/resources/colecciones/java/imagenes/", express.static(__dirname + "/dashboard/resources/colecciones/java/imagenes/"));
+//app.use("/dashboard/resources/colecciones/java/imagenes/", express.static(__dirname + "/dashboard/resources/colecciones/java/imagenes/"));
 //app.use("/dashboard/resources/*", express.static(__dirname + "/dashboard/resources/media"));
 
 //Acceso a subdirectorios público
 app.get("/assets/*", function (req, res) {
   let url = req.originalUrl;
   console.log(url.toString());
-  res.sendFile(__dirname +url.toString());
+  
+  if(fs.existsSync(__dirname +url.toString())){
+    res.sendFile(__dirname +url.toString());
+  } else {
+    res.sendStatus(404);
+  }
+  
+});
+
+app.get("/dashboard/resources/*", function (req, res) {
+  let url = req.originalUrl;
+  console.log(url.toString());
+  
+  if(fs.existsSync(__dirname +url.toString())){
+    res.sendFile(__dirname +url.toString());
+  } else {
+    res.sendStatus(404);
+  }
+  
 });
 
 app.get("/dashboard/admin/editarColeccion", function (req, res) {
@@ -308,7 +326,7 @@ app.get("/dashboard/admin/editarColeccion", function (req, res) {
       throw err;
     }
 
-    res.render('admin/Editar-Coleccion', {
+    res.render('admin/administradorEditarColeccion', {
       cromos: result
     });
 
