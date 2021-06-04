@@ -1,0 +1,405 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Retos (Pasatiempo)</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic">
+    <link rel="stylesheet" href="assets/fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/css/cromo.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/6.4.8/swiper-bundle.min.css">
+    <link rel="stylesheet" href="assets/css/pasatiempo.css">
+    <link rel="stylesheet" href="assets/css/Pretty-Registration-Form.css">
+    <link rel="stylesheet" href="assets/css/Registration-Form-with-Photo.css">
+    <link rel="stylesheet" href="assets/css/Team-Clean.css">
+</head>
+
+<body style="height: 880px;" onload="cargarDiccionario(), cargarInfoGuardada()">
+    <nav class="navbar navbar-light navbar-expand-lg fixed-top bg-secondary text-uppercase" id="mainNav" style="height: 70px;">
+        <div class="container"><img src="assets/img/logoBlanco.svg" style="height: 60px;filter: brightness(0%) contrast(200%) invert(100%);"><a class="navbar-brand" href="#page-top">&nbsp; KIOSCO CARENTE</a><button data-bs-toggle="collapse" data-bs-target="#navbarResponsive" class="navbar-toggler text-white bg-primary navbar-toggler-right text-uppercase rounded" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><i class="fa fa-bars"></i></button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded"><i class="fa fa-star"></i>&nbsp;PUNTOS: 1200</a></li>
+                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="clientePrincipal.html"><i class="fa fa-home"></i>&nbsp;INICIO</a></li>
+                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="clientePerfil.html"><i class="fa fa-user"></i>&nbsp;PERFIL</a></li>
+                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="../logout"><i class="fa fa-sign-out"></i>&nbsp;CERRAR SESIÓN</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <header class="text-center" style="margin-top: 67px;">
+        <h1 class="font-monospace text-uppercase" style="margin: 30px;margin-top: 92px;">Consigue Puntos Resolviendo el Pasatiempo</h1>
+    </header>
+    <div class="container" style="margin-top: 0px;height: 754px;"><div>
+
+<header id="header_pasatiempo" class="color1">
+            <h1 class="titulo">EN CASCADA</h1>
+        </header>
+        <nav id="barra" class="color1">
+            <button id="botonResolver" type="button" onclick="resolverPasatiempo()" disabled>Resolver</button>
+        </nav>
+        <section class="section_pasatiempo">
+            <article id="tablero" class="color2">
+                <form>
+                    <table id="tabla">
+                        <th colspan="9">Tablero del Pasatiempo</th>
+                        <tr class="fila">
+                            <td class="columna_vacio" colspan="1"><p></p></td>
+                            <td class="columna_vacio" colspan="1"><p></p></td>
+                            <td class="columna_vacio" colspan="1"><p></p></td>
+                            <td class="columna_vacio" colspan="1"><p></p></td>
+                            <td class="columna_vacio" colspan="1"><p></p></td>
+                            <td class="columna_vacio" colspan="1"><p></p></td>
+                            <td class="columna_vacio" colspan="1"><p></p></td>
+                            <td class="columna_vacio" colspan="1"><p></p></td>
+                            <td class="columna_vacio" colspan="1"><p></p></td>
+                        </tr>
+                        <tr class="fila">
+                            <td class="columna_vacio" colspan="1"><p></p></td>
+                            <td class="columna_vacio" colspan="1"><p></p></td>
+                            <td class="columna_input" colspan="1">
+                                <input id="celdaA0" class="celda" type="text" size="1" maxlength="1" onblur="guardarCasillas()"/>
+                            </td>
+                            <td class="columna_input" colspan="1">
+                                <input id="celdaA1" class="celda" type="text" size="1" maxlength="1" onblur="guardarCasillas()"/>
+                            </td>
+                            <td class="columna_input" colspan="1">
+                                <input id="celdaA2" class="celda" type="text" size="1" maxlength="1" onblur="guardarCasillas()"/>
+                            </td>
+                            <td class="columna_input" colspan="1">
+                                <input id="celdaA3" class="celda" type="text" size="1" maxlength="1" onblur="guardarCasillas()"/>
+                            </td>
+                            <td class="columna_num" colspan="1"><a class="texto">1</a></td>
+                            <td class="columna_vacio" colspan="1"><p></p></td>
+                            <td class="columna_vacio" colspan="1"><p></p></td>
+                        </tr>
+                        <tr class="fila">
+                            <td class="columna_vacio" colspan="1"><p></p></td>
+                            <td class="columna_vacio" colspan="1"><p></p></td>
+                            <td class="columna_input" colspan="1">
+                                <input id="celdaB0" class="celda" type="text" size="1" maxlength="1" onblur="guardarCasillas()"/>
+                            </td>
+                            <td class="columna_input" colspan="1">
+                                <input id="celdaB1" class="celda" type="text" size="1" maxlength="1" onblur="guardarCasillas()"/>
+                            </td>
+                            <td class="columna_input" colspan="1">
+                                <input id="celdaB2" class="celda" type="text" size="1" maxlength="1" onblur="guardarCasillas()"/>
+                            </td>
+                            <td class="columna_input" colspan="1">
+                                <input id="celdaB3" class="celda" type="text" size="1" maxlength="1" onblur="guardarCasillas()"/>
+                            </td>
+                            <td class="columna_vacio" colspan="1"><p></p></td>
+                            <td class="columna_vacio" colspan="1"><p></p></td>
+                            <td class="columna_vacio" colspan="1"><p></p></td>
+                        </tr>
+                        <tr class="fila">
+                            <td class="columna_vacio" colspan="1"><p></p></td>
+                            <td class="columna_vacio" colspan="1"><p></p></td>
+                            <td class="columna_input" colspan="1">
+                                <input id="celdaC0" class="celda" type="text" size="1" maxlength="1" onblur="guardarCasillas()"/>
+                            </td>
+                            <td class="columna_input" colspan="1">
+                                <input id="celdaC1" class="celda" type="text" size="1" maxlength="1" onblur="guardarCasillas()"/>
+                            </td>
+                            <td class="columna_input" colspan="1">
+                                <input id="celdaC2" class="celda" type="text" size="1" maxlength="1" onblur="guardarCasillas()"/>
+                            </td>
+                            <td class="columna_input" colspan="1">
+                                <input id="celdaC3" class="celda" type="text" size="1" maxlength="1" onblur="guardarCasillas()"/>
+                            </td>
+                            <td class="columna_vacio" colspan="1"><p></p></td>
+                            <td class="columna_vacio" colspan="1"><p></p></td>
+                            <td class="columna_vacio" colspan="1"><p></p></td>
+                        </tr>
+                        <tr class="fila">
+                            <td class="columna_vacio" colspan="1"><p></p></td>
+                            <td class="columna_vacio" colspan="1"><p></p></td>
+                            <td class="columna_input" colspan="1">
+                                <input id="celdaD0" class="celda" type="text" size="1" maxlength="1" onblur="guardarCasillas()"/>
+                            </td>
+                            <td class="columna_input" colspan="1">
+                                <input id="celdaD1" class="celda" type="text" size="1" maxlength="1" onblur="guardarCasillas()"/>
+                            </td>
+                            <td class="columna_input" colspan="1">
+                                <input id="celdaD2" class="celda" type="text" size="1" maxlength="1" onblur="guardarCasillas()"/>
+                            </td>
+                            <td class="columna_input" colspan="1">
+                                <input id="celdaD3" class="celda" type="text" size="1" maxlength="1" onblur="guardarCasillas()"/>
+                            </td>
+                            <td class="columna_vacio" colspan="1"><p></p></td>
+                            <td class="columna_vacio" colspan="1"><p></p></td>
+                            <td class="columna_vacio" colspan="1"><p></p></td>
+                        </tr>
+                        <tr class="fila">
+                            <td class="columna_vacio" colspan="1"><p></p></td>
+                            <td class="columna_vacio" colspan="1"><p></p></td>
+                            <td class="columna_input" colspan="1">
+                                <input id="celdaE0" class="celda" type="text" size="1" maxlength="1" onblur="guardarCasillas()"/>
+                            </td>
+                            <td class="columna_input" colspan="1">
+                                <input id="celdaE1" class="celda" type="text" size="1" maxlength="1" onblur="guardarCasillas()"/>
+                            </td>
+                            <td class="columna_input" colspan="1">
+                                <input id="celdaE2" class="celda" type="text" size="1" maxlength="1" onblur="guardarCasillas()"/>
+                            </td>
+                            <td class="columna_input" colspan="1">
+                                <input id="celdaE3" class="celda" type="text" size="1" maxlength="1" onblur="guardarCasillas()"/>
+                            </td>
+                            <td class="columna_vacio" colspan="1"><p></p></td>
+                            <td class="columna_vacio" colspan="1"><p></p></td>
+                            <td class="columna_vacio" colspan="1"><p></p></td>
+                        </tr>
+                        <tr class="fila">
+                            <td class="columna_vacio" colspan="1"><p></p></td>
+                            <td class="columna_vacio" colspan="1"><p></p></td>
+                            <td class="columna_input" colspan="1">
+                                <input id="celdaF0" class="celda" type="text" size="1" maxlength="1" onblur="guardarCasillas()"/>
+                            </td>
+                            <td class="columna_input" colspan="1">
+                                <input id="celdaF1" class="celda" type="text" size="1" maxlength="1" onblur="guardarCasillas()"/>
+                            </td>
+                            <td class="columna_input" colspan="1">
+                                <input id="celdaF2" class="celda" type="text" size="1" maxlength="1" onblur="guardarCasillas()"/>
+                            </td>
+                            <td class="columna_input" colspan="1">
+                                <input id="celdaF3" class="celda" type="text" size="1" maxlength="1" onblur="guardarCasillas()"/>
+                            </td>
+                            <td class="columna_num" colspan="1"><a class="texto">2</a></td>
+                            <td class="columna_vacio" colspan="1"><p></p></td>
+                            <td class="columna_vacio" colspan="1"><p></p></td>
+                        </tr>
+                        <tr class="fila">
+                            <td class="columna_vacio" colspan="1"><p></p></td>
+                            <td class="columna_num" colspan="1"><a class="texto">3</a></td>
+                            <td class="columna_input" colspan="1">
+                                <input id="celdaG0" class="celda" type="text" size="1" maxlength="1" onblur="guardarCasillas()"/>
+                            </td>
+                            <td class="columna_input" colspan="1">
+                                <input id="celdaG1" class="celda" type="text" size="1" maxlength="1" onblur="guardarCasillas()"/>
+                            </td>
+                            <td class="columna_input" colspan="1">
+                                <input id="celdaG2" class="celda" type="text" size="1" maxlength="1" onblur="guardarCasillas()"/>
+                            </td>
+                            <td class="columna_input" colspan="1">
+                                <input id="celdaG3" class="celda" type="text" size="1" maxlength="1" onblur="guardarCasillas()"/>
+                            </td>
+                            <td class="columna_input" colspan="1">
+                                <input id="celdaG4" class="celda" type="text" size="1" maxlength="1" onblur="guardarCasillas()"/>
+                            </td>
+                            <td class="columna_input" colspan="1">
+                                <input id="celdaG5" class="celda" type="text" size="1" maxlength="1" onblur="guardarCasillas()"/>
+                            </td>
+                            <td class="columna_vacio" colspan="1"><p></p></td>
+                        </tr>
+                        <tr class="fila">
+                            <td class="columna_vacio" colspan="1"><p></p></td>
+                            <td class="columna_vacio" colspan="1"><p></p></td>
+                            <td class="columna_input" colspan="1">
+                                <input id="celdaH0" class="celda" type="text" size="1" maxlength="1" onblur="guardarCasillas()"/>
+                            </td>
+                            <td class="columna_input" colspan="1">
+                                <input id="celdaH1" class="celda" type="text" size="1" maxlength="1" onblur="guardarCasillas()"/>
+                            </td>
+                            <td class="columna_input" colspan="1">
+                                <input id="celdaH2" class="celda" type="text" size="1" maxlength="1" onblur="guardarCasillas()"/>
+                            </td>
+                            <td class="columna_input" colspan="1">
+                                <input id="celdaH3" class="celda" type="text" size="1" maxlength="1" onblur="guardarCasillas()"/>
+                            </td>
+                            <td class="columna_input" colspan="1">
+                                <input id="celdaH4" class="celda" type="text" size="1" maxlength="1" onblur="guardarCasillas()"/>
+                            </td>
+                            <td class="columna_input" colspan="1">
+                                <input id="celdaH5" class="celda" type="text" size="1" maxlength="1" onblur="guardarCasillas()"/>
+                            </td>
+                            <td class="columna_vacio" colspan="1"><p></p></td>
+                        </tr>
+                        <tr class="fila">
+                            <td class="columna_vacio" colspan="1"><p></p></td>
+                            <td class="columna_vacio" colspan="1"><p></p></td>
+                            <td class="columna_input" colspan="1">
+                                <input id="celdaI0" class="celda" type="text" size="1" maxlength="1" onblur="guardarCasillas()"/>
+                            </td>
+                            <td class="columna_input" colspan="1">
+                                <input id="celdaI1" class="celda" type="text" size="1" maxlength="1" onblur="guardarCasillas()"/>
+                            </td>
+                            <td class="columna_input" colspan="1">
+                                <input id="celdaI2" class="celda" type="text" size="1" maxlength="1" onblur="guardarCasillas()"/>
+                            </td>
+                            <td class="columna_input" colspan="1">
+                                <input id="celdaI3" class="celda" type="text" size="1" maxlength="1" onblur="guardarCasillas()"/>
+                            </td>
+                            <td class="columna_input" colspan="1">
+                                <input id="celdaI4" class="celda" type="text" size="1" maxlength="1" onblur="guardarCasillas()"/>
+                            </td>
+                            <td class="columna_input" colspan="1">
+                                <input id="celdaI5" class="celda" type="text" size="1" maxlength="1" onblur="guardarCasillas()"/>
+                            </td>
+                            <td class="columna_vacio" colspan="1"><p></p></td>
+                        </tr>
+                        <tr class="fila">
+                            <td class="columna_vacio" colspan="1"><p></p></td>
+                            <td class="columna_vacio" colspan="1"><p></p></td>
+                            <td class="columna_input" colspan="1">
+                                <input id="celdaJ0" class="celda" type="text" size="1" maxlength="1" onblur="guardarCasillas()"/>
+                            </td>
+                            <td class="columna_input" colspan="1">
+                                <input id="celdaJ1" class="celda" type="text" size="1" maxlength="1" onblur="guardarCasillas()"/>
+                            </td>
+                            <td class="columna_input" colspan="1">
+                                <input id="celdaJ2" class="celda" type="text" size="1" maxlength="1" onblur="guardarCasillas()"/>
+                            </td>
+                            <td class="columna_input" colspan="1">
+                                <input id="celdaJ3" class="celda" type="text" size="1" maxlength="1" onblur="guardarCasillas()"/>
+                            </td>
+                            <td class="columna_input" colspan="1">
+                                <input id="celdaJ4" class="celda" type="text" size="1" maxlength="1" onblur="guardarCasillas()"/>
+                            </td>
+                            <td class="columna_input" colspan="1">
+                                <input id="celdaJ5" class="celda" type="text" size="1" maxlength="1" onblur="guardarCasillas()"/>
+                            </td>
+                            <td class="columna_vacio" colspan="1"><p></p></td>
+                        </tr>
+                        <tr class="fila">
+                            <td class="columna_vacio" colspan="1"><p></p></td>
+                            <td class="columna_vacio" colspan="1"><p></p></td>
+                            <td class="columna_input" colspan="1">
+                                <input id="celdaK0" class="celda" type="text" size="1" maxlength="1" onblur="guardarCasillas()"/>
+                            </td>
+                            <td class="columna_input" colspan="1">
+                                <input id="celdaK1" class="celda" type="text" size="1" maxlength="1" onblur="guardarCasillas()"/>
+                            </td>
+                            <td class="columna_input" colspan="1">
+                                <input id="celdaK2" class="celda" type="text" size="1" maxlength="1" onblur="guardarCasillas()"/>
+                            </td>
+                            <td class="columna_input" colspan="1">
+                                <input id="celdaK3" class="celda" type="text" size="1" maxlength="1" onblur="guardarCasillas()"/>
+                            </td>
+                            <td class="columna_input" colspan="1">
+                                <input id="celdaK4" class="celda" type="text" size="1" maxlength="1" onblur="guardarCasillas()"/>
+                            </td>
+                            <td class="columna_input" colspan="1">
+                                <input id="celdaK5" class="celda" type="text" size="1" maxlength="1" onblur="guardarCasillas()"/>
+                            </td>
+                            <td class="columna_vacio" colspan="1"><p></p></td>
+                        </tr>
+                        <tr class="fila">
+                            <td class="columna_vacio" colspan="1"><p></p></td>
+                            <td class="columna_num" colspan="1"><a class="texto">4</a></td>
+                            <td class="columna_input" colspan="1">
+                                <input id="celdaL0" class="celda" type="text" size="1" maxlength="1" onblur="guardarCasillas()"/>
+                            </td>
+                            <td class="columna_input" colspan="1">
+                                <input id="celdaL1" class="celda" type="text" size="1" maxlength="1" onblur="guardarCasillas()"/>
+                            </td>
+                            <td class="columna_input" colspan="1">
+                                <input id="celdaL2" class="celda" type="text" size="1" maxlength="1" onblur="guardarCasillas()"/>
+                            </td>
+                            <td class="columna_input" colspan="1">
+                                <input id="celdaL3" class="celda" type="text" size="1" maxlength="1" onblur="guardarCasillas()"/>
+                            </td>
+                            <td class="columna_input" colspan="1">
+                                <input id="celdaL4" class="celda" type="text" size="1" maxlength="1" onblur="guardarCasillas()"/>
+                            </td>
+                            <td class="columna_input" colspan="1">
+                                <input id="celdaL5" class="celda" type="text" size="1" maxlength="1" onblur="guardarCasillas()"/>
+                            </td>
+                            <td class="columna_vacio" colspan="1"><p></p></td>
+                        </tr>
+                        <tr class="fila">
+                            <td class="columna_vacio" colspan="1"><p></p></td>
+                            <td class="columna_vacio" colspan="1"><p></p></td>
+                            <td class="columna_vacio" colspan="1"><p></p></td>
+                            <td class="columna_vacio" colspan="1"><p></p></td>
+                            <td class="columna_vacio" colspan="1"><p></p></td>
+                            <td class="columna_vacio" colspan="1"><p></p></td>
+                            <td class="columna_vacio" colspan="1"><p></p></td>
+                            <td class="columna_vacio" colspan="1"><p></p></td>
+                            <td class="columna_vacio" colspan="1"><p></p></td>
+                        </tr>
+                    </table>
+                </form>
+            </article>
+            <article id="instrucciones" class="color3">
+                <article id="datos" class="color4">
+                    <h4>Información de resolución</h4>
+                    <ol>
+                        <li>Familia en Escocia.</li>
+                        <li>Tristeza y dolor por algo.</li>
+                        <li>Termino algo definitivamente.</li>
+                        <li>El que torea.</li>
+                    </ol>
+                    <h4>Instrucciones del pasatiempo</h4>
+                    <p>Identifique la primera palabra y la última de cada bloque con las pistas que se dan.
+                        A continuación, trate de descrubir las palabras intermedias. Para lograrlo,
+                        cambie una letra de la primera palabra para obtener la próxima y, después, altere
+                        el orden de una o varias letras para encontrar la siguiente. Siga así, sucesivamente,
+                        hasta que logre completar ambos casilleros. Todas las palabras intermedias deben
+                        tener significado.
+                    </p>
+                </article>
+                <article id="seccionPista" class="color5">
+                    <form>
+                        <table id="tablaPista">
+                            <tr>
+                                <td rowspan="3" colspan="2" id="textoPista">
+                                    <h4>Pistas de resolución</h4>
+                                    <p>Introduce letras y obtendrás palabras formadas con ellas. Úsame con precaución, 
+                                        solo tienes 3 oportunidades.</p>
+                                </td>
+                                <td colspan="1" id="formularioPista">
+                                    <input id="letrasPista" type="text" size="6" maxlength="6"/>
+                                </td>
+                                <td colspan="1" id="casillaBotonPista">
+                                    <button id="botonPista" type="button" onclick="otorgarPista()">Pedir Pista (3)</button>
+                                </td>
+                            </tr>
+                            <tr>
+                                <td colspan="2" id="casillaPista">
+                                    <textarea id="pista" rows="5" cols="7" readonly></textarea>
+                                </td>
+                            </tr>
+                        </table>
+                    </form>
+                </article>
+            </article>
+        </section>
+        <footer id="footer_pasatiempo" class="color6">
+            <table class="tabla_toggle">
+                <tr>
+                    <td>
+                        <h5>Pasatiempo en Cascada - Ángel López Arias   |   </h5>
+                    </td>
+                    <td>
+                        <h5>Guardar progreso</h5>
+                    </td>
+                    <td>
+                        <label class="switch">
+                            <input type="checkbox" id="guardar" onchange="almacenamiento()"> 
+                            <span class="slider round"></span>
+                        </label>
+                    </td>
+                    <td>
+                        <h5>   |   2021</h5>
+                    </td>
+                </tr>
+            </table>
+        </footer>
+    
+</div></div>
+    <div class="text-center text-white copyright py-4 fixed-bottom" style="padding-top: 0px;padding-bottom: 0px;padding-right: 0px;padding-left: 0px;margin-top: 0px;">
+        <div class="container"><small>Copyright ©&nbsp;Carentes 2021</small></div>
+    </div>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="assets/js/bs-init.js"></script>
+    <script src="assets/js/freelancer.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/6.4.8/swiper-bundle.min.js"></script>
+    <script src="assets/js/script.js"></script>
+    <script src="assets/js/Simple-Slider.js"></script>
+</body>
+
+</html>
