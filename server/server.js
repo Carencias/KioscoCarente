@@ -629,16 +629,13 @@ function ejecutarQueryBBDD(query, arrayDatos, operacion, devolverResultado){
     connection.query(query, arrayDatos, function (err, result) {
       if(err){
         reject (Error("Operacion " + operacion + " no completada"));
-      } else if(result) {
+      } else {
 
         if(devolverResultado){
           resolve(result[0]);
         }else{
           resolve("Operacion " + operacion + " completada con exito");
         }
-
-      }else{
-        reject (Error("No se han obtenido resultados al realizar la operacion: " + operacion));
       }
     });
   });
