@@ -102,10 +102,6 @@ app.get("/dashboard/admin", function (req, res) {
 
 });
 
-app.get("/dashboard/user", function (req, res) {
-  res.sendFile(__dirname +"/dashboard/user/clientePrincipal.html")
-});
-
 function comprobarCredenciales(req, res) {
   let username = req.body.username;
   let password = req.body.password;
@@ -366,26 +362,35 @@ app.get("/dashboard/admin/editarColeccion", function (req, res) {
 });
 
 app.get("/dashboard/user", function (req, res) {
-
-  let string = "SELECT * FROM ALBUMES WHERE User = '" + req.session.idUser + "'";
+  let string = "SELECT * FROM ALBUMES WHERE User = '" + req.session.user + "'";
+  var colecciones = [];
+  let estadosAlbumes = [];
   connection.query(string, function (err, result, fields) {
     if (err) {
       throw err;
     }
-  let stringUser = "SELECT Puntos FROM CLIENTES WHERE User = '" + req.session.idUser + "'";
-  connection.query(stringUser, function (err, resultUser, fields) {
-    if (err) {
-      throw err;
-    }
-
-    res.render('user/clientePrincipal', {
-      albumes: result
-      nombre: req.session.user
-      puntos: resultUser
+    result.forEach(function(album){
+        estadosAlbumes.push(album.Estado);
+        console.log(estadosAlbumes);
+        obtenerColeccion(album.Coleccion).then(function(coleccion){
+        colecciones.push(coleccion);console.log(colecciones);
+        
+        let stringUser = "SELECT * FROM CLIENTES WHERE User = '" + req.session.user + "'";
+        connection.query(stringUser, function (err, resultUser, fields) {
+        if (err) {
+          throw err;
+        }
+        res.render('user/clientePrincipal', {
+          colecciones: colecciones,
+          estados: estadosAlbumes,
+          nombre: req.session.user,
+          puntos: resultUser[0].Puntos
+        });
+        });
+        
+        }, (error) => {res.send(error.message)});
     });
-
   });
-
 });
 
 /**
@@ -403,8 +408,8 @@ app.get("/dashboard/user/clienteCromos", function (req, res) {
     }
 
     res.render('user/clientePrincipal', {
-      albumes: result
-      nombre: req.session.user
+      albumes: result,
+      nombre: req.session.user,
       puntos: resultUser
     });
 
@@ -633,6 +638,23 @@ function ejecutarQueryBBDD(query, arrayDatos, operacion, devolverResultado){
 
         if(devolverResultado){
           resolve(result[0]);
+        }else{
+          resolve("Operacion " + operacion + " completada con exito");
+        }
+      }
+    });
+  });
+}
+
+function ejecutarQueryBBDD_array(query, arrayDatos, operacion, devolverResultado){
+  return new Promise(function(resolve, reject){
+    connection.query(query, arrayDatos, function (err, result) {
+      if(err){
+        reject (Error("Operacion " + operacion + " no completada"));
+      } else {
+
+        if(devolverResultado){
+          resolve(result);
         }else{
           resolve("Operacion " + operacion + " completada con exito");
         }

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <title>Página Cliente</title>
+    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic">
+    <link rel="stylesheet" href="assets/fonts/font-awesome.min.css">
+    <link rel="stylesheet" href="assets/css/cromo.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/Swiper/6.4.8/swiper-bundle.min.css">
+    <link rel="stylesheet" href="assets/css/pasatiempo.css">
+    <link rel="stylesheet" href="assets/css/Pretty-Registration-Form.css">
+    <link rel="stylesheet" href="assets/css/Registration-Form-with-Photo.css">
+    <link rel="stylesheet" href="assets/css/Team-Clean.css">
+</head>
+
+<body>
+    <nav class="navbar navbar-light navbar-expand-lg fixed-top bg-secondary text-uppercase" id="mainNav" style="height: 70px;">
+        <div class="container"><img src="assets/img/logoBlanco.svg" style="height: 60px;filter: brightness(0%) contrast(200%) invert(100%);"><a class="navbar-brand" href="#page-top">&nbsp; KIOSCO CARENTE</a><button data-bs-toggle="collapse" data-bs-target="#navbarResponsive" class="navbar-toggler text-white bg-primary navbar-toggler-right text-uppercase rounded" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><i class="fa fa-bars"></i></button>
+            <div class="collapse navbar-collapse" id="navbarResponsive">
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded"><i class="fa fa-star"></i>&nbsp;PUNTOS: <%= puntos %></a></li>
+                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="clienteTiendaAlbumes.html"><i class="fa fa-shopping-cart"></i>&nbsp;TIENDA</a></li>
+                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="clientePerfil.html"><i class="fa fa-user"></i>&nbsp;PERFIL</a></li>
+                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="../logout"><i class="fa fa-sign-out"></i>&nbsp;CERRAR SESIÓN</a></li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+    <div class="container" style="padding-bottom: 52px;padding-top: 25px;"><div><h1 class="text-uppercase text-center text-secondary" style="margin: 20px;height: 25px;margin-top: 69px;padding-top: 0px;">Bienvenido <%= nombre %></h1></div>
+        <h3 class="text-uppercase text-center text-secondary" style="margin: 0px;height: 25px;margin-top: 0px;padding: 0px;padding-top: 0px;margin-bottom: 26px;">ÁLBUMES</h3>
+        
+        <% colecciones.forEach(function(coleccion, i) { %>
+                <% if(i%3===0){ %>
+                    <div class="row text-start justify-content-center">
+                  <% } %>
+                  <div class="col-md-4 columnas_coleccion">
+                    <div class="card"><img class="card-img-top w-100 d-block bg-danger bg-gradient border rounded-pill border-secondary shadow-lg" src=<%= coleccion.FotoAlbum %>>
+                        <div class="card-body">
+                            <h1 class="card-title" style="text-align: center;"><strong><%= coleccion.Nombre %></strong><br></h1>
+                            <% if(estados[i] === "No iniciada"){ %>
+                                <h6 class="text-muted card-subtitle mb-2" style="text-align: center;background: rgb(238,195,195);"><%= estados[i] %></h6>
+                                <%}else if(estados[i] === "Completada parcialmente"){ %>
+                                <h6 class="text-muted card-subtitle mb-2" style="text-align: center;background: rgb(171,169,58);margin-bottom: 6px;"><%= estados[i] %></h6>
+                                <%}else { %>
+                                <h6 class="text-muted card-subtitle mb-2" style="text-align: center;background: rgb(157,224,156);margin-bottom: 6px;"><%= estados[i] %></h6>
+                            <%} %>
+                            
+                            <p class="card-text" style="text-align: justify;"><%= coleccion.Descripcion %><br></p><a class="btn btn-primary" role="button" style="text-align: left;" href=<%= "clienteCromos?nombreColeccion=" + coleccion.Nombre %>>Acceder</a>
+                        </div>
+                    </div>
+                </div>
+
+                <% if(i%3===2){ %>
+
+                </div>
+            
+                <% } %>
+            
+                <% }); %>
+            </div>
+    <section id="activity_information" class="team-clean" style="height: 567px;padding-top: 0px;padding-bottom: 0px;">
+        <div class="container" style="margin-top: 61px;">
+            <div class="intro">
+                <h2 class="text-center" style="margin: 0px;padding: 0px 0px;margin-top: 14px;">Consigue Puntos</h2>
+                <p class="text-center"><br><em>Completa nuestros desafíos y gana puntos para conseguir todos los cromos de tu colección.</em><br><br></p>
+            </div>
+            <div class="row people">
+                <div class="col-md-6 col-lg-4 col-xxl-3 item"><img class="rounded-circle" src="assets/img//retos/pasatiempo.png">
+                    <h3 class="name">Pasatiempo</h3>
+                    <p class="title">12 puntos</p>
+                    <p class="description">Resuelve los pasatiempos que te proponemos y consigue puntos a la vez que te entretienes.</p><a class="btn btn-primary text-center" role="button" style="text-align: left;width: 133.0625px;" href="clienteRetoPasatiempo.html">ACCEDER<br></a>
+                </div>
+                <div class="col-md-6 col-lg-4 col-xxl-3 item"><img class="rounded-circle" src="assets/img/retos/captcha.png">
+                    <h3 class="name">Captcha</h3>
+                    <p class="title">2 puntos</p>
+                    <p class="description">Demuéstranos que no eres un robot y premiaremos tu humanidad con puntos.</p><a class="btn btn-primary text-center" role="button" style="text-align: left;width: 133.0625px;" href="clienteRetoCaptcha.html">ACCEDER<br></a>
+                </div>
+                <div class="col-md-6 col-lg-4 col-xxl-3 item"><img class="rounded-circle" src="assets/img/retos/pregunta.png">
+                    <h3 class="name">Preguntas</h3>
+                    <p class="title">5 puntos</p>
+                    <p class="description">Te preguntamos y tú respondes. Si aciertas te llevas recompensa.</p><a class="btn btn-primary text-center" role="button" style="text-align: left;width: 133.0625px;" href="clienteRetoPregunta.html">ACCEDER<br></a>
+                </div>
+                <div class="col-md-6 col-lg-4 col-xxl-3 item"><img class="rounded-circle" src="assets/img/retos/ecuacion.png">
+                    <h3 class="name">Ecuación</h3>
+                    <p class="title">7 puntos</p>
+                    <p class="description">Si las ecuaciones son lo tuyo, obtendrás puntos de manera rápida y sencilla.</p><a class="btn btn-primary text-center" role="button" style="text-align: left;width: 133.0625px;" href="clienteRetoEcuacion.html">ACCEDER<br></a>
+                </div>
+            </div>
+        </div>
+    </section>
+    <div style="margin-bottom: 20px;"></div>
+    <div class="text-center text-white copyright py-4 fixed-bottom" style="padding-top: 0px;padding-bottom: 0px;padding-right: 0px;padding-left: 0px;margin-top: 0px;">
+        <div class="container"><small>Copyright ©&nbsp;Carentes 2021</small></div>
+    </div>
+    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
+    <script src="assets/js/bs-init.js"></script>
+    <script src="assets/js/freelancer.js"></script>
+    <script src="assets/js/editarCromo.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/6.4.8/swiper-bundle.min.js"></script>
+    <script src="assets/js/script.js"></script>
+    <script src="assets/js/Simple-Slider.js"></script>
+</body>
+
+</html>
