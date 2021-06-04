@@ -97,7 +97,29 @@ function comprobarCredenciales(req, res) {
   let username = req.body.username;
   let password = req.body.password;
 
-  connection.query(
+  obtenerUsuario(username).then(
+    function(usuario){
+      if (usuario.length === 0 || usuario.Password !== password) {
+        res.send("Autenticación incorrecta");
+      } else {
+        console.log("Login Username: ", usuario.User);
+        console.log("Login Password: ", usuario.Password);
+
+        let tipoUsuario = usuario.Tipo;
+        //Guardo en la sesión los datos obtenidos de la bbdd
+        req.session.user = usuario.User;
+        req.session.password = usuario.Password;
+        req.session.userType = usuario.Admin;
+
+        console.log(tipoUsuario);
+        abrirSesionIniciada(req, res);
+      }
+    },
+    function(error){
+      console.log(error);
+      //throw error;
+  });
+  /*connection.query(
     "SELECT User, Password, Admin FROM USUARIOS WHERE User='" + username + "'",
     function (err, result) {
       if (err) throw err;
@@ -120,7 +142,7 @@ function comprobarCredenciales(req, res) {
         abrirSesionIniciada(req, res);
       }
     }
-  );
+  );*/
 }
 
 app.post("/login", function (req, res) {
@@ -210,7 +232,11 @@ app.post("/registro", function (req, res) {
   let apellidos = req.body.apellidos;
   let email = req.body.email;
   
-  connection.connect();
+  agregarUsuario(username, password, nombre, apellidos, email, '0').then(
+    () => {res.send("Se ha creado el usuario exitosamente")},
+    (error) => {response.send(error)}
+  );
+  /*connection.connect();
   let string = "INSERT INTO USUARIOS (User, Password, Nombre, Apellidos, Email, Admin) VALUES ('"+
   username +"','"+
   password + "','" +
@@ -223,10 +249,8 @@ app.post("/registro", function (req, res) {
     }
   });
 
-  res.send("Se ha creado el usuario exitosamente");
+  res.send("Se ha creado el usuario exitosamente");*/
 });
-
-
 
 app.post("/crearColeccion", function (req, res) {
   //TODO comprobar entrada??
@@ -234,7 +258,11 @@ app.post("/crearColeccion", function (req, res) {
   let precioAlbum = req.body.precio_coleccion;
   let foto = req.body.imagen_album;
 
-  let string = "INSERT INTO COLECCIONES (Nombre,PrecioAlbum,FotoAlbum) VALUES ('" +
+  agregarColeccion(nombre, precioAlbum, foto).then(
+    () => {res.send("Añadido correctamente")},
+    (error) => {res.send(error)}
+  );
+  /*let string = "INSERT INTO COLECCIONES (Nombre,PrecioAlbum,FotoAlbum) VALUES ('" +
     nombre + "'," +
     precioAlbum + ",'" +
     foto + "')";
@@ -244,8 +272,7 @@ app.post("/crearColeccion", function (req, res) {
     }else{
       res.send("Añadido correctamente")
     }
-  });
-  
+  });*/  
 });
 
 app.post("/editarColeccion", function (req, res) {
@@ -256,7 +283,11 @@ app.post("/editarColeccion", function (req, res) {
   let estado = req.body.estado;
   let coleccion = req.body.coleccion;
 
-  let string =
+  editarColeccion(precioAlbum, foto, nombre, estado, coleccion).then(
+    () => {res.send("Coleccion Actualizada")},
+    (error) => {res.send(error)}
+  );
+  /*let string =
     "UPDATE COLECCIONES SET PrecioAlbum =" + precioAlbum +
     ",FotoAlbum= '" + foto +
     "',Nombre= '" + nombre +
@@ -268,7 +299,7 @@ app.post("/editarColeccion", function (req, res) {
     if (err) {
       throw err;
     }
-  });
+  });*/
 });
 
 app.set('views', path.join(__dirname, '/dashboard/views'));
@@ -329,8 +360,11 @@ app.post("/crearCromo", function (req, res) {
   let datoInteresante = req.body.datoInteresante;
   let frecuencia = req.body.frecuencia;
 
-
-  let string =
+  agregarCromo(nombre, coleccion, rutaImagen, precio, cantidad, descripcion, datoInteresante, frecuencia).then(
+    () => {res.send("Cromo creado correctamente")},
+    (error) => {res.send(error)}
+  );
+  /*let string =
     "INSERT INTO CROMOS (Nombre, Coleccion, RutaImagen, Precio, Cantidad, Descripcion, DatoInteresante, Frecuencia) VALUES ('" +
     nombre +"','" +
     coleccion +"','" +
@@ -344,13 +378,17 @@ app.post("/crearCromo", function (req, res) {
     if (err) {
       throw err;
     }
-  });
+  });*/
 });
 
 app.post("/borrarCromo", function (req, res) {
   let id = req.body.id;
 
-  let string =
+  borrarCromo(id).then(
+    () => {res.send("El cromo ha sido borrado")},
+    (error) => {res.send(error)}
+  );
+  /*let string =
     "DELETE FROM CROMOS WHERE ID =" + id ;
   try {
     connection.query(string, function (err, result, fields) {
@@ -361,13 +399,17 @@ app.post("/borrarCromo", function (req, res) {
   } catch (error) {
     console.log(error);
   }
-    res.send("El cromo ha sido borrado");
+    res.send("El cromo ha sido borrado");*/
 });
 
 app.post("/borrarColeccion", function (req, res) {
   let nombre = req.body.nombre;
   
-  let string =
+  borrarColeccion(nombre).then(
+    () => {res.send("La coleccion ha sido borrada")},
+    (error) => {res.send(error)}
+  );
+  /*let string =
     "DELETE FROM COLECCIONES WHERE Nombre = '" + nombre +"'";
   try {
     connection.query(string, function (err, result, fields) {
@@ -378,8 +420,7 @@ app.post("/borrarColeccion", function (req, res) {
   } catch (error) {
     console.log(error);
   }
-  res.send("La coleccion ha sido borrada");
-
+  res.send("La coleccion ha sido borrada");*/
 });
 
 app.post("/comprarCromo", function (req, res) {
@@ -438,6 +479,35 @@ function agregarCromoAAlbumAtomico(idCromo, coleccionAlbum, idUser, precio, cant
         }, function(error){actualizarPuntosCliente(puntos+precio, idUser);});
     }, function(error){reject(error);});
   });
+}
+
+function borrarColeccion(nombre){
+  return ejecutarQueryBBDD("DELETE FROM COLECCIONES WHERE Nombre = ?", [nombre], "Borrar coleccion", false);
+}
+
+function borrarCromo(id){
+  return ejecutarQueryBBDD("DELETE FROM CROMOS WHERE ID = ?", [id], "Borrar cromo", false);
+}
+
+function agregarCromo(nombre, coleccion, rutaImagen, precio, cantidad, descripcion, datoInteresante, frecuencia){
+  return ejecutarQueryBBDD("INSERT INTO CROMOS (Nombre, Coleccion, RutaImagen, Precio, Cantidad, Descripcion, DatoInteresante, Frecuencia) VALUES (?,?,?,?,?,?,?,?)",
+  [nombre, coleccion, rutaImagen, precio, cantidad, descripcion, datoInteresante, frecuencia], "Agregar cromo", false);
+}
+
+function editarColeccion(precioAlbum, foto, nombre, estado, coleccion){
+  return ejecutarQueryBBDD("UPDATE COLECCIONES SET (PrecioAlbum,FotoAlbum,Nombre,Estado) VALUES (?,?,?,?) WHERE Nombre = ?", [precioAlbum,foto,nombre,estado,coleccion], "Editar coleccion", false);
+}
+
+function agregarColeccion(nombre, precioAlbum, foto){
+  return ejecutarQueryBBDD("INSERT INTO COLECCIONES (Nombre,PrecioAlbum,FotoAlbum) VALUES (?,?,?)", [nombre, precioAlbum, foto], "Agregar coleccion", false);
+}
+
+function agregarUsuario(username, password, nombre, apellidos, email, admin){
+  return ejecutarQueryBBDD("INSERT INTO USUARIOS (User, Password, Nombre, Apellidos, Email, Admin) VALUES (?, ?, ?, ?, ?, ?)", [username,password,nombre,apellidos,email,admin], "Agregar usuario",false);
+}
+
+function obtenerUsuario(username){
+  return ejecutarQueryBBDD("SELECT User, Password, Admin FROM USUARIOS WHERE User = ?", [username], "Obtener usuario", true);
 }
 
 function agregarCromoAAlbum(idCromo, idUser, coleccionAlbum){
