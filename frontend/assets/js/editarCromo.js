@@ -1,33 +1,32 @@
-var formulario = {}, cromo = {};
+var formulario_editar_cromo = {}, cromo_editar_cromo = {};
 
-function cargarDatosFomulario(){
-    formulario.nombre = document.getElementById("nombre_cromo_formulario").value;
-    formulario.imagen = document.getElementById("imagen_cromo_formulario").value;
-    formulario.stock = document.getElementById("stock_cromo_formulario").value;
-    formulario.descripcion = document.getElementById("descripcion_cromo_formulario").value;
-    formulario.dato = document.getElementById("dato_cromo_formulario").value;
-    formulario.frecuencia = document.getElementById("frecuencia_cromo_formulario").value;
+function cargarDatosFomularioEditarCromo(){
+    formulario_editar_cromo.nombre = document.getElementById("formulario_editar_cromo_nombre").value;
+    formulario_editar_cromo.imagen = document.getElementById("formulario_editar_cromo_imagen").value;
+    formulario_editar_cromo.stock = document.getElementById("formulario_editar_cromo_stock").value;
+    formulario_editar_cromo.descripcion = document.getElementById("formulario_editar_cromo_descripcion").value;
+    formulario_editar_cromo.dato = document.getElementById("formulario_editar_cromo_dato").value;
+    formulario_editar_cromo.frecuencia = document.getElementById("formulario_editar_cromo_frecuencia").value;
 }
 
-function cargarDatosCromo(){
-    console.log("cambiandoDatos");
-    inicializarCamposCromo();
-    cargarDatosFomulario();
-    cromo.nombre.innerHTML = formulario.nombre;
-    cromo.imagen.source = formulario.imagen;
-    cromo.descripcion.innerHTML = formulario.descripcion;
-    cromo.dato.innerHTML = "\""+formulario.dato+"\"";
-    cromo.frecuencia.innerHTML = formulario.frecuencia;
+function cargarDatosCromoEditar(){
+    inicializarCamposCromoEditar();
+    cargarDatosFomularioEditarCromo();
+    cromo_editar_cromo.nombre.innerHTML = formulario_editar_cromo.nombre;
+    cromo_editar_cromo.imagen.source = formulario_editar_cromo.imagen;
+    cromo_editar_cromo.descripcion.innerHTML = formulario_editar_cromo.descripcion;
+    cromo_editar_cromo.dato.innerHTML = "\""+formulario_editar_cromo.dato+"\"";
+    cromo_editar_cromo.frecuencia.innerHTML = formulario_editar_cromo.frecuencia;
     let url = window.location.search;
     const urlParams = new URLSearchParams(url);
-    cromo.lenguaje.innerHTML = urlParams.get('nombreColeccion');
+    cromo_editar_cromo.lenguaje.innerHTML = urlParams.get('nombreColeccion');
 }
 
-function inicializarCamposCromo(){
-    cromo.nombre = document.getElementById("nombre_cromo");
-    cromo.imagen = document.getElementById("imagen_cromo");
-    cromo.descripcion = document.getElementById("descripcion_cromo");
-    cromo.dato = document.getElementById("dato_cromo");
-    cromo.frecuencia = document.getElementById("frecuencia_cromo");
-    cromo.lenguaje = document.getElementById("lenguaje_cromo");
+function inicializarCamposCromoEditar(){
+    cromo_editar_cromo.nombre = document.getElementById("nombre_cromo");
+    cromo_editar_cromo.imagen = document.getElementById("imagen_cromo");
+    cromo_editar_cromo.descripcion = document.getElementById("descripcion_cromo");
+    cromo_editar_cromo.dato = document.getElementById("dato_cromo");
+    cromo_editar_cromo.frecuencia = document.getElementById("frecuencia_cromo");
+    cromo_editar_cromo.lenguaje = document.getElementById("lenguaje_cromo");
 }
