@@ -472,14 +472,14 @@ function obtenerAlbum(coleccion, usuario){
   return ejecutarQueryBBDD("SELECT * FROM ALBUMES WHERE User = ? AND Coleccion = ?", [usuario, coleccion], "Obtener album", true);
 }
 
-function ejecutarQueryBBDD(query, arrayDatos, operacion, obtenerResultado){
+function ejecutarQueryBBDD(query, arrayDatos, operacion, devolverResultado){
   return new Promise(function(resolve, reject){
     connection.query(query, arrayDatos, function (err, result) {
       if(err){
         reject (Error("Operacion " + operacion + " no completada"));
       } else if(result) {
 
-        if(obtenerResultado){
+        if(devolverResultado){
           resolve(result[0]);
         }else{
           resolve("Operacion " + operacion + " completada con exito");
