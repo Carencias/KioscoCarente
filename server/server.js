@@ -385,7 +385,6 @@ app.post("/borrarColeccion", function (req, res) {
 app.post("/comprarCromo", function (req, res) {
   //TODO comprobar entrada??
   let idCromo = req.body.idCromo;
-  //let idAlbum = req.body.idAlbum;
   let coleccionAlbum = req.body.coleccionAlbum;
   //let usuarioAlbum = req.body.usuarioAlbum;
   //let idUser = req.session.user
@@ -393,8 +392,10 @@ app.post("/comprarCromo", function (req, res) {
 
   var cromo, cliente;
 
-  obtenerCromo(idCromo).then(function(cromo, precio, cantidad){
+  obtenerCromo(idCromo).then(function(cromo){
     cromo = cromo;
+    var precio = cromo.Precio;
+    var cantidad = cromo.Cantidad;
     if (cantidad > 0){
       obtenerCliente(idUser, precio).then(function(cliente){  
         cliente = cliente;
@@ -409,26 +410,6 @@ app.post("/comprarCromo", function (req, res) {
     } else{res.send("No hay existencias de ese cromo")}
     }, function(error){res.send(error)});
 });
-
-function obtenerCliente(idUser, precio){
-  return new Promise(function(resolve, reject){
-    connection.query("SELECT * FROM CLIENTES WHERE User = ?", [idUser], function (err, result) {
-      if (err) reject(Error("No existe ningun cliente con ese nombre de usuario"));
-      else if(result) resolve(result[0])
-      else (reject(Error("Resultado inesperado buscando cliente")));
-    });
-  });
-}
-
-function obtenerCromo(idCromo){
-  return new Promise(function(resolve, reject){
-    connection.query("SELECT * FROM CROMOS WHERE ID = ?", [idCromo], function (err, result) {
-      if(err) reject(Error("No existe ningun cromo con el ID indicado"));
-      else if(result) resolve(result[0])
-      else(reject(Error("Resultado inesperado buscando cromo")));
-    });
-  });
-}
 
 function consultarCromoAlbum(idCromo, idUser, coleccionAlbum){
   return new Promise(function(resolve, reject){
@@ -460,51 +441,53 @@ function agregarCromoAAlbumAtomico(idCromo, coleccionAlbum, idUser, precio, cant
 }
 
 function agregarCromoAAlbum(idCromo, idUser, coleccionAlbum){
-  return new Promise(function(resolve, reject){
-    connection.query("INSERT INTO CROMOS_ALBUMES (CromoID, AlbumUser, AlbumColeccion) VALUES (?, ?, ?)", [idCromo,idUser,coleccionAlbum], function (err, result) {
-      if(err) reject (Error("No se ha podido agregar el cromo al album"));
-      else if(result) resolve("Query ejecutada con exito");
-      else(reject(Error("Resultado inesperado agregando cromo al album")));
-    });
-  });
+  return ejecutarQueryBBDD("INSERT INTO CROMOS_ALBUMES (CromoID, AlbumUser, AlbumColeccion) VALUES (?, ?, ?)", [idCromo,idUser,coleccionAlbum], "Agregar cromo a album", false);
 }
 
 function actualizarCantidadCromo(nuevaCantidad, idCromo){
-  return new Promise(function(resolve, reject){
-    connection.query("UPDATE CROMOS SET Cantidad = ? WHERE ID = ?", [nuevaCantidad, idCromo], function (err, result) {
-      if(err)reject (Error("No se ha podido actualizar la cantidad de los cromos"));
-      else if(result)resolve("Query ejecutada con exito");
-      else(reject(Error("Resultado inesperado actualizando la cantidad del cromo")));
-    });
-  });
+  return ejecutarQueryBBDD("UPDATE CROMOS SET Cantidad = ? WHERE ID = ?", [nuevaCantidad, idCromo], "Actualizar cantidad cromo", false);
 }
 
 function actualizarPuntosCliente(nuevosPuntos, idUser){
-  return new Promise(function(resolve, reject){
-    connection.query("UPDATE CLIENTES SET Puntos = ? WHERE User = ?", [nuevosPuntos, idUser], function (err, result) {
-      if(err) reject (Error("No se han podido actualizar los puntos del cliente"));
-      else if(result) resolve("Query ejecutada con exito");
-      else(reject(Error("Resultado inesperado actualizando los puntos del cliente")));
-    });
-  });
-}
-
-function obtenerColeccion(nombreColeccion){
-  return new Promise(function(resolve, reject){
-    connection.query("SELECT * FROM COLECCIONES WHERE Nombre = ?", [nombreColeccion], function (err, result) {
-      if (err) reject(Error("No existe ninguna coleccion con ese nombre"));
-      else if(result) resolve(result[0])
-      else (reject(Error("Resultado inesperado buscando coleccion")));
-    });
-  });
+  return ejecutarQueryBBDD("UPDATE CLIENTES SET Puntos = ? WHERE User = ?", [nuevosPuntos, idUser], "Actualizar puntos cliente", false);
 }
 
 function agregarAlbumCliente(idUser, nombreColeccion){
+  return ejecutarQueryBBDD("INSERT INTO ALBUMES (User, Coleccion) VALUES (?, ?)", [idUser, nombreColeccion], "Agregar album al cliente", false);
+}
+
+function obtenerColeccion(nombreColeccion){
+  return ejecutarQueryBBDD("SELECT * FROM COLECCIONES WHERE Nombre = ?", [nombreColeccion], "Obtener coleccion", true);
+}
+
+function obtenerCliente(idUser, precio){
+  return ejecutarQueryBBDD("SELECT * FROM CLIENTES WHERE User = ?", [idUser], "Obtener cliente", true);
+}
+
+function obtenerCromo(idCromo){
+  return ejecutarQueryBBDD("SELECT * FROM CROMOS WHERE ID = ?", [idCromo], "Obtener cromo", true);
+}
+
+function obtenerAlbum(coleccion, usuario){
+  return ejecutarQueryBBDD("SELECT * FROM ALBUMES WHERE User = ? AND Coleccion = ?", [usuario, coleccion], "Obtener album", true);
+}
+
+function ejecutarQueryBBDD(query, arrayDatos, operacion, obtenerResultado){
   return new Promise(function(resolve, reject){
-    connection.query("INSERT INTO ALBUMES (User, Coleccion) VALUES (?, ?)", [idUser, nombreColeccion], function (err, result) {
-      if(err) reject (Error("No se ha podido agregar el album al usuario"));
-      else if(result) resolve("Query ejecutada con exito");
-      else(reject(Error("Resultado inesperado agregando album a cliente")));
+    connection.query(query, arrayDatos, function (err, result) {
+      if(err){
+        reject (Error("Operacion " + operacion + " no completada"));
+      } else if(result) {
+
+        if(obtenerResultado){
+          resolve(result[0]);
+        }else{
+          resolve("Operacion " + operacion + " completada con exito");
+        }
+
+      }else{
+        reject (Error("No se han obtenido resultados al realizar la operacion: " + operacion));
+      }
     });
   });
 }
@@ -516,26 +499,37 @@ app.post("/comprarAlbum", function (req, res) {
   //let idUser = req.session.user
   var coleccion, cliente;
 
-//TODO, comprobar que el cliente no tiene ya el album de la coleccion comprada
-
   obtenerColeccion(nombreColeccion).then(function(coleccion){
     coleccion = coleccion;
     if(coleccion.Estado !== "Agotado"){
-      obtenerCliente(idUser).then(function(cliente){  
-        cliente = cliente;
-        if (cliente.Puntos > coleccion.PrecioAlbum){
-          actualizarPuntosCliente(cliente.Puntos-coleccion.PrecioAlbum, idUser).then(function(){},
-          function(error){res.send(error);});
-          agregarAlbumCliente(idUser, coleccion.Nombre).then(function(){
-            res.send("Álbum comprado correctamente");},
-          function(error){res.send(error);});
-        } else{res.send("Puntos insuficientes para comprar el album")};
-        },function(error){res.send(error)});
+
+      obtenerAlbum(coleccion.Nombre, idUser).then(function(album){
+        if(album){
+          res.send("Ya ha adquirido un album para dicha coleccion");
+        }else{
+          obtenerCliente(idUser).then(function(cliente){  
+            cliente = cliente;
+
+            if (cliente.Puntos > coleccion.PrecioAlbum){
+
+              actualizarPuntosCliente(cliente.Puntos-coleccion.PrecioAlbum, idUser).then(function(){}, function(error){res.send(error);});
+              agregarAlbumCliente(idUser, coleccion.Nombre).then(function(){res.send("Álbum comprado correctamente");}, function(error){res.send(error);});
+           
+            } else{
+              res.send("Puntos insuficientes para comprar el album")
+            };
+          },function(error){res.send(error)});
+        }
+
+      },function(error){res.send(error)});
+
     }else{res.send("No hay existencias en álbumes de esa colección")}
+
   },function(error){res.send(error);});
 });
 
 var svgCaptcha = require('svg-captcha');
+const { NOMEM } = require("dns");
 app.get("/captcha", function (req, res) {
   svgCaptcha.options.width=1600;
   //svgCaptcha.options.size=100;
