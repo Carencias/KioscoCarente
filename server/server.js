@@ -86,7 +86,20 @@ app.use("/dashboard/user", express.static(__dirname + "/dashboard/user"));
 app.use("/dashboard/admin", express.static(__dirname + "/dashboard/admin"));
 
 app.get("/dashboard/admin", function (req, res) {
-  res.sendFile(__dirname +"/dashboard/admin/administradorPrincipal.html")
+
+  let string = "SELECT * FROM COLECCIONES ";
+  connection.query(string, function (err, result, fields) {
+    if (err) {
+      throw err;
+    }
+
+    res.render('admin/administradorPrincipal', {
+      colecciones: result,
+      nombre: req.session.user
+    });
+
+  });
+
 });
 
 app.get("/dashboard/user", function (req, res) {
@@ -252,16 +265,18 @@ app.post("/registro", function (req, res) {
   res.send("Se ha creado el usuario exitosamente");*/
 });
 
-app.post("/crearColeccion", function (req, res) {
+app.post("/dashboard/admin/crearColeccion", function (req, res) {
   //TODO comprobar entrada??
   let nombre = req.body.titulo_coleccion;
   let precioAlbum = req.body.precio_coleccion;
   let foto = req.body.imagen_album;
+  let descripcion = req.body.descripcion_coleccion
 
-  agregarColeccion(nombre, precioAlbum, foto).then(
-    () => {res.send("Añadido correctamente")},
+  agregarColeccion(nombre, precioAlbum, foto,descripcion).then(
+    () => {res.redirect("/dashboard/admin/");},
     (error) => {res.send(error)}
   );
+
   /*let string = "INSERT INTO COLECCIONES (Nombre,PrecioAlbum,FotoAlbum) VALUES ('" +
     nombre + "'," +
     precioAlbum + ",'" +
@@ -309,7 +324,7 @@ app.set('views', path.join(__dirname, '/dashboard/views'));
 //Acceso a subdirectorios público
 app.get("/assets/*", function (req, res) {
   let url = req.originalUrl;
-  console.log(url.toString());
+  //console.log(url.toString());
   
   if(fs.existsSync(__dirname +url.toString())){
     res.sendFile(__dirname +url.toString());
@@ -321,7 +336,7 @@ app.get("/assets/*", function (req, res) {
 
 app.get("/dashboard/resources/*", function (req, res) {
   let url = req.originalUrl;
-  console.log(url.toString());
+  //console.log(url.toString());
   
   if(fs.existsSync(__dirname +url.toString())){
     res.sendFile(__dirname +url.toString());
@@ -333,6 +348,7 @@ app.get("/dashboard/resources/*", function (req, res) {
 
 app.get("/dashboard/admin/editarColeccion", function (req, res) {
   //TODO comprobar entrada??
+  
   let coleccion = req.query.nombreColeccion;
 
   let string = "SELECT * FROM CROMOS WHERE Coleccion = '" + coleccion + "'";
@@ -340,13 +356,32 @@ app.get("/dashboard/admin/editarColeccion", function (req, res) {
     if (err) {
       throw err;
     }
-
+    console.log(result)
     res.render('admin/administradorEditarColeccion', {
       cromos: result
     });
 
   });
 
+});
+
+app.get("/dashboard/admin/editarCromo", function (req, res) {
+  //TODO comprobar entrada??
+  
+  let coleccion = req.query.IDCromo;
+
+  /*let string = "SELECT * FROM CROMOS WHERE Coleccion = '" + coleccion + "'";
+  connection.query(string, function (err, result, fields) {
+    if (err) {
+      throw err;
+    }
+    console.log(result)
+    res.render('admin/administradorEditarColeccion', {
+      cromos: result
+    });
+
+  });*/
+  res.sendStatus(400);
 });
 
 app.post("/crearCromo", function (req, res) {
@@ -498,8 +533,8 @@ function editarColeccion(precioAlbum, foto, nombre, estado, coleccion){
   return ejecutarQueryBBDD("UPDATE COLECCIONES SET (PrecioAlbum,FotoAlbum,Nombre,Estado) VALUES (?,?,?,?) WHERE Nombre = ?", [precioAlbum,foto,nombre,estado,coleccion], "Editar coleccion", false);
 }
 
-function agregarColeccion(nombre, precioAlbum, foto){
-  return ejecutarQueryBBDD("INSERT INTO COLECCIONES (Nombre,PrecioAlbum,FotoAlbum) VALUES (?,?,?)", [nombre, precioAlbum, foto], "Agregar coleccion", false);
+function agregarColeccion(nombre, precioAlbum, foto,descripcion){
+  return ejecutarQueryBBDD("INSERT INTO COLECCIONES (Nombre,PrecioAlbum,FotoAlbum,Descripcion) VALUES (?,?,?,?)", [nombre, precioAlbum, foto,descripcion], "Agregar coleccion", false);
 }
 
 function agregarUsuario(username, password, nombre, apellidos, email, admin){

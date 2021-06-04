@@ -30,7 +30,7 @@
       <div class="collapse navbar-collapse" id="navbarResponsive">
         <ul class="navbar-nav ms-auto">
           <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded"
-              href="administradorPrincipal.html"><i class="fa fa-home"></i>&nbsp;INICIO</a></li>
+              href="."><i class="fa fa-home"></i>&nbsp;INICIO</a></li>
           <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded"
               href="administradorPerfil.html"><i class="fa fa-user"></i>&nbsp;PERFIL</a></li>
           <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="../logout"><i
@@ -54,6 +54,10 @@
           <div class="col-sm-6 input-column"><input class="form-control form-control-lg" type="number"
               name="precio_coleccion"></div>
         </div>
+        <div class="row form-group">
+          <div class="col-sm-4 label-column"><label class="col-form-label" for="name-input-field">Descripcion&nbsp;</label></div>
+          <div class="col-sm-6 input-column"><textarea class="form-control" name="descripcion_coleccion"></textarea></div>
+      </div>
         <div class="row form-group">
           <div class="col-sm-4 label-column"><label class="col-form-label" for="pawssword-input-field">Imagen
               Álbum</label></div>
@@ -109,7 +113,7 @@
         </div>
 
         <div class="text-center"><a class="btn btn-primary" role="button"
-            style="margin: 10px;background: var(--bs-teal);" href=<%= "editarCromo?=" + cromo.ID %>>EDITAR</a><button
+            style="margin: 10px;background: var(--bs-teal);" href=<%= "editarCromo?IDCromo=" + cromo.ID %>>EDITAR</a><button
             class="btn btn-primary" type="button"
             style="margin: 10px;background: var(--bs-danger);border-color: rgb(234,140,140);" onclick=<%= "eliminarCromo("+ cromo.ID+ ")" %>>ELIMINAR</button></div>
       </div>
