@@ -361,6 +361,25 @@ app.get("/dashboard/admin/editarColeccion", function (req, res) {
 
 });
 
+app.get("/dashboard/admin/editarCromo", function (req, res) {
+  //TODO comprobar entrada??
+  
+  let id = req.query.IDCromo;
+
+  let string = "SELECT * FROM CROMOS WHERE ID ='"+id+"'" ;
+  connection.query(string, function (err, result, fields) {
+    if (err) {
+      throw err;
+    }
+    console.log(result)
+    res.render('admin/administradorEditarCromo', {
+      cromo: result[0]
+    });
+
+  });
+
+});
+
 app.get("/dashboard/user", function (req, res) {
   let string = "SELECT * FROM ALBUMES WHERE User = '" + req.session.user + "'";
   var colecciones = [];
@@ -417,24 +436,6 @@ app.get("/dashboard/user/clienteCromos", function (req, res) {
 
 });*/
 
-app.get("/dashboard/admin/editarCromo", function (req, res) {
-  //TODO comprobar entrada??
-  
-  let coleccion = req.query.IDCromo;
-
-  /*let string = "SELECT * FROM CROMOS WHERE Coleccion = '" + coleccion + "'";
-  connection.query(string, function (err, result, fields) {
-    if (err) {
-      throw err;
-    }
-    console.log(result)
-    res.render('admin/administradorEditarColeccion', {
-      cromos: result
-    });
-
-  });*/
-  res.sendStatus(400);
-});
 
 app.post("/dashboard/admin/crearCromo", function (req, res) {
   //TODO comprobar entrada??
