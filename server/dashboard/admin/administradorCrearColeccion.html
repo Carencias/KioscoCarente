@@ -38,19 +38,19 @@
                         <h1 style="border-bottom-color: var(--bs-teal);">Crear nueva colección</h1>
                         <div class="row form-group">
                             <div class="col-sm-4 label-column"><label class="col-form-label" for="name-input-field">Titulo Colección</label></div>
-                            <div class="col-sm-6 input-column"><input class="form-control" type="text" name="titulo_coleccion"></div>
+                            <div class="col-sm-6 input-column"><input class="form-control" type="text" name="titulo_coleccion" required=""></div>
                         </div>
                         <div class="row form-group">
                             <div class="col-sm-4 label-column"><label class="col-form-label" for="email-input-field">Precio Álbum</label></div>
-                            <div class="col-sm-6 input-column"><input class="form-control form-control-lg" type="number" name="precio_coleccion"></div>
+                            <div class="col-sm-6 input-column"><input class="form-control form-control-lg" type="number" name="precio_coleccion" required=""></div>
                         </div>
                         <div class="row form-group">
                             <div class="col-sm-4 label-column"><label class="col-form-label" for="name-input-field">Descripcion&nbsp;</label></div>
-                            <div class="col-sm-6 input-column"><textarea class="form-control" name="descripcion_coleccion"></textarea></div>
+                            <div class="col-sm-6 input-column"><textarea class="form-control" name="descripcion_coleccion" required=""></textarea></div>
                         </div>
                         <div class="row form-group">
                             <div class="col-sm-4 label-column"><label class="col-form-label" for="pawssword-input-field">Imagen Álbum</label></div>
-                            <div class="col-sm-6 input-column"><input class="form-control" type="file" name="imagen_album"></div>
+                            <div class="col-sm-6 input-column"><input class="form-control" type="file" name="imagen_album" required="" accept="image/*"></div>
                         </div><button class="btn btn-light submit-button" type="submit" style="background: var(--bs-teal);">Guardar Colección</button>
                     </form>
                 </div>
