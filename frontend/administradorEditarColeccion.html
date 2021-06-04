@@ -36,23 +36,23 @@
                 <h1 style="border-bottom-color: var(--bs-teal);">Editar Colección</h1>
                 <div class="row form-group">
                     <div class="col-sm-4 label-column"><label class="col-form-label" for="name-input-field">Título Colección</label></div>
-                    <div class="col-sm-6 input-column"><input class="form-control" type="text" name="nombre_coleccion"></div>
+                    <div class="col-sm-6 input-column"><input class="form-control" type="text" name="nombre_coleccion" required=""></div>
                 </div>
                 <div class="row form-group">
                     <div class="col-sm-4 label-column"><label class="col-form-label" for="email-input-field">Precio Álbum</label></div>
-                    <div class="col-sm-6 input-column"><input class="form-control form-control-lg" type="number" name="precio_coleccion"></div>
+                    <div class="col-sm-6 input-column"><input class="form-control form-control-lg" type="number" name="precio_coleccion" required=""></div>
                 </div>
                 <div class="row form-group">
                     <div class="col-sm-4 label-column"><label class="col-form-label" for="name-input-field">Descripcion&nbsp;</label></div>
-                    <div class="col-sm-6 input-column"><textarea class="form-control" name="descripcion_coleccion"></textarea></div>
+                    <div class="col-sm-6 input-column"><textarea class="form-control" name="descripcion_coleccion" required=""></textarea></div>
                 </div>
                 <div class="row form-group">
                     <div class="col-sm-4 label-column"><label class="col-form-label" for="pawssword-input-field">Imagen Álbum</label></div>
-                    <div class="col-sm-6 input-column"><input class="form-control" type="file"></div>
+                    <div class="col-sm-6 input-column"><input class="form-control" type="file" required="" accept="image/*"></div>
                 </div>
                 <div class="row form-group">
                     <div class="col-sm-4 label-column"><label class="col-form-label" for="repeat-pawssword-input-field">Estado</label></div>
-                    <div class="col-sm-6 input-column"><select class="form-select">
+                    <div class="col-sm-6 input-column"><select class="form-select" required="">
                             <option value="activada" selected="">Activada</option>
                             <option value="desactivada">Desactivada</option>
                         </select></div>
