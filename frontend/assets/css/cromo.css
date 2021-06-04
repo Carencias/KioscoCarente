@@ -11,16 +11,10 @@ span {
 }
 
 .cromo {
-  /*align-self: center;*/
-  /*padding: 5px;*/
   width: 328px;
   margin: 0 auto;
   overflow: hidden;
   padding: 10px 0;
-  /*align-items: center;*/
-  /*justify-content: space-around;*/
-  /*display: flex;*/
-  /*float: none;*/
 }
 
 .decoracion {
@@ -39,7 +33,9 @@ span {
   display: inline-block;
   padding: 11px;
   box-sizing: border-box;
-  margin-left: 83px;
+  width: 318px;
+  word-wrap: break-word;
+  margin: 0 auto;
 }
 
 .top img {
@@ -48,7 +44,7 @@ span {
   border-radius: 4px;
   box-shadow: 3px 3px 2px 0px rgba(0, 0, 0, 0.17);
   border: solid black 2px;
-  margin: 5px;
+  margin: 10px;
 }
 
 .bottom {
@@ -59,10 +55,26 @@ span {
   margin: 7px;
   color: white;
   background-color: #4C4F54;
+  display: block;
 }
 
 .dato {
   font-style: italic;
+  display: inline-block;
+  padding: 11px;
+  box-sizing: border-box;
+  width: 300px;
+  word-wrap: break-word;
+  margin: 0 auto;
+}
+
+.descripcion {
+  display: inline-block;
+  box-sizing: border-box;
+  padding: 5px;
+  width: 290px;
+  word-wrap: break-word;
+  margin: 0 auto;
 }
 
 h3.nombreCromo {
@@ -71,6 +83,7 @@ h3.nombreCromo {
   margin: 11px 0 0 78px;
   padding-top: 2px;
   text-align: center;
+  display: block;
   height: 26px;
   font-family: "papyrus";
 }
@@ -78,8 +91,9 @@ h3.nombreCromo {
 .nombreCromo h3 {
   font-size: 25px;
   font-family: "Papyrus";
-  display: inline-block;
+  text-align: center;
   margin: 0 auto;
+  display: block;
 }
 
 .columnas_cromos {

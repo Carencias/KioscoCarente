@@ -38,18 +38,18 @@
       <div class="decoracion">
         <div class="top">
           <div class="nombreCromo">
-            <h3>NullPointer</h3>
+            <h3 id="nombre_cromo">NullPointer</h3>
           </div>
           <div class="border">
-            <img src="assets/img//AssertionError.jpg" alt="imagen">
+            <img id="imagen_cromo" src="assets/img//AssertionError.jpg" alt="imagen">
           </div>
         </div>
         <div class="bottom">
-          <p class="dato">"De los que le gustan a Camino"</p>
-          <p class="descripcion">NullPointerException es una RuntimeException. En java, un valor especial "null" se puede asignar a la referencia de un objeto. Se lanza NullPointer cuando una aplicacion intenta usar una referencia a un objeto que tiene ese valor "null"</p>
+          <p id="dato_cromo" class="dato">"De los que le gustan a Camino"</p>
+          <p class="descripcion" id="descripcion_cromo" class="descripcion">NullPointerException es una RuntimeException. En java, un valor especial "null" se puede asignar a la referencia de un objeto. Se lanza NullPointer cuando una aplicacion intenta usar una referencia a un objeto que tiene ese valor "null"</p>
           <ul>
-            <li><span class="frecuencia">Frecuencia</span>: Común</li>
-            <li><span class="lenguaje">Lenguaje</span>: Java</li>
+            <li><span class="frecuencia">Frecuencia: </span><a id="frecuencia_cromo" >Común</a></li>
+            <li><span class="lenguaje">Lenguaje: </span><a id="lenguaje_cromo">Java</a></li>
           </ul>
   
           <p class="info">
@@ -66,31 +66,31 @@
                             <h1 style="border-bottom-color: var(--bs-teal);">Editar Cromo</h1>
                             <div class="row form-group">
                                 <div class="col-sm-4 label-column"><label class="col-form-label" for="name-input-field">Nombre</label></div>
-                                <div class="col-sm-6 input-column"><input class="form-control" type="text" name="nombre_cromo" required=""></div>
+                                <div class="col-sm-6 input-column"><input class="form-control" type="text" id="nombre_cromo_formulario" name="nombre_cromo_formulario" oninput="cargarDatosCromo()" required=""></div>
                             </div>
                             <div class="row form-group">
                                 <div class="col-sm-4 label-column"><label class="col-form-label" for="email-input-field">Precio</label></div>
-                                <div class="col-sm-6 input-column"><input class="form-control form-control-lg" type="number" name="precio_cromo" required=""></div>
+                                <div class="col-sm-6 input-column"><input class="form-control form-control-lg" type="number" id="precio_cromo_formulario" name="precio_cromo_formulario" required="" oninput="cargarDatosCromo()"></div>
                             </div>
                             <div class="row form-group">
                                 <div class="col-sm-4 label-column"><label class="col-form-label" for="pawssword-input-field">Stock</label></div>
-                                <div class="col-sm-6 input-column"><input class="form-control form-control-lg" type="number" name="stock_cromo" required=""></div>
+                                <div class="col-sm-6 input-column"><input class="form-control form-control-lg" type="number" id="stock_cromo_formulario" name="stock_cromo_formulario" required="" oninput="cargarDatosCromo()"></div>
                             </div>
                             <div class="row form-group">
                                 <div class="col-sm-4 label-column"><label class="col-form-label" for="repeat-pawssword-input-field">Imagen</label></div>
-                                <div class="col-sm-6 input-column"><input class="form-control" type="file" name="imagen_cromo" required="" accept="image/*"></div>
+                                <div class="col-sm-6 input-column"><input class="form-control" type="file" id="imagen_cromo_formulario" name="imagen_cromo_formulario" required="" accept="image/*" oninput="cargarDatosCromo()"></div>
                             </div>
                             <div class="row form-group">
                                 <div class="col-sm-4 label-column"><label class="col-form-label" for="repeat-pawssword-input-field">Descripción</label></div>
-                                <div class="col-sm-6 input-column"><textarea class="form-control" name="descripcion_cromo" required=""></textarea></div>
+                                <div class="col-sm-6 input-column"><textarea class="form-control" id="descripcion_cromo_formulario" name="descripcion_cromo_formulario" oninput="cargarDatosCromo()" required=""></textarea></div>
                             </div>
                             <div class="row form-group">
                                 <div class="col-sm-4 label-column"><label class="col-form-label" for="name-input-field">Dato Interesante</label></div>
-                                <div class="col-sm-6 input-column"><input class="form-control" type="text" name="dato_cromo" required=""></div>
+                                <div class="col-sm-6 input-column"><input class="form-control" type="text" id="dato_cromo_formulario" name="dato_cromo_formulario" required="" oninput="cargarDatosCromo()"></div>
                             </div>
                             <div class="row form-group">
                                 <div class="col-sm-4 label-column"><label class="col-form-label" for="name-input-field">Frecuencia</label></div>
-                                <div class="col-sm-6 input-column"><select class="form-select" required="">
+                                <div class="col-sm-6 input-column"><select class="form-select" id="frecuencia_cromo_formulario" required="" name="frecuencia_cromo_formulario" oninput="cargarDatosCromo()">
                                         <option value="Comun" selected="">Común</option>
                                         <option value="Raro" selected="">Raro</option>
                                         <option value="Excepcional">Excepcional</option>
@@ -108,6 +108,7 @@
     <script src="assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="assets/js/bs-init.js"></script>
     <script src="assets/js/freelancer.js"></script>
+    <script src="assets/js/editarCromo.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/6.4.8/swiper-bundle.min.js"></script>
     <script src="assets/js/script.js"></script>
     <script src="assets/js/Simple-Slider.js"></script>
