@@ -274,7 +274,7 @@ app.post("/dashboard/admin/crearColeccion", function (req, res) {
 
   agregarColeccion(nombre, precioAlbum, foto,descripcion).then(
     () => {res.redirect("/dashboard/admin/");},
-    (error) => {res.send(error)}
+    (error) => {res.send(error.message)}
   );
 
   /*let string = "INSERT INTO COLECCIONES (Nombre,PrecioAlbum,FotoAlbum) VALUES ('" +
