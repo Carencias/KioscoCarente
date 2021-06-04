@@ -283,14 +283,14 @@ app.post("/dashboard/admin/crearColeccion", function (req, res) {
     foto + "')";
   connection.query(string, function (err, result, fields) {
     if (err) {
-      res.send(err);
+      res.send(err.message);
     }else{
       res.send("Añadido correctamente")
     }
   });*/  
 });
 
-app.post("/editarColeccion", function (req, res) {
+app.post("dashboard/admin/editarColeccion", function (req, res) {
   //TODO comprobar entrada??
   let nombre = req.body.nombre;
   let precioAlbum = req.body.precio;
@@ -300,7 +300,7 @@ app.post("/editarColeccion", function (req, res) {
 
   editarColeccion(precioAlbum, foto, nombre, estado, coleccion).then(
     () => {res.send("Coleccion Actualizada")},
-    (error) => {res.send(error)}
+    (error) => {res.send(error.message)}
   );
   /*let string =
     "UPDATE COLECCIONES SET PrecioAlbum =" + precioAlbum +
@@ -365,6 +365,53 @@ app.get("/dashboard/admin/editarColeccion", function (req, res) {
 
 });
 
+app.get("/dashboard/user", function (req, res) {
+
+  let string = "SELECT * FROM ALBUMES WHERE User = '" + req.session.idUser + "'";
+  connection.query(string, function (err, result, fields) {
+    if (err) {
+      throw err;
+    }
+  let stringUser = "SELECT Puntos FROM CLIENTES WHERE User = '" + req.session.idUser + "'";
+  connection.query(stringUser, function (err, resultUser, fields) {
+    if (err) {
+      throw err;
+    }
+
+    res.render('user/clientePrincipal', {
+      albumes: result
+      nombre: req.session.user
+      puntos: resultUser
+    });
+
+  });
+
+});
+
+/**
+app.get("/dashboard/user/clienteCromos", function (req, res) {
+
+  let string = "SELECT * FROM ALBUMES WHERE User = '" + req.session.idUser + "'";
+  connection.query(string, function (err, result, fields) {
+    if (err) {
+      throw err;
+    }
+  let stringUser = "SELECT Puntos FROM CLIENTES WHERE User = '" + req.session.idUser + "'";
+  connection.query(stringUser, function (err, resultUser, fields) {
+    if (err) {
+      throw err;
+    }
+
+    res.render('user/clientePrincipal', {
+      albumes: result
+      nombre: req.session.user
+      puntos: resultUser
+    });
+
+  });
+
+});*/
+
 app.get("/dashboard/admin/editarCromo", function (req, res) {
   //TODO comprobar entrada??
   
@@ -384,7 +431,7 @@ app.get("/dashboard/admin/editarCromo", function (req, res) {
   res.sendStatus(400);
 });
 
-app.post("/crearCromo", function (req, res) {
+app.post("/dashboard/admin/crearCromo", function (req, res) {
   //TODO comprobar entrada??
   let nombre = req.body.nombre;
   let coleccion = req.body.coleccion;
@@ -397,7 +444,7 @@ app.post("/crearCromo", function (req, res) {
 
   agregarCromo(nombre, coleccion, rutaImagen, precio, cantidad, descripcion, datoInteresante, frecuencia).then(
     () => {res.send("Cromo creado correctamente")},
-    (error) => {res.send(error)}
+    (error) => {res.send(error.message)}
   );
   /*let string =
     "INSERT INTO CROMOS (Nombre, Coleccion, RutaImagen, Precio, Cantidad, Descripcion, DatoInteresante, Frecuencia) VALUES ('" +
@@ -421,7 +468,7 @@ app.post("/borrarCromo", function (req, res) {
 
   borrarCromo(id).then(
     () => {res.send("El cromo ha sido borrado")},
-    (error) => {res.send(error)}
+    (error) => {res.send(error.message)}
   );
   /*let string =
     "DELETE FROM CROMOS WHERE ID =" + id ;
@@ -479,12 +526,12 @@ app.post("/comprarCromo", function (req, res) {
           consultarCromoAlbum(idCromo, idUser, coleccionAlbum).then(function(){
             agregarCromoAAlbumAtomico(idCromo, coleccionAlbum, idUser, cromo.Precio, cromo.Cantidad, cliente.Puntos).then(function(){
                 console.log("Cromo comprado correctamente");
-              }, function (error){res.send(error)});
-          }, function(error){res.send(error)});
+              }, function (error){res.send(error.message)});
+          }, function(error){res.send(error.message)});
         } else{res.send("Puntos insuficientes para comprar el cromo")};
-        }, function(error){res.send(error)});
+        }, function(error){res.send(error.message)});
     } else{res.send("No hay existencias de ese cromo")}
-    }, function(error){res.send(error)});
+    }, function(error){res.send(error.message)});
 });
 
 function consultarCromoAlbum(idCromo, idUser, coleccionAlbum){
@@ -617,20 +664,20 @@ app.post("/comprarAlbum", function (req, res) {
 
             if (cliente.Puntos > coleccion.PrecioAlbum){
 
-              actualizarPuntosCliente(cliente.Puntos-coleccion.PrecioAlbum, idUser).then(function(){}, function(error){res.send(error);});
-              agregarAlbumCliente(idUser, coleccion.Nombre).then(function(){res.send("Álbum comprado correctamente");}, function(error){res.send(error);});
+              actualizarPuntosCliente(cliente.Puntos-coleccion.PrecioAlbum, idUser).then(function(){}, function(error){res.send(error.message);});
+              agregarAlbumCliente(idUser, coleccion.Nombre).then(function(){res.send("Álbum comprado correctamente");}, function(error){res.send(error.message);});
            
             } else{
               res.send("Puntos insuficientes para comprar el album")
             };
-          },function(error){res.send(error)});
+          },function(error){res.send(error.message)});
         }
 
-      },function(error){res.send(error)});
+      },function(error){res.send(error.message)});
 
     }else{res.send("No hay existencias en álbumes de esa colección")}
 
-  },function(error){res.send(error);});
+  },function(error){res.send(error.message);});
 });
 
 var svgCaptcha = require('svg-captcha');
