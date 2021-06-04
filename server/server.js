@@ -380,6 +380,7 @@ app.get("/dashboard/admin/editarCromo", function (req, res) {
 
 });
 
+//PAGINA PRINCIPAL USUARIO
 app.get("/dashboard/user", function (req, res) {
   let string = "SELECT * FROM ALBUMES WHERE User = '" + req.session.user + "'";
   var colecciones = [];
@@ -412,29 +413,33 @@ app.get("/dashboard/user", function (req, res) {
   });
 });
 
-/**
-app.get("/dashboard/user/clienteCromos", function (req, res) {
+//TIENDA USUARIO ALBUMES
+app.get("/dashboard/user/tiendaAlbumes", function (req, res) {
 
-  let string = "SELECT * FROM ALBUMES WHERE User = '" + req.session.idUser + "'";
-  connection.query(string, function (err, result, fields) {
+  let stringCompradas = "SELECT * FROM COLECCIONES AS c INNER JOIN ALBUMES AS a ON c.Nombre = a.Coleccion WHERE c.Estado = 'Activa' and a.User = '" + req.session.user + "'";
+  connection.query(stringCompradas, function (err, coleccionesDisponiblesCompradas, fields) {
     if (err) {
       throw err;
     }
-  let stringUser = "SELECT Puntos FROM CLIENTES WHERE User = '" + req.session.idUser + "'";
-  connection.query(stringUser, function (err, resultUser, fields) {
-    if (err) {
-      throw err;
-    }
-
-    res.render('user/clientePrincipal', {
-      albumes: result,
-      nombre: req.session.user,
-      puntos: resultUser
-    });
-
+      let stringNoCompradas = "SELECT * FROM COLECCIONES WHERE Estado = 'Activa'";
+      connection.query(stringNoCompradas, function (err, coleccionesDisponiblesNoCompradas, fields) {
+            if (err) {
+              throw err;
+            }
+            let stringUser = "SELECT * FROM CLIENTES WHERE User = '" + req.session.user + "'";
+            connection.query(stringUser, function (err, resultUser, fields) {
+                if (err) {
+                  throw err;
+                }
+                res.render('user/clienteTiendaAlbumes', {
+                  colecciones: coleccionesDisponiblesNoCompradas.concat(coleccionesDisponiblesCompradas),
+                  numeroNoCompradas: coleccionesDisponiblesNoCompradas.length,
+                  puntos: resultUser[0].Puntos
+                });
+            });
+      });
   });
-
-});*/
+});
 
 
 app.post("/dashboard/admin/crearCromo", function (req, res) {
