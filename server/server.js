@@ -411,7 +411,8 @@ app.get("/dashboard/user/tiendaCromos", function (req, res) {
   connection.query(string, function (err, cromosNoComprados, fields) {
     if (err) throw err;
 
-    let string = "SELECT * FROM CROMOS INNER JOIN CROMOS_ALBUMES ON CROMOS.ID = CROMOS_ALBUMES.CromoID AND CROMOS.Coleccion = CROMOS_ALBUMES.AlbumColeccion AND CROMOS_ALBUMES.AlbumUser =" + idUser + "'";
+
+    let string = "SELECT * FROM CROMOS WHERE ID IN (SELECT CromoID FROM CROMOS_ALBUMES WHERE AlbumUser = '" + idUser + "' AND AlbumColeccion = '" + coleccion + "' )";
 
     connection.query(string, function (err, cromosComprados, fields) {
       if (err) throw err;
@@ -437,12 +438,13 @@ app.get("/dashboard/user/clienteCromos", function (req, res) {
   //TODO comprobar entrada??
   
   let coleccion = req.query.nombreColeccion;
+  let idUser = req.session.user;
 
-  let stringUser = "SELECT * FROM CLIENTES WHERE User = '" + req.session.user + "'";
+  let stringUser = "SELECT * FROM CLIENTES WHERE User = '" + idUser + "'";
     connection.query(stringUser, function (err, resultUser, fields) {
     if (err) throw err;
 
-    let string = "SELECT * FROM CROMOS WHERE ID = (SELECT CromoID FROM CROMOS_ALBUMES WHERE AlbumUser = '" + req.session.user + "' AND AlbumColeccion = '" + coleccion + "' )";
+    let string = "SELECT * FROM CROMOS WHERE ID IN (SELECT CromoID FROM CROMOS_ALBUMES WHERE AlbumUser = '" + idUser + "' AND AlbumColeccion = '" + coleccion + "' )";
     connection.query(string, function (err, cromosComprados, fields) {
       if (err) throw err;
         console.log(cromosComprados);
