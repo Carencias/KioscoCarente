@@ -36,13 +36,15 @@
             <form class="custom-form" style="box-shadow: 0px 0px 20px var(--bs-teal);margin: 0px;margin-top: 76px;padding: 0px;padding-left: 0px;padding-bottom: 23px;" method="post">
                 <h1 style="margin-top: 25px;border-bottom-color: var(--bs-teal);margin-bottom: 23px;">CAPTCHA</h1>
                 <p class="text-center" style="margin-bottom: 27px;">Demuéstranos que no eres un robot y ganarás puntos por humanidad.</p>
-                <div class="container" style="margin-bottom: 20px;"><img src="assets/img/logo.png"></div>
-                <div class="row form-group">
-                    <div class="col-sm-4 label-column"><label class="col-form-label" for="email-input-field">Texto</label></div>
-                    <div class="col-sm-6 input-column"><input class="form-control" type="text" name="respuesta" style="height: 32px;" required=""></div>
-                </div><button class="btn btn-light submit-button" type="submit" style="background: var(--bs-teal);">ENVIAR RESPUESTA</button>
+                <div class="container" style="margin-bottom: 20px;"><div>Custom Code</div></div><input class="form-control" type="text" name="respuesta" style="height: 32px;margin: 0 auto;width: 343.062px;margin-bottom: 30px;" required="">
+                <div class="container" id="contenedorAlertas">
+                    <div class="alert alert-success text-center alert-dismissible" role="alert" style="width: 516.062px;margin: 0 auto;margin-bottom: 10px;"><button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button><span><strong>Alert</strong> text.</span></div>
+                    <div class="alert alert-danger text-center alert-dismissible" role="alert" style="width: 516.062px;margin: 0 auto;margin-bottom: 10px;"><button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button><span><strong>Alert</strong> text.</span></div>
+                </div>
+                <div class="btn-group" role="group"><a class="btn btn-primary" role="button" href="./retoCaptcha"><i class="fa fa-refresh"></i></a><button class="btn btn-primary" type="submit" onclick="validarCaptcha()">VALIDAR</button></div>
             </form>
         </div>
+        <div class="col"></div>
     </div>
     <div class="text-center text-white copyright py-4 fixed-bottom">
         <div class="container"><small>Copyright ©&nbsp;Carentes 2021</small></div>

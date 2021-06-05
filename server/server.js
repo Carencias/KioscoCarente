@@ -103,7 +103,7 @@ function comprobarCredenciales(req, res) {
   let password = req.body.password;
 
   obtenerUsuarios(username).then(
-    function(usuarios){
+    function (usuarios) {
 
       let usuario = usuarios[0];
 
@@ -123,10 +123,10 @@ function comprobarCredenciales(req, res) {
         abrirSesionIniciada(req, res);
       }
     },
-    function(error){
+    function (error) {
       console.log(error);
       //throw error;
-  });
+    });
   /*connection.query(
     "SELECT User, Password, Admin FROM USUARIOS WHERE User='" + username + "'",
     function (err, result) {
@@ -193,7 +193,7 @@ app.get("/login", function (req, res) {
 });
 
 app.get("/registro", function (req, res) {
-    res.sendFile(__dirname + "/registro/registro.html");
+  res.sendFile(__dirname + "/registro/registro.html");
 
 });
 
@@ -237,10 +237,14 @@ app.post("/registro", function (req, res) {
   let password = req.body.password;
   let apellidos = req.body.apellidos;
   let email = req.body.email;
-  
+
   agregarUsuario(username, password, nombre, apellidos, email, '0').then(
-    () => {res.send("Se ha creado el usuario exitosamente")},
-    (error) => {response.send(error)}
+    () => {
+      res.send("Se ha creado el usuario exitosamente")
+    },
+    (error) => {
+      response.send(error)
+    }
   );
 
 });
@@ -252,11 +256,30 @@ app.post("/dashboard/admin/crearColeccion", function (req, res) {
   let foto = req.body.imagen_album;
   let descripcion = req.body.descripcion_coleccion
 
-  agregarColeccion(nombre, precioAlbum, foto,descripcion).then(
-    () => {res.redirect("/dashboard/admin/");},
-    (error) => {res.send(error.message)}
+  agregarColeccion(nombre, precioAlbum, foto, descripcion).then(
+    () => {
+      res.redirect("/dashboard/admin/");
+    },
+    (error) => {
+      res.send(error.message)
+    }
   );
+<<<<<<< Updated upstream
  
+=======
+
+  /*let string = "INSERT INTO COLECCIONES (Nombre,PrecioAlbum,FotoAlbum) VALUES ('" +
+    nombre + "'," +
+    precioAlbum + ",'" +
+    foto + "')";
+  connection.query(string, function (err, result, fields) {
+    if (err) {
+      res.send(err.message);
+    }else{
+      res.send("Añadido correctamente")
+    }
+  });*/
+>>>>>>> Stashed changes
 });
 
 app.post("dashboard/admin/editarColeccion", function (req, res) {
@@ -268,8 +291,12 @@ app.post("dashboard/admin/editarColeccion", function (req, res) {
   let coleccion = req.body.coleccion;
 
   editarColeccion(precioAlbum, foto, nombre, estado, coleccion).then(
-    () => {res.send("Coleccion Actualizada")},
-    (error) => {res.send(error.message)}
+    () => {
+      res.send("Coleccion Actualizada")
+    },
+    (error) => {
+      res.send(error.message)
+    }
   );
 });
 
@@ -281,30 +308,30 @@ app.set('views', path.join(__dirname, '/dashboard/views'));
 app.get("/assets/*", function (req, res) {
   let url = req.originalUrl;
   //console.log(url.toString());
-  
-  if(fs.existsSync(__dirname +url.toString())){
-    res.sendFile(__dirname +url.toString());
+
+  if (fs.existsSync(__dirname + url.toString())) {
+    res.sendFile(__dirname + url.toString());
   } else {
     res.sendStatus(404);
   }
-  
+
 });
 
 app.get("/dashboard/resources/*", function (req, res) {
   let url = req.originalUrl;
   //console.log(url.toString());
-  
-  if(fs.existsSync(__dirname +url.toString())){
-    res.sendFile(__dirname +url.toString());
+
+  if (fs.existsSync(__dirname + url.toString())) {
+    res.sendFile(__dirname + url.toString());
   } else {
     res.sendStatus(404);
   }
-  
+
 });
 
 app.get("/dashboard/admin/editarColeccion", function (req, res) {
   //TODO comprobar entrada??
-  
+
   let coleccion = req.query.nombreColeccion;
 
   let string = "SELECT * FROM CROMOS WHERE Coleccion = '" + coleccion + "'";
@@ -323,10 +350,10 @@ app.get("/dashboard/admin/editarColeccion", function (req, res) {
 
 app.get("/dashboard/admin/editarCromo", function (req, res) {
   //TODO comprobar entrada??
-  
+
   let id = req.query.IDCromo;
 
-  let string = "SELECT * FROM CROMOS WHERE ID ='"+id+"'" ;
+  let string = "SELECT * FROM CROMOS WHERE ID ='" + id + "'";
   connection.query(string, function (err, result, fields) {
     if (err) {
       throw err;
@@ -349,25 +376,27 @@ app.get("/dashboard/user", function (req, res) {
     if (err) {
       throw err;
     }
-    result.forEach(function(album){
-        estadosAlbumes.push(album.Estado);
-        obtenerColecciones(album.Coleccion).then(function(coleccionesBBDD){
+    result.forEach(function (album) {
+      estadosAlbumes.push(album.Estado);
+      obtenerColecciones(album.Coleccion).then(function (coleccionesBBDD) {
         colecciones.push(coleccionesBBDD[0]);
-        
+
         let stringUser = "SELECT * FROM CLIENTES WHERE User = '" + req.session.user + "'";
         connection.query(stringUser, function (err, resultUser, fields) {
-        if (err) {
-          throw err;
-        }
-        res.render('user/clientePrincipal', {
-          colecciones: colecciones,
-          estados: estadosAlbumes,
-          nombre: req.session.user,
-          puntos: resultUser[0].Puntos
+          if (err) {
+            throw err;
+          }
+          res.render('user/clientePrincipal', {
+            colecciones: colecciones,
+            estados: estadosAlbumes,
+            nombre: req.session.user,
+            puntos: resultUser[0].Puntos
+          });
         });
-        });
-        
-        }, (error) => {res.send(error.message)});
+
+      }, (error) => {
+        res.send(error.message)
+      });
     });
   });
 });
@@ -380,34 +409,34 @@ app.get("/dashboard/user/tiendaAlbumes", function (req, res) {
     if (err) {
       throw err;
     }
-      let stringNoCompradas = "SELECT * FROM COLECCIONES WHERE Estado = 'Activa' AND Nombre not IN( SELECT Nombre FROM COLECCIONES AS c INNER JOIN ALBUMES AS a ON c.Nombre = a.Coleccion WHERE c.Estado = 'Activa' and a.User = '" + req.session.user  +"' )";
-      connection.query(stringNoCompradas, function (err, coleccionesDisponiblesNoCompradas, fields) {
-            if (err) {
-              throw err;
-            }
-            let stringUser = "SELECT * FROM CLIENTES WHERE User = '" + req.session.user + "'";
-            connection.query(stringUser, function (err, resultUser, fields) {
-                if (err) {
-                  throw err;
-                }
-                res.render('user/clienteTiendaAlbumes', {
-                  colecciones: coleccionesDisponiblesNoCompradas.concat(coleccionesDisponiblesCompradas),
-                  numeroNoCompradas: coleccionesDisponiblesNoCompradas.length,
-                  puntos: resultUser[0].Puntos
-                });
-            });
+    let stringNoCompradas = "SELECT * FROM COLECCIONES WHERE Estado = 'Activa' AND Nombre not IN( SELECT Nombre FROM COLECCIONES AS c INNER JOIN ALBUMES AS a ON c.Nombre = a.Coleccion WHERE c.Estado = 'Activa' and a.User = '" + req.session.user + "' )";
+    connection.query(stringNoCompradas, function (err, coleccionesDisponiblesNoCompradas, fields) {
+      if (err) {
+        throw err;
+      }
+      let stringUser = "SELECT * FROM CLIENTES WHERE User = '" + req.session.user + "'";
+      connection.query(stringUser, function (err, resultUser, fields) {
+        if (err) {
+          throw err;
+        }
+        res.render('user/clienteTiendaAlbumes', {
+          colecciones: coleccionesDisponiblesNoCompradas.concat(coleccionesDisponiblesCompradas),
+          numeroNoCompradas: coleccionesDisponiblesNoCompradas.length,
+          puntos: resultUser[0].Puntos
+        });
       });
+    });
   });
 });
 
 //TIENDA CROMOS
 app.get("/dashboard/user/tiendaCromos", function (req, res) {
   //TODO comprobar entrada??
-  
+
   let coleccion = req.query.nombreColeccion;
   let idUser = "user";
 
-  let string = "SELECT * FROM CROMOS AS c WHERE c.ID not IN(SELECT CromoID FROM CROMOS_ALBUMES WHERE AlbumUser = '" + idUser + "' AND AlbumColeccion = '" + coleccion + "') AND c.Coleccion = '"+coleccion+"'";
+  let string = "SELECT * FROM CROMOS AS c WHERE c.ID not IN(SELECT CromoID FROM CROMOS_ALBUMES WHERE AlbumUser = '" + idUser + "' AND AlbumColeccion = '" + coleccion + "') AND c.Coleccion = '" + coleccion + "'";
   connection.query(string, function (err, cromosNoComprados, fields) {
     if (err) throw err;
 
@@ -416,18 +445,20 @@ app.get("/dashboard/user/tiendaCromos", function (req, res) {
 
     connection.query(string, function (err, cromosComprados, fields) {
       if (err) throw err;
-  
+
       let stringUser = "SELECT * FROM CLIENTES WHERE User = '" + req.session.user + "'";
       connection.query(stringUser, function (err, resultUser, fields) {
-      if (err) {throw err;}
+        if (err) {
+          throw err;
+        }
 
-      res.render('user/clienteTiendaCromos', {
-      cromos: cromosNoComprados.concat(cromosComprados),
-      numeroNoComprados: cromosNoComprados.length,
-      nombreColeccion: coleccion,
-      puntos: resultUser[0].Puntos
+        res.render('user/clienteTiendaCromos', {
+          cromos: cromosNoComprados.concat(cromosComprados),
+          numeroNoComprados: cromosNoComprados.length,
+          nombreColeccion: coleccion,
+          puntos: resultUser[0].Puntos
+        });
       });
-    });
     });
   });
 
@@ -436,24 +467,29 @@ app.get("/dashboard/user/tiendaCromos", function (req, res) {
 //CROMOS USUARIO
 app.get("/dashboard/user/clienteCromos", function (req, res) {
   //TODO comprobar entrada??
-  
+
   let coleccion = req.query.nombreColeccion;
   let idUser = req.session.user;
 
+<<<<<<< Updated upstream
   let stringUser = "SELECT * FROM CLIENTES WHERE User = '" + idUser + "'";
     connection.query(stringUser, function (err, resultUser, fields) {
+=======
+  let stringUser = "SELECT * FROM CLIENTES WHERE User = '" + req.session.user + "'";
+  connection.query(stringUser, function (err, resultUser, fields) {
+>>>>>>> Stashed changes
     if (err) throw err;
 
     let string = "SELECT * FROM CROMOS WHERE ID IN (SELECT CromoID FROM CROMOS_ALBUMES WHERE AlbumUser = '" + idUser + "' AND AlbumColeccion = '" + coleccion + "' )";
     connection.query(string, function (err, cromosComprados, fields) {
       if (err) throw err;
-        console.log(cromosComprados);
+      console.log(cromosComprados);
       res.render('user/clienteCromos', {
         cromos: cromosComprados,
         nombreColeccion: coleccion,
         puntos: resultUser[0].Puntos
       });
-  
+
     });
 
   });
@@ -472,8 +508,12 @@ app.post("/dashboard/admin/crearCromo", function (req, res) {
   let frecuencia = req.body.frecuencia;
 
   agregarCromo(nombre, coleccion, rutaImagen, precio, cantidad, descripcion, datoInteresante, frecuencia).then(
-    () => {res.send("Cromo creado correctamente")},
-    (error) => {res.send(error.message)}
+    () => {
+      res.send("Cromo creado correctamente")
+    },
+    (error) => {
+      res.send(error.message)
+    }
   );
 
 });
@@ -482,18 +522,26 @@ app.post("/borrarCromo", function (req, res) {
   let id = req.body.id;
 
   borrarCromo(id).then(
-    () => {res.send("El cromo ha sido borrado")},
-    (error) => {res.send(error.message)}
+    () => {
+      res.send("El cromo ha sido borrado")
+    },
+    (error) => {
+      res.send(error.message)
+    }
   );
 
 });
 
 app.post("/borrarColeccion", function (req, res) {
   let nombre = req.body.nombre;
-  
+
   borrarColeccion(nombre).then(
-    () => {res.send("La coleccion ha sido borrada")},
-    (error) => {res.send(error)}
+    () => {
+      res.send("La coleccion ha sido borrada")
+    },
+    (error) => {
+      res.send(error)
+    }
   );
 
 });
@@ -507,19 +555,20 @@ app.post("/dashboard/user/comprarCromo", function (req, res) {
 
   var cromo, cliente;
 
-  obtenerCromos(idCromo).then(function(cromos){
+  obtenerCromos(idCromo).then(function (cromos) {
     //TODO si no se permite enviar el ID del cromo a mano sobra
-    if(!cromos.length){
+    if (!cromos.length) {
       res.send("No existe ese cromo");
-    }else{
+    } else {
 
       cromo = cromos[0];
 
       var precio = cromo.Precio;
       var cantidad = cromo.Cantidad;
-      if (cantidad > 0){
-        obtenerClientes(idUser, precio).then(function(clientes){  
+      if (cantidad > 0) {
+        obtenerClientes(idUser, precio).then(function (clientes) {
           cliente = clientes[0];
+<<<<<<< Updated upstream
           if (cliente.Puntos > cromo.Precio){
             consultarCromoAlbum(idCromo, idUser, coleccionAlbum).then(function(){
               agregarCromoAAlbumAtomico(idCromo, coleccionAlbum, idUser, cromo.Precio, cromo.Cantidad, cliente.Puntos).then(function(){
@@ -532,12 +581,36 @@ app.post("/dashboard/user/comprarCromo", function (req, res) {
           } else{res.send("Puntos insuficientes para comprar el cromo")};
           }, function(error){res.send(error.message)});
       } else{res.send("No hay existencias de ese cromo")}
+=======
+          if (cliente.Puntos > cromo.Precio) {
+            consultarCromoAlbum(idCromo, idUser, coleccionAlbum).then(function () {
+              agregarCromoAAlbumAtomico(idCromo, coleccionAlbum, idUser, cromo.Precio, cromo.Cantidad, cliente.Puntos).then(function () {
+                res.send("Cromo comprado correctamente");
+              }, function (error) {
+                res.send(error.message)
+              });
+            }, function (error) {
+              res.send(error.message)
+            });
+          } else {
+            res.send("Puntos insuficientes para comprar el cromo")
+          };
+        }, function (error) {
+          res.send(error.message)
+        });
+      } else {
+        res.send("No hay existencias de ese cromo")
+      }
+>>>>>>> Stashed changes
 
     }
 
-  }, function(error){res.send(error.message)});
+  }, function (error) {
+    res.send(error.message)
+  });
 });
 
+<<<<<<< Updated upstream
 function calcularNuevoEstadoAlbum(usuario, coleccion){
   contarCromosComprados(usuario, coleccion).then(function(numCromosComprados){
 
@@ -561,33 +634,44 @@ function calcularNuevoEstadoAlbum(usuario, coleccion){
 
 function consultarCromoAlbum(idCromo, idUser, coleccionAlbum){
   return new Promise(function(resolve, reject){
+=======
+function consultarCromoAlbum(idCromo, idUser, coleccionAlbum) {
+  return new Promise(function (resolve, reject) {
+>>>>>>> Stashed changes
     connection.query("SELECT * FROM CROMOS_ALBUMES WHERE CromoID = ? AND AlbumUser = ? AND AlbumColeccion = ?", [idCromo, idUser, coleccionAlbum], function (err, result) {
-      if(err) reject (Error("No se ha podido consultar si está o no el cromo en el álbum"));
-      else if(result){
-        if (result.length !== 0) reject( Error("Cromo ya comprado"));
+      if (err) reject(Error("No se ha podido consultar si está o no el cromo en el álbum"));
+      else if (result) {
+        if (result.length !== 0) reject(Error("Cromo ya comprado"));
         else resolve("El cromo no está comprado");
       }
     });
   });
 }
 
-function agregarCromoAAlbumAtomico(idCromo, coleccionAlbum, idUser, precio, cantidad, puntos){
-  return new Promise(function(resolve, reject){
-    actualizarPuntosCliente(puntos-precio, idUser)
-    .then(function(){
-      actualizarCantidadCromo(cantidad-1, idCromo)
-        .then(function(){
-          agregarCromoAAlbum(idCromo, idUser, coleccionAlbum)
-            .then(function (){resolve()},
-            function(error){
-              actualizarCantidadCromo(cantidad+1, idCromo);
-              actualizarPuntosCliente(puntos+precio, idUser);
-            });
-        }, function(error){actualizarPuntosCliente(puntos+precio, idUser);});
-    }, function(error){reject(error);});
+function agregarCromoAAlbumAtomico(idCromo, coleccionAlbum, idUser, precio, cantidad, puntos) {
+  return new Promise(function (resolve, reject) {
+    actualizarPuntosCliente(puntos - precio, idUser)
+      .then(function () {
+        actualizarCantidadCromo(cantidad - 1, idCromo)
+          .then(function () {
+            agregarCromoAAlbum(idCromo, idUser, coleccionAlbum)
+              .then(function () {
+                  resolve()
+                },
+                function (error) {
+                  actualizarCantidadCromo(cantidad + 1, idCromo);
+                  actualizarPuntosCliente(puntos + precio, idUser);
+                });
+          }, function (error) {
+            actualizarPuntosCliente(puntos + precio, idUser);
+          });
+      }, function (error) {
+        reject(error);
+      });
   });
 }
 
+<<<<<<< Updated upstream
 function cambiarEstadoAlbum(estado, usuario, coleccion){
   return ejecutarQueryBBDD("UPDATE ALBUMES SET Estado = ? WHERE User = ? AND Coleccion = ?", [estado, usuario, coleccion], "Cambiar estado album", false);
 }
@@ -601,78 +685,92 @@ function contarCromosColeccion(coleccion){
 }
 
 function borrarColeccion(nombre){
+=======
+function borrarColeccion(nombre) {
+>>>>>>> Stashed changes
   return ejecutarQueryBBDD("DELETE FROM COLECCIONES WHERE Nombre = ?", [nombre], "Borrar coleccion", false);
 }
 
-function borrarCromo(id){
+function borrarCromo(id) {
   return ejecutarQueryBBDD("DELETE FROM CROMOS WHERE ID = ?", [id], "Borrar cromo", false);
 }
 
-function agregarCromo(nombre, coleccion, rutaImagen, precio, cantidad, descripcion, datoInteresante, frecuencia){
+function agregarCromo(nombre, coleccion, rutaImagen, precio, cantidad, descripcion, datoInteresante, frecuencia) {
   return ejecutarQueryBBDD("INSERT INTO CROMOS (Nombre, Coleccion, RutaImagen, Precio, Cantidad, Descripcion, DatoInteresante, Frecuencia) VALUES (?,?,?,?,?,?,?,?)",
-  [nombre, coleccion, rutaImagen, precio, cantidad, descripcion, datoInteresante, frecuencia], "Agregar cromo", false);
+    [nombre, coleccion, rutaImagen, precio, cantidad, descripcion, datoInteresante, frecuencia], "Agregar cromo", false);
 }
 
-function editarColeccion(precioAlbum, foto, nombre, estado, coleccion){
-  return ejecutarQueryBBDD("UPDATE COLECCIONES SET (PrecioAlbum,FotoAlbum,Nombre,Estado) VALUES (?,?,?,?) WHERE Nombre = ?", [precioAlbum,foto,nombre,estado,coleccion], "Editar coleccion", false);
+function editarColeccion(precioAlbum, foto, nombre, estado, coleccion) {
+  return ejecutarQueryBBDD("UPDATE COLECCIONES SET (PrecioAlbum,FotoAlbum,Nombre,Estado) VALUES (?,?,?,?) WHERE Nombre = ?", [precioAlbum, foto, nombre, estado, coleccion], "Editar coleccion", false);
 }
 
-function agregarColeccion(nombre, precioAlbum, foto,descripcion){
-  return ejecutarQueryBBDD("INSERT INTO COLECCIONES (Nombre,PrecioAlbum,FotoAlbum,Descripcion) VALUES (?,?,?,?)", [nombre, precioAlbum, foto,descripcion], "Agregar coleccion", false);
+function agregarColeccion(nombre, precioAlbum, foto, descripcion) {
+  return ejecutarQueryBBDD("INSERT INTO COLECCIONES (Nombre,PrecioAlbum,FotoAlbum,Descripcion) VALUES (?,?,?,?)", [nombre, precioAlbum, foto, descripcion], "Agregar coleccion", false);
 }
 
-function agregarUsuario(username, password, nombre, apellidos, email, admin){
-  return ejecutarQueryBBDD("INSERT INTO USUARIOS (User, Password, Nombre, Apellidos, Email, Admin) VALUES (?, ?, ?, ?, ?, ?)", [username,password,nombre,apellidos,email,admin], "Agregar usuario",false);
+function agregarUsuario(username, password, nombre, apellidos, email, admin) {
+  return ejecutarQueryBBDD("INSERT INTO USUARIOS (User, Password, Nombre, Apellidos, Email, Admin) VALUES (?, ?, ?, ?, ?, ?)", [username, password, nombre, apellidos, email, admin], "Agregar usuario", false);
 }
 
-function obtenerUsuarios(username){
+function obtenerUsuarios(username) {
   return ejecutarQueryBBDD("SELECT User, Password, Admin FROM USUARIOS WHERE User = ?", [username], "Obtener usuario", true);
 }
 
-function agregarCromoAAlbum(idCromo, idUser, coleccionAlbum){
-  return ejecutarQueryBBDD("INSERT INTO CROMOS_ALBUMES (CromoID, AlbumUser, AlbumColeccion) VALUES (?, ?, ?)", [idCromo,idUser,coleccionAlbum], "Agregar cromo a album", false);
+function agregarCromoAAlbum(idCromo, idUser, coleccionAlbum) {
+  return ejecutarQueryBBDD("INSERT INTO CROMOS_ALBUMES (CromoID, AlbumUser, AlbumColeccion) VALUES (?, ?, ?)", [idCromo, idUser, coleccionAlbum], "Agregar cromo a album", false);
 }
 
-function actualizarCantidadCromo(nuevaCantidad, idCromo){
+function actualizarCantidadCromo(nuevaCantidad, idCromo) {
   return ejecutarQueryBBDD("UPDATE CROMOS SET Cantidad = ? WHERE ID = ?", [nuevaCantidad, idCromo], "Actualizar cantidad cromo", false);
 }
 
-function actualizarPuntosCliente(nuevosPuntos, idUser){
+function actualizarPuntosCliente(nuevosPuntos, idUser) {
   return ejecutarQueryBBDD("UPDATE CLIENTES SET Puntos = ? WHERE User = ?", [nuevosPuntos, idUser], "Actualizar puntos cliente", false);
 }
 
-function agregarAlbumCliente(idUser, nombreColeccion){
+function agregarAlbumCliente(idUser, nombreColeccion) {
   return ejecutarQueryBBDD("INSERT INTO ALBUMES (User, Coleccion) VALUES (?, ?)", [idUser, nombreColeccion], "Agregar album al cliente", false);
 }
 
-function obtenerColecciones(nombreColeccion){
+function obtenerColecciones(nombreColeccion) {
   return ejecutarQueryBBDD("SELECT * FROM COLECCIONES WHERE Nombre = ?", [nombreColeccion], "Obtener coleccion", true);
 }
 
-function obtenerClientes(idUser, precio){
+function obtenerClientes(idUser, precio) {
   return ejecutarQueryBBDD("SELECT * FROM CLIENTES WHERE User = ?", [idUser], "Obtener cliente", true);
 }
 
-function obtenerCromos(idCromo){
+function obtenerCromos(idCromo) {
   return ejecutarQueryBBDD("SELECT * FROM CROMOS WHERE ID = ?", [idCromo], "Obtener cromo", true);
 }
 
-function obtenerAlbumes(coleccion, usuario){
+function obtenerAlbumes(coleccion, usuario) {
   return ejecutarQueryBBDD("SELECT * FROM ALBUMES WHERE User = ? AND Coleccion = ?", [usuario, coleccion], "Obtener album", true);
 }
 
-function ejecutarQueryBBDD(query, arrayDatos, operacion, devolverResultado){
-  return new Promise(function(resolve, reject){
+async function obtenerPuntosCliente(idUser){
+  let clientes = await obtenerClientes(idUser);
+  let puntos = clientes[0].Puntos;
+  return puntos;
+}
+
+function ejecutarQueryBBDD(query, arrayDatos, operacion, devolverResultado) {
+  return new Promise(function (resolve, reject) {
     connection.query(query, arrayDatos, function (err, result) {
+<<<<<<< Updated upstream
       if(err){
         //reject (Error("Operacion " + operacion + " no completada"));
         reject (err);
+=======
+      if (err) {
+        return reject("Operacion " + operacion + " no completada");
+>>>>>>> Stashed changes
       } else {
 
-        if(devolverResultado){
-          resolve(result);
-        }else{
-          resolve("Operacion " + operacion + " completada con exito");
+        if (devolverResultado) {
+          return resolve(result);
+        } else {
+          return resolve("Operacion " + operacion + " completada con exito");
         }
       }
     });
@@ -686,46 +784,148 @@ app.post("/dashboard/user/comprarAlbum", function (req, res) {
   //let idUser = req.session.user
   var coleccion, cliente;
 
-  obtenerColecciones(nombreColeccion).then(function(colecciones){
+  obtenerColecciones(nombreColeccion).then(function (colecciones) {
     coleccion = colecciones[0];
-    if(coleccion.Estado !== "Agotado"){
+    if (coleccion.Estado !== "Agotado") {
 
-      obtenerAlbumes(coleccion.Nombre, idUser).then(function(albumes){
+      obtenerAlbumes(coleccion.Nombre, idUser).then(function (albumes) {
         let album = albumes[0];
 
-        if(album){
+        if (album) {
           res.send("Ya ha adquirido un album para dicha coleccion");
-        }else{
-          obtenerClientes(idUser).then(function(clientes){  
+        } else {
+          obtenerClientes(idUser).then(function (clientes) {
             cliente = clientes[0];
 
-            if (cliente.Puntos > coleccion.PrecioAlbum){
+            if (cliente.Puntos > coleccion.PrecioAlbum) {
 
-              actualizarPuntosCliente(cliente.Puntos-coleccion.PrecioAlbum, idUser).then(function(){}, function(error){res.send(error.message);});
-              agregarAlbumCliente(idUser, coleccion.Nombre).then(function(){res.send("Álbum comprado correctamente");}, function(error){res.send(error.message);});
-           
-            } else{
+              actualizarPuntosCliente(cliente.Puntos - coleccion.PrecioAlbum, idUser).then(function () {}, function (error) {
+                res.send(error.message);
+              });
+              agregarAlbumCliente(idUser, coleccion.Nombre).then(function () {
+                res.send("Álbum comprado correctamente");
+              }, function (error) {
+                res.send(error.message);
+              });
+
+            } else {
               res.send("Puntos insuficientes para comprar el album")
             };
-          },function(error){res.send(error.message)});
+          }, function (error) {
+            res.send(error.message)
+          });
         }
 
-      },function(error){res.send(error.message)});
+      }, function (error) {
+        res.send(error.message)
+      });
 
-    }else{res.send("No hay existencias en álbumes de esa colección")}
+    } else {
+      res.send("No hay existencias en álbumes de esa colección")
+    }
 
-  },function(error){res.send(error.message);});
+  }, function (error) {
+    res.send(error.message);
+  });
 });
 
+
+
+//RETOS
+
+//CAPTCHA
 var svgCaptcha = require('svg-captcha');
-const { NOMEM } = require("dns");
-app.get("/captcha", function (req, res) {
-  svgCaptcha.options.width=1600;
-  //svgCaptcha.options.size=100;
-  svgCaptcha.options.color=true;
-  var captcha = svgCaptcha.create(80);
-    req.session.captcha = captcha.text;
-    
-    res.type('svg');
-    res.status(200).send(captcha.data);
+
+app.get("/dashboard/user/retoCaptcha", async function (req, res) {
+  var captcha = generarCaptcha();
+  req.session.captcha = captcha.text;
+  res.render('user/clienteRetoCaptcha', {
+    image: captcha.data,
+    alerta: undefined,
+    puntos: await obtenerPuntosCliente(req.session.user)
+  });
 });
+
+app.post("/dashboard/user/retoCaptcha", async function (req, res) {
+  let respuesta = req.body.respuesta;
+  let idUser = req.session.user;
+  let PUNTOS_PREGUNTA = 3;
+  let puntos= await obtenerPuntosCliente(idUser);
+
+  if (req.session.captcha) {
+
+    let alerta = [];
+    if (respuesta === req.session.captcha) {
+      alerta.esValido = 1;
+
+      //SUMAR PUNTOS
+        puntos = puntos + PUNTOS_PREGUNTA;
+        actualizarPuntosCliente(puntos);
+
+    } else {
+      //INVALIDO
+      alerta.esValido = 0;
+    }
+
+    var captcha = generarCaptcha();
+    req.session.captcha = captcha.text;
+
+    res.render('user/clienteRetoCaptcha', {
+      image: captcha.data,
+      alerta: alerta,
+      puntos: puntos
+    });
+
+  } else {
+    res.sendStatus(403);
+  }
+
+});
+
+function generarCaptcha(){
+  svgCaptcha.options.width = 220;
+  return svgCaptcha.create(8);
+}
+
+//PREGUNTAS
+
+app.post("/dashboard/user/comprobarRespuestaPregunta", function (req, res) {
+  //TODO comprobar entrada??
+  let pregunta = req.body.pregunta;
+  let respuesta = req.body.respuesta;
+  let idUser = req.session.user
+
+  //TODO PONERLO ARRIBA
+  const PUNTOS_PREGUNTA = 7;
+
+  obtenerRespuestaCorrecta(pregunta).then(function(respuestaCorrecta){
+
+    respuestaCorrecta = respuestaCorrecta[0].Respuesta;
+
+    if(respuesta === respuestaCorrecta){
+
+      obtenerClientes(idUser).then(function(clientes){
+        let puntos = clientes[0].Puntos;
+
+        actualizarPuntosCliente(puntos+PUNTOS_PREGUNTA, idUser).then(
+          () => {res.send("Respuesta correcta. Se han actualizado tus puntos")},
+          (error) => {res.send(error.message)}
+        );
+
+      }, function(error){res.send(error.message);})
+
+
+    }else{
+      res.send("Respuesta incorrecta");
+    }
+
+  }, function(error){res.send(error.message);})
+
+
+
+});
+
+
+function obtenerRespuestaCorrecta(pregunta){
+  return ejecutarQueryBBDD("SELECT Respuesta FROM PREGUNTAS WHERE Pregunta = ?", [pregunta], "Obtener respuesta", true);
+}
