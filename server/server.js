@@ -494,34 +494,6 @@ app.get("/dashboard/user/clienteCromos", function (req, res) {
 
 });
 
-//CODIGO DE DIEGO
-/*
-app.get("/dashboard/user/mostrarAlbum", function (req, res) {
-  //TODO comprobar entrada??
-  
-  let coleccion = req.query.nombreColeccion;
-  let idUser = "user";
-
-  let string = "SELECT * FROM CROMOS WHERE Coleccion = '" + coleccion + "'";
-  connection.query(string, function (err, todosCromos, fields) {
-    if (err) throw err;
-
-    let string = "SELECT * FROM CROMOS WHERE ID = (SELECT CromoID FROM CROMOS_ALBUMES WHERE AlbumUser = " + idUser + " AND AlbumColeccion = " + coleccion + " )";
-    connection.query(string, function (err, cromosComprados, fields) {
-      if (err) throw err;
-  
-      res.render('user/usuarioMostrarAlbum', {
-        todosCromos: todosCromos,
-        cromosComprados: cromosComprados
-      });
-  
-    });
-
-  });
-
-});*/
-
-
 app.post("/dashboard/admin/crearCromo", function (req, res) {
   //TODO comprobar entrada??
   let nombre = req.body.nombre;
@@ -600,7 +572,6 @@ app.post("/dashboard/user/comprarCromo", function (req, res) {
   //TODO comprobar entrada??
   let idCromo = req.body.idCromo;
   let coleccionAlbum = req.body.coleccionAlbum;
-  //let usuarioAlbum = req.body.usuarioAlbum;
   //let idUser = req.session.user
   let idUser = "user";
 
@@ -623,6 +594,9 @@ app.post("/dashboard/user/comprarCromo", function (req, res) {
             consultarCromoAlbum(idCromo, idUser, coleccionAlbum).then(function(){
               agregarCromoAAlbumAtomico(idCromo, coleccionAlbum, idUser, cromo.Precio, cromo.Cantidad, cliente.Puntos).then(function(){
                   res.send("Cromo comprado correctamente");
+
+                  calcularNuevoEstadoAlbum(idUser, coleccionAlbum);
+
                 }, function (error){res.send(error.message)});
             }, function(error){res.send(error.message)});
           } else{res.send("Puntos insuficientes para comprar el cromo")};
@@ -633,6 +607,27 @@ app.post("/dashboard/user/comprarCromo", function (req, res) {
 
   }, function(error){res.send(error.message)});
 });
+
+function calcularNuevoEstadoAlbum(usuario, coleccion){
+  contarCromosComprados(usuario, coleccion).then(function(numCromosComprados){
+
+    numCromosComprados = numCromosComprados[0].numCromosComprados;
+
+    contarCromosColeccion(coleccion).then(function(numCromosColeccion){
+
+      numCromosColeccion = numCromosColeccion[0].numCromosColeccion;
+      
+      if(numCromosComprados===0){
+        cambiarEstadoAlbum('No iniciada', usuario, coleccion);
+      }else if(numCromosComprados < numCromosColeccion){
+        cambiarEstadoAlbum('Completada parcialmente', usuario, coleccion);
+      }else{
+        cambiarEstadoAlbum('Finalizada', usuario, coleccion);
+      }
+
+    },function(error){res.send(error.message)})
+  }, function(error){res.send(error.message)});
+}
 
 function consultarCromoAlbum(idCromo, idUser, coleccionAlbum){
   return new Promise(function(resolve, reject){
@@ -661,6 +656,18 @@ function agregarCromoAAlbumAtomico(idCromo, coleccionAlbum, idUser, precio, cant
         }, function(error){actualizarPuntosCliente(puntos+precio, idUser);});
     }, function(error){reject(error);});
   });
+}
+
+function cambiarEstadoAlbum(estado, usuario, coleccion){
+  return ejecutarQueryBBDD("UPDATE ALBUMES SET Estado = ? WHERE User = ? AND Coleccion = ?", [estado, usuario, coleccion], "Cambiar estado album", false);
+}
+
+function contarCromosComprados(usuario, coleccion){
+  return ejecutarQueryBBDD("SELECT COUNT(*) AS numCromosComprados FROM CROMOS_ALBUMES WHERE AlbumUser = ? AND AlbumColeccion = ?", [usuario, coleccion], "Contar cromos comprados", true);
+}
+
+function contarCromosColeccion(coleccion){
+  return ejecutarQueryBBDD("SELECT COUNT(*) AS numCromosColeccion FROM CROMOS WHERE Coleccion = ?", [coleccion], "Contar cromos coleccion", true);
 }
 
 function borrarColeccion(nombre){
@@ -728,7 +735,8 @@ function ejecutarQueryBBDD(query, arrayDatos, operacion, devolverResultado){
   return new Promise(function(resolve, reject){
     connection.query(query, arrayDatos, function (err, result) {
       if(err){
-        reject (Error("Operacion " + operacion + " no completada"));
+        //reject (Error("Operacion " + operacion + " no completada"));
+        reject (err);
       } else {
 
         if(devolverResultado){
