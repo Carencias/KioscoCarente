@@ -388,9 +388,8 @@ app.get("/dashboard/user", function (req, res) {
     }
     result.forEach(function(album){
         estadosAlbumes.push(album.Estado);
-        console.log(estadosAlbumes);
         obtenerColecciones(album.Coleccion).then(function(coleccionesBBDD){
-        colecciones.push(coleccionesBBDD[0]);console.log(colecciones);
+        colecciones.push(coleccionesBBDD[0]);
         
         let stringUser = "SELECT * FROM CLIENTES WHERE User = '" + req.session.user + "'";
         connection.query(stringUser, function (err, resultUser, fields) {
@@ -418,7 +417,7 @@ app.get("/dashboard/user/tiendaAlbumes", function (req, res) {
     if (err) {
       throw err;
     }
-      let stringNoCompradas = "SELECT * FROM COLECCIONES WHERE Estado = 'Activa'";
+      let stringNoCompradas = "SELECT * FROM COLECCIONES WHERE Estado = 'Activa' AND Nombre not IN( SELECT Nombre FROM COLECCIONES AS c INNER JOIN ALBUMES AS a ON c.Nombre = a.Coleccion WHERE c.Estado = 'Activa' and a.User = '" + req.session.user  +"' )";
       connection.query(stringNoCompradas, function (err, coleccionesDisponiblesNoCompradas, fields) {
             if (err) {
               throw err;
@@ -438,6 +437,65 @@ app.get("/dashboard/user/tiendaAlbumes", function (req, res) {
   });
 });
 
+//TIENDA CROMOS
+app.get("/dashboard/user/tiendaCromos", function (req, res) {
+  //TODO comprobar entrada??
+  
+  let coleccion = req.query.nombreColeccion;
+  let idUser = "user";
+
+  let string = "SELECT * FROM CROMOS AS c WHERE c.ID not IN(SELECT CromoID FROM CROMOS_ALBUMES WHERE AlbumUser = '" + idUser + "' AND AlbumColeccion = '" + coleccion + "') AND c.Coleccion = '"+coleccion+"'";
+  connection.query(string, function (err, cromosNoComprados, fields) {
+    if (err) throw err;
+
+    let string = "SELECT * FROM CROMOS WHERE ID = (SELECT CromoID FROM CROMOS_ALBUMES WHERE AlbumUser = '" + idUser + "' AND AlbumColeccion = '" + coleccion + "' )";
+    connection.query(string, function (err, cromosComprados, fields) {
+      if (err) throw err;
+  
+      let stringUser = "SELECT * FROM CLIENTES WHERE User = '" + req.session.user + "'";
+      connection.query(stringUser, function (err, resultUser, fields) {
+      if (err) {throw err;}
+
+      res.render('user/clienteTiendaCromos', {
+      cromos: cromosNoComprados.concat(cromosComprados),
+      numeroNoComprados: cromosNoComprados.length,
+      nombreColeccion: coleccion,
+      puntos: resultUser[0].Puntos
+      });
+    });
+    });
+  });
+
+});
+
+//CROMOS USUARIO
+app.get("/dashboard/user/clienteCromos", function (req, res) {
+  //TODO comprobar entrada??
+  
+  let coleccion = req.query.nombreColeccion;
+
+  let stringUser = "SELECT * FROM CLIENTES WHERE User = '" + req.session.user + "'";
+    connection.query(stringUser, function (err, resultUser, fields) {
+    if (err) throw err;
+
+    let string = "SELECT * FROM CROMOS WHERE ID = (SELECT CromoID FROM CROMOS_ALBUMES WHERE AlbumUser = '" + req.session.user + "' AND AlbumColeccion = '" + coleccion + "' )";
+    connection.query(string, function (err, cromosComprados, fields) {
+      if (err) throw err;
+        console.log(cromosComprados);
+      res.render('user/clienteCromos', {
+        cromos: cromosComprados,
+        nombreColeccion: coleccion,
+        puntos: resultUser[0].Puntos
+      });
+  
+    });
+
+  });
+
+});
+
+//CODIGO DE DIEGO
+/*
 app.get("/dashboard/user/mostrarAlbum", function (req, res) {
   //TODO comprobar entrada??
   
@@ -461,8 +519,7 @@ app.get("/dashboard/user/mostrarAlbum", function (req, res) {
 
   });
 
-});
-
+});*/
 
 
 app.post("/dashboard/admin/crearCromo", function (req, res) {
@@ -539,7 +596,7 @@ app.post("/borrarColeccion", function (req, res) {
   res.send("La coleccion ha sido borrada");*/
 });
 
-app.post("/comprarCromo", function (req, res) {
+app.post("/dashboard/user/comprarCromo", function (req, res) {
   //TODO comprobar entrada??
   let idCromo = req.body.idCromo;
   let coleccionAlbum = req.body.coleccionAlbum;
@@ -684,7 +741,7 @@ function ejecutarQueryBBDD(query, arrayDatos, operacion, devolverResultado){
   });
 }
 
-app.post("/comprarAlbum", function (req, res) {
+app.post("/dashboard/user/comprarAlbum", function (req, res) {
   //TODO comprobar entrada??
   let nombreColeccion = req.body.nombreColeccion;
   let idUser = "user";

@@ -38,18 +38,22 @@
                     <div class="row text-start justify-content-center">
                   <% } %>
                   <div class="col-md-4 columnas_coleccion_tienda">
-                    <div class="card" style="margin-bottom: 0px;"><img class="card-img-top w-100 d-block bg-danger bg-gradient border rounded-pill border-secondary shadow-lg" src=<%= coleccion.FotoAlbum %> style="margin-bottom: 0px;">
+                    <div class="card" style="margin-bottom: 0px;"><img class="card-img-top w-100 d-block bg-danger bg-gradient border rounded-pill border-secondary shadow-lg" src="<%= coleccion.FotoAlbum%>" style="margin-bottom: 0px;">
                         <div class="card-body" style="margin-bottom: 0px;">
                             <h1 class="card-title" style="text-align: center;margin-bottom: 6px;"><strong><%= coleccion.Nombre %></strong><br></h1>
                             <% if(i < numeroNoCompradas){ %>
                                 <h6 class="text-muted card-subtitle mb-2" style="text-align: center;background: rgb(238,195,195);margin-bottom: 6px;">NO POSEES EL ÁLBUM</h6>
                                 <p class="card-text" style="text-align: justify;margin-bottom: 12px;"><%= coleccion.Descripcion %><br></p>
-                                <h6 class="text-muted card-subtitle mb-2" style="text-align: center;background: var(--color6);margin-bottom: 6px;"><%= coleccion.PrecioAlbum %> PUNTOS</h6><button class="btn btn-primary" type="button" style="text-align: left;margin-bottom: 0px;" href=<%= "TiendaCromos?nombreColeccion=" + coleccion.Nombre %>>CROMOS</button>
-                    
+                                <h6 class="text-muted card-subtitle mb-2" style="text-align: center;background: var(--color6);margin-bottom: 6px;"><%= coleccion.PrecioAlbum %> PUNTOS</h6>
+                                <a class="btn btn-primary" role="button" style="text-align: left;margin-bottom: 0px;" href=<%= "/dashboard/user/tiendaCromos?nombreColeccion=" + coleccion.Nombre %>>CROMOS</a>
+                                <a class="btn btn-primary" role="button" style="text-align: left;margin-bottom: 0px;margin-left: 12px;" href=<%= "comprarAlbum?nombreColeccion=" + coleccion.Nombre %>>COMPRAR ÁLBUM</a>
+
+
                                 <%}else { %>
                                 <h6 class="text-muted card-subtitle mb-2" style="text-align: center;background: rgb(157,224,156);">TIENES EL ÁLBUM</h6>
                                 <p class="card-text" style="text-align: justify;margin-bottom: 12px;"><%= coleccion.Descripcion %><br></p>
-                                <h6 class="text-muted card-subtitle mb-2" style="text-align: center;background: var(--color6);margin-bottom: 6px;"><%= coleccion.PrecioAlbum %> PUNTOS</h6><button class="btn btn-primary" type="button" style="text-align: left;margin-bottom: 0px;" href=<%= "TiendaCromos?nombreColeccion=" + coleccion.Nombre %>>CROMOS</button><button class="btn btn-primary" type="button" style="text-align: left;margin-bottom: 0px;margin-left: 12px;" href=<%= "comprarAlbum?nombreColeccion=" + coleccion.Nombre %>>COMPRAR ÁLBUM</button>
+                                <h6 class="text-muted card-subtitle mb-2" style="text-align: center;background: var(--color6);margin-bottom: 6px;"><%= coleccion.PrecioAlbum %> PUNTOS</h6>
+                                <a class="btn btn-primary" role="button" style="text-align: left;margin-bottom: 0px;" href=<%= "TiendaCromos?nombreColeccion=" + coleccion.Nombre %>>CROMOS</a>
                     
                                 <%} %>
                         </div>
