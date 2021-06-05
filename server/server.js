@@ -242,20 +242,7 @@ app.post("/registro", function (req, res) {
     () => {res.send("Se ha creado el usuario exitosamente")},
     (error) => {response.send(error)}
   );
-  /*connection.connect();
-  let string = "INSERT INTO USUARIOS (User, Password, Nombre, Apellidos, Email, Admin) VALUES ('"+
-  username +"','"+
-  password + "','" +
-  nombre + "','" +
-  apellidos + "','" +
-  email + "','0')";
-  connection.query(string, function (err, result, fields) {
-    if (err) {
-      response.send(err);
-    }
-  });
 
-  res.send("Se ha creado el usuario exitosamente");*/
 });
 
 app.post("/dashboard/admin/crearColeccion", function (req, res) {
@@ -269,18 +256,7 @@ app.post("/dashboard/admin/crearColeccion", function (req, res) {
     () => {res.redirect("/dashboard/admin/");},
     (error) => {res.send(error.message)}
   );
-
-  /*let string = "INSERT INTO COLECCIONES (Nombre,PrecioAlbum,FotoAlbum) VALUES ('" +
-    nombre + "'," +
-    precioAlbum + ",'" +
-    foto + "')";
-  connection.query(string, function (err, result, fields) {
-    if (err) {
-      res.send(err.message);
-    }else{
-      res.send("Añadido correctamente")
-    }
-  });*/  
+ 
 });
 
 app.post("dashboard/admin/editarColeccion", function (req, res) {
@@ -295,19 +271,6 @@ app.post("dashboard/admin/editarColeccion", function (req, res) {
     () => {res.send("Coleccion Actualizada")},
     (error) => {res.send(error.message)}
   );
-  /*let string =
-    "UPDATE COLECCIONES SET PrecioAlbum =" + precioAlbum +
-    ",FotoAlbum= '" + foto +
-    "',Nombre= '" + nombre +
-    "', Estado = '" + estado +
-    "' WHERE  Nombre= '" + coleccion +"'";
-
-  console.log(string);
-  connection.query(string, function (err, result, fields) {
-    if (err) {
-      throw err;
-    }
-  });*/
 });
 
 app.set('views', path.join(__dirname, '/dashboard/views'));
@@ -448,7 +411,8 @@ app.get("/dashboard/user/tiendaCromos", function (req, res) {
   connection.query(string, function (err, cromosNoComprados, fields) {
     if (err) throw err;
 
-    let string = "SELECT * FROM CROMOS WHERE ID = (SELECT CromoID FROM CROMOS_ALBUMES WHERE AlbumUser = '" + idUser + "' AND AlbumColeccion = '" + coleccion + "' )";
+    let string = "SELECT * FROM CROMOS INNER JOIN CROMOS_ALBUMES ON CROMOS.ID = CROMOS_ALBUMES.CromoID AND CROMOS.Coleccion = CROMOS_ALBUMES.AlbumColeccion AND CROMOS_ALBUMES.AlbumUser =" + idUser + "'";
+
     connection.query(string, function (err, cromosComprados, fields) {
       if (err) throw err;
   
@@ -509,21 +473,7 @@ app.post("/dashboard/admin/crearCromo", function (req, res) {
     () => {res.send("Cromo creado correctamente")},
     (error) => {res.send(error.message)}
   );
-  /*let string =
-    "INSERT INTO CROMOS (Nombre, Coleccion, RutaImagen, Precio, Cantidad, Descripcion, DatoInteresante, Frecuencia) VALUES ('" +
-    nombre +"','" +
-    coleccion +"','" +
-    rutaImagen +"'," +
-    precio +"," +
-    cantidad +",'" +
-    descripcion +"','" +
-    datoInteresante +"','" +
-    frecuencia +"')";
-  connection.query(string, function (err, result, fields) {
-    if (err) {
-      throw err;
-    }
-  });*/
+
 });
 
 app.post("/borrarCromo", function (req, res) {
@@ -533,18 +483,7 @@ app.post("/borrarCromo", function (req, res) {
     () => {res.send("El cromo ha sido borrado")},
     (error) => {res.send(error.message)}
   );
-  /*let string =
-    "DELETE FROM CROMOS WHERE ID =" + id ;
-  try {
-    connection.query(string, function (err, result, fields) {
-      if (err) {
-        throw err;
-      }
-    });
-  } catch (error) {
-    console.log(error);
-  }
-    res.send("El cromo ha sido borrado");*/
+
 });
 
 app.post("/borrarColeccion", function (req, res) {
@@ -554,18 +493,7 @@ app.post("/borrarColeccion", function (req, res) {
     () => {res.send("La coleccion ha sido borrada")},
     (error) => {res.send(error)}
   );
-  /*let string =
-    "DELETE FROM COLECCIONES WHERE Nombre = '" + nombre +"'";
-  try {
-    connection.query(string, function (err, result, fields) {
-      if (err) {
-        throw err;
-      }
-    });
-  } catch (error) {
-    console.log(error);
-  }
-  res.send("La coleccion ha sido borrada");*/
+
 });
 
 app.post("/dashboard/user/comprarCromo", function (req, res) {
