@@ -1,5 +1,3 @@
-"use strict";
-
 const USUARIO_INCORRECTO = -1;
 const USUARIO_ESTANDAR = 0;
 const ADMIN = 1;
@@ -264,22 +262,7 @@ app.post("/dashboard/admin/crearColeccion", function (req, res) {
       res.send(error.message)
     }
   );
-<<<<<<< Updated upstream
  
-=======
-
-  /*let string = "INSERT INTO COLECCIONES (Nombre,PrecioAlbum,FotoAlbum) VALUES ('" +
-    nombre + "'," +
-    precioAlbum + ",'" +
-    foto + "')";
-  connection.query(string, function (err, result, fields) {
-    if (err) {
-      res.send(err.message);
-    }else{
-      res.send("Añadido correctamente")
-    }
-  });*/
->>>>>>> Stashed changes
 });
 
 app.post("dashboard/admin/editarColeccion", function (req, res) {
@@ -471,13 +454,8 @@ app.get("/dashboard/user/clienteCromos", function (req, res) {
   let coleccion = req.query.nombreColeccion;
   let idUser = req.session.user;
 
-<<<<<<< Updated upstream
   let stringUser = "SELECT * FROM CLIENTES WHERE User = '" + idUser + "'";
     connection.query(stringUser, function (err, resultUser, fields) {
-=======
-  let stringUser = "SELECT * FROM CLIENTES WHERE User = '" + req.session.user + "'";
-  connection.query(stringUser, function (err, resultUser, fields) {
->>>>>>> Stashed changes
     if (err) throw err;
 
     let string = "SELECT * FROM CROMOS WHERE ID IN (SELECT CromoID FROM CROMOS_ALBUMES WHERE AlbumUser = '" + idUser + "' AND AlbumColeccion = '" + coleccion + "' )";
@@ -568,7 +546,6 @@ app.post("/dashboard/user/comprarCromo", function (req, res) {
       if (cantidad > 0) {
         obtenerClientes(idUser, precio).then(function (clientes) {
           cliente = clientes[0];
-<<<<<<< Updated upstream
           if (cliente.Puntos > cromo.Precio){
             consultarCromoAlbum(idCromo, idUser, coleccionAlbum).then(function(){
               agregarCromoAAlbumAtomico(idCromo, coleccionAlbum, idUser, cromo.Precio, cromo.Cantidad, cliente.Puntos).then(function(){
@@ -581,27 +558,6 @@ app.post("/dashboard/user/comprarCromo", function (req, res) {
           } else{res.send("Puntos insuficientes para comprar el cromo")};
           }, function(error){res.send(error.message)});
       } else{res.send("No hay existencias de ese cromo")}
-=======
-          if (cliente.Puntos > cromo.Precio) {
-            consultarCromoAlbum(idCromo, idUser, coleccionAlbum).then(function () {
-              agregarCromoAAlbumAtomico(idCromo, coleccionAlbum, idUser, cromo.Precio, cromo.Cantidad, cliente.Puntos).then(function () {
-                res.send("Cromo comprado correctamente");
-              }, function (error) {
-                res.send(error.message)
-              });
-            }, function (error) {
-              res.send(error.message)
-            });
-          } else {
-            res.send("Puntos insuficientes para comprar el cromo")
-          };
-        }, function (error) {
-          res.send(error.message)
-        });
-      } else {
-        res.send("No hay existencias de ese cromo")
-      }
->>>>>>> Stashed changes
 
     }
 
@@ -610,7 +566,6 @@ app.post("/dashboard/user/comprarCromo", function (req, res) {
   });
 });
 
-<<<<<<< Updated upstream
 function calcularNuevoEstadoAlbum(usuario, coleccion){
   contarCromosComprados(usuario, coleccion).then(function(numCromosComprados){
 
@@ -634,10 +589,6 @@ function calcularNuevoEstadoAlbum(usuario, coleccion){
 
 function consultarCromoAlbum(idCromo, idUser, coleccionAlbum){
   return new Promise(function(resolve, reject){
-=======
-function consultarCromoAlbum(idCromo, idUser, coleccionAlbum) {
-  return new Promise(function (resolve, reject) {
->>>>>>> Stashed changes
     connection.query("SELECT * FROM CROMOS_ALBUMES WHERE CromoID = ? AND AlbumUser = ? AND AlbumColeccion = ?", [idCromo, idUser, coleccionAlbum], function (err, result) {
       if (err) reject(Error("No se ha podido consultar si está o no el cromo en el álbum"));
       else if (result) {
@@ -671,7 +622,6 @@ function agregarCromoAAlbumAtomico(idCromo, coleccionAlbum, idUser, precio, cant
   });
 }
 
-<<<<<<< Updated upstream
 function cambiarEstadoAlbum(estado, usuario, coleccion){
   return ejecutarQueryBBDD("UPDATE ALBUMES SET Estado = ? WHERE User = ? AND Coleccion = ?", [estado, usuario, coleccion], "Cambiar estado album", false);
 }
@@ -685,9 +635,6 @@ function contarCromosColeccion(coleccion){
 }
 
 function borrarColeccion(nombre){
-=======
-function borrarColeccion(nombre) {
->>>>>>> Stashed changes
   return ejecutarQueryBBDD("DELETE FROM COLECCIONES WHERE Nombre = ?", [nombre], "Borrar coleccion", false);
 }
 
@@ -757,14 +704,9 @@ async function obtenerPuntosCliente(idUser){
 function ejecutarQueryBBDD(query, arrayDatos, operacion, devolverResultado) {
   return new Promise(function (resolve, reject) {
     connection.query(query, arrayDatos, function (err, result) {
-<<<<<<< Updated upstream
       if(err){
         //reject (Error("Operacion " + operacion + " no completada"));
         reject (err);
-=======
-      if (err) {
-        return reject("Operacion " + operacion + " no completada");
->>>>>>> Stashed changes
       } else {
 
         if (devolverResultado) {
