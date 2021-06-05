@@ -350,6 +350,41 @@ app.get("/dashboard/admin/editarCromo", function (req, res) {
 
 });
 
+app.post("/dashboard/admin/editarCromo", function (req, res) {
+  //TODO comprobar entrada??
+  
+  let id = req.query.IDCromo;
+  let nombre = req.body.nombre_cromo_formulario;
+  let precio = req.body.precio_cromo_formulario;
+  let cantidad = req.body.stock_cromo_formulario;
+  let nombreImagen = req.body.imagen_cromo_formulario;
+  let descripcion = req.body.descripcion_cromo_formulario;
+  let datoInteresante = req.body.dato_cromo_formulario;
+  let frecuencia = req.body.frecuencia_cromo_formulario;
+  let coleccion;
+
+  //Obtener coleccion
+  let string = "SELECT Coleccion FROM CROMOS WHERE ID ='" + id + "'";
+  connection.query(string, function (err, result, fields) {
+    if (err) {
+      throw err;
+    }
+    console.log(result);
+    coleccion = result[0].Coleccion;
+    
+    let imagen = "./resources/colecciones/"+coleccion+"/imagenes/"+nombreImagen;
+
+    editarCromo(id, nombre, precio, cantidad, imagen, descripcion, datoInteresante, frecuencia).then(() => {
+        res.send("Cromo actualizado correctamente");
+      }, (error) => {
+        res.send(error.message);
+      }
+    );
+
+  });
+  
+});
+
 //PAGINA PRINCIPAL USUARIO
 app.get("/dashboard/user", function (req, res) {
   let string = "SELECT * FROM ALBUMES WHERE User = '" + req.session.user + "'";
@@ -645,6 +680,11 @@ function borrarCromo(id) {
 function agregarCromo(nombre, coleccion, rutaImagen, precio, cantidad, descripcion, datoInteresante, frecuencia) {
   return ejecutarQueryBBDD("INSERT INTO CROMOS (Nombre, Coleccion, RutaImagen, Precio, Cantidad, Descripcion, DatoInteresante, Frecuencia) VALUES (?,?,?,?,?,?,?,?)",
     [nombre, coleccion, rutaImagen, precio, cantidad, descripcion, datoInteresante, frecuencia], "Agregar cromo", false);
+}
+
+function editarCromo(id, nombre, precio, cantidad, imagen, descripcion, datoInteresante, frecuencia){
+  return ejecutarQueryBBDD("UPDATE CROMOS SET Nombre = ?, Precio = ?, Cantidad = ?, RutaImagen = ?, Descripcion = ?, DatoInteresante = ?, Frecuencia = ? WHERE ID = ?", 
+    [nombre, precio, cantidad, imagen, descripcion, datoInteresante, frecuencia, id], "Editar cromo", false);
 }
 
 function editarColeccion(precioAlbum, foto, nombre, estado, coleccion) {
