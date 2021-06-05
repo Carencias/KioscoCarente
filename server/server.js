@@ -400,7 +400,7 @@ app.get("/dashboard/user", async function (req, res) {
         colecciones.push(coleccionesBBDD[0]);
 
         let stringUser = "SELECT * FROM CLIENTES WHERE User = '" + req.session.user + "'";
-        let puntos = await obtenerPuntosCliente(req.session.user);
+       
         connection.query(stringUser, function (err, resultUser, fields) {
           if (err) {
             throw err;
