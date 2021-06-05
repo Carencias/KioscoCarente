@@ -41,7 +41,7 @@ CREATE TABLE COLECCIONES(
     	Nombre VARCHAR(20),
     	Estado ENUM('Activa','Agotada') DEFAULT 'Activa' NOT NULL, #No se si se puede poner not null aqui
         PrecioAlbum INT DEFAULT 1,
-        FotoAlbum VARCHAR(50),
+        FotoAlbum VARCHAR(200),
     	CONSTRAINT pk_colecciones PRIMARY KEY(Nombre)
 );
 
@@ -58,7 +58,7 @@ CREATE TABLE CROMOS(
     ID INT AUTO_INCREMENT,
 	Nombre VARCHAR(40) NOT NULL,
     Coleccion VARCHAR(20),
-    RutaImagen VARCHAR(100),
+    RutaImagen VARCHAR(200),
     Precio INT UNSIGNED NOT NULL,
     Cantidad SMALLINT UNSIGNED NOT NULL,
     Descripcion VARCHAR(400),
