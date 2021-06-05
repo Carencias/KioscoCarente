@@ -262,7 +262,7 @@ app.post("/dashboard/admin/crearColeccion", function (req, res) {
       res.send(error.message)
     }
   );
- 
+
 });
 
 app.post("dashboard/admin/editarColeccion", function (req, res) {
@@ -386,7 +386,7 @@ app.post("/dashboard/admin/editarCromo", function (req, res) {
 });
 
 //PAGINA PRINCIPAL USUARIO
-app.get("/dashboard/user", function (req, res) {
+app.get("/dashboard/user", async function (req, res) {
   let string = "SELECT * FROM ALBUMES WHERE User = '" + req.session.user + "'";
   var colecciones = [];
   let estadosAlbumes = [];
@@ -400,6 +400,7 @@ app.get("/dashboard/user", function (req, res) {
         colecciones.push(coleccionesBBDD[0]);
 
         let stringUser = "SELECT * FROM CLIENTES WHERE User = '" + req.session.user + "'";
+        let puntos = await obtenerPuntosCliente(req.session.user);
         connection.query(stringUser, function (err, resultUser, fields) {
           if (err) {
             throw err;
@@ -490,7 +491,7 @@ app.get("/dashboard/user/clienteCromos", function (req, res) {
   let idUser = req.session.user;
 
   let stringUser = "SELECT * FROM CLIENTES WHERE User = '" + idUser + "'";
-    connection.query(stringUser, function (err, resultUser, fields) {
+  connection.query(stringUser, function (err, resultUser, fields) {
     if (err) throw err;
 
     let string = "SELECT * FROM CROMOS WHERE ID IN (SELECT CromoID FROM CROMOS_ALBUMES WHERE AlbumUser = '" + idUser + "' AND AlbumColeccion = '" + coleccion + "' )";
@@ -581,18 +582,28 @@ app.post("/dashboard/user/comprarCromo", function (req, res) {
       if (cantidad > 0) {
         obtenerClientes(idUser, precio).then(function (clientes) {
           cliente = clientes[0];
-          if (cliente.Puntos > cromo.Precio){
-            consultarCromoAlbum(idCromo, idUser, coleccionAlbum).then(function(){
-              agregarCromoAAlbumAtomico(idCromo, coleccionAlbum, idUser, cromo.Precio, cromo.Cantidad, cliente.Puntos).then(function(){
-                  res.send("Cromo comprado correctamente");
+          if (cliente.Puntos > cromo.Precio) {
+            consultarCromoAlbum(idCromo, idUser, coleccionAlbum).then(function () {
+              agregarCromoAAlbumAtomico(idCromo, coleccionAlbum, idUser, cromo.Precio, cromo.Cantidad, cliente.Puntos).then(function () {
+                res.send("Cromo comprado correctamente");
 
-                  calcularNuevoEstadoAlbum(idUser, coleccionAlbum);
+                calcularNuevoEstadoAlbum(idUser, coleccionAlbum);
 
-                }, function (error){res.send(error.message)});
-            }, function(error){res.send(error.message)});
-          } else{res.send("Puntos insuficientes para comprar el cromo")};
-          }, function(error){res.send(error.message)});
-      } else{res.send("No hay existencias de ese cromo")}
+              }, function (error) {
+                res.send(error.message)
+              });
+            }, function (error) {
+              res.send(error.message)
+            });
+          } else {
+            res.send("Puntos insuficientes para comprar el cromo")
+          };
+        }, function (error) {
+          res.send(error.message)
+        });
+      } else {
+        res.send("No hay existencias de ese cromo")
+      }
 
     }
 
@@ -601,29 +612,33 @@ app.post("/dashboard/user/comprarCromo", function (req, res) {
   });
 });
 
-function calcularNuevoEstadoAlbum(usuario, coleccion){
-  contarCromosComprados(usuario, coleccion).then(function(numCromosComprados){
+function calcularNuevoEstadoAlbum(usuario, coleccion) {
+  contarCromosComprados(usuario, coleccion).then(function (numCromosComprados) {
 
     numCromosComprados = numCromosComprados[0].numCromosComprados;
 
-    contarCromosColeccion(coleccion).then(function(numCromosColeccion){
+    contarCromosColeccion(coleccion).then(function (numCromosColeccion) {
 
       numCromosColeccion = numCromosColeccion[0].numCromosColeccion;
-      
-      if(numCromosComprados===0){
+
+      if (numCromosComprados === 0) {
         cambiarEstadoAlbum('No iniciada', usuario, coleccion);
-      }else if(numCromosComprados < numCromosColeccion){
+      } else if (numCromosComprados < numCromosColeccion) {
         cambiarEstadoAlbum('Completada parcialmente', usuario, coleccion);
-      }else{
+      } else {
         cambiarEstadoAlbum('Finalizada', usuario, coleccion);
       }
 
-    },function(error){res.send(error.message)})
-  }, function(error){res.send(error.message)});
+    }, function (error) {
+      res.send(error.message)
+    })
+  }, function (error) {
+    res.send(error.message)
+  });
 }
 
-function consultarCromoAlbum(idCromo, idUser, coleccionAlbum){
-  return new Promise(function(resolve, reject){
+function consultarCromoAlbum(idCromo, idUser, coleccionAlbum) {
+  return new Promise(function (resolve, reject) {
     connection.query("SELECT * FROM CROMOS_ALBUMES WHERE CromoID = ? AND AlbumUser = ? AND AlbumColeccion = ?", [idCromo, idUser, coleccionAlbum], function (err, result) {
       if (err) reject(Error("No se ha podido consultar si está o no el cromo en el álbum"));
       else if (result) {
@@ -657,19 +672,19 @@ function agregarCromoAAlbumAtomico(idCromo, coleccionAlbum, idUser, precio, cant
   });
 }
 
-function cambiarEstadoAlbum(estado, usuario, coleccion){
+function cambiarEstadoAlbum(estado, usuario, coleccion) {
   return ejecutarQueryBBDD("UPDATE ALBUMES SET Estado = ? WHERE User = ? AND Coleccion = ?", [estado, usuario, coleccion], "Cambiar estado album", false);
 }
 
-function contarCromosComprados(usuario, coleccion){
+function contarCromosComprados(usuario, coleccion) {
   return ejecutarQueryBBDD("SELECT COUNT(*) AS numCromosComprados FROM CROMOS_ALBUMES WHERE AlbumUser = ? AND AlbumColeccion = ?", [usuario, coleccion], "Contar cromos comprados", true);
 }
 
-function contarCromosColeccion(coleccion){
+function contarCromosColeccion(coleccion) {
   return ejecutarQueryBBDD("SELECT COUNT(*) AS numCromosColeccion FROM CROMOS WHERE Coleccion = ?", [coleccion], "Contar cromos coleccion", true);
 }
 
-function borrarColeccion(nombre){
+function borrarColeccion(nombre) {
   return ejecutarQueryBBDD("DELETE FROM COLECCIONES WHERE Nombre = ?", [nombre], "Borrar coleccion", false);
 }
 
@@ -735,7 +750,7 @@ function obtenerAlbumes(coleccion, usuario) {
   return ejecutarQueryBBDD("SELECT * FROM ALBUMES WHERE User = ? AND Coleccion = ?", [usuario, coleccion], "Obtener album", true);
 }
 
-async function obtenerPuntosCliente(idUser){
+async function obtenerPuntosCliente(idUser) {
   let clientes = await obtenerClientes(idUser);
   let puntos = clientes[0].Puntos;
   return puntos;
@@ -744,11 +759,11 @@ async function obtenerPuntosCliente(idUser){
 function ejecutarQueryBBDD(query, arrayDatos, operacion, devolverResultado) {
   return new Promise(function (resolve, reject) {
     connection.query(query, arrayDatos, function (err, result) {
-      if(err){
+      if (err) {
         //reject (Error("Operacion " + operacion + " no completada"));
-        reject (err);
-      } else {
+        reject(err);
 
+      } else {
         if (devolverResultado) {
           return resolve(result);
         } else {
@@ -817,22 +832,30 @@ app.post("/dashboard/user/comprarAlbum", function (req, res) {
 
 //CAPTCHA
 var svgCaptcha = require('svg-captcha');
+const { type } = require("os");
 
 app.get("/dashboard/user/retoCaptcha", async function (req, res) {
   var captcha = generarCaptcha();
   req.session.captcha = captcha.text;
-  res.render('user/clienteRetoCaptcha', {
-    image: captcha.data,
-    alerta: undefined,
-    puntos: await obtenerPuntosCliente(req.session.user)
+  let puntos = undefined;
+  puntos = await obtenerPuntosCliente(req.session.user).catch((error) => {
+    res.send(error.message)
   });
+  if (puntos) {
+    res.render('user/clienteRetoCaptcha', {
+      image: captcha.data,
+      alerta: undefined,
+      puntos: puntos
+    });
+  }
+
 });
 
 app.post("/dashboard/user/retoCaptcha", async function (req, res) {
   let respuesta = req.body.respuesta;
   let idUser = req.session.user;
   let PUNTOS_PREGUNTA = 3;
-  let puntos= await obtenerPuntosCliente(idUser);
+  let puntos = await obtenerPuntosCliente(idUser);
 
   if (req.session.captcha) {
 
@@ -841,8 +864,8 @@ app.post("/dashboard/user/retoCaptcha", async function (req, res) {
       alerta.esValido = 1;
 
       //SUMAR PUNTOS
-        puntos = puntos + PUNTOS_PREGUNTA;
-        actualizarPuntosCliente(puntos);
+      puntos = puntos + PUNTOS_PREGUNTA;
+      actualizarPuntosCliente(puntos, idUser);
 
     } else {
       //INVALIDO
@@ -864,50 +887,77 @@ app.post("/dashboard/user/retoCaptcha", async function (req, res) {
 
 });
 
-function generarCaptcha(){
+function generarCaptcha() {
   svgCaptcha.options.width = 220;
   return svgCaptcha.create(8);
 }
 
 //PREGUNTAS
 
-app.post("/dashboard/user/comprobarRespuestaPregunta", function (req, res) {
+app.get("/dashboard/user/retoPregunta", async function (req, res) {
+
+  let puntos = await obtenerPuntosCliente(req.session.user);
+
+  obtenerPreguntaAleatoria().then((result) => {
+    let pregunta = result[0].Pregunta;
+    let respuesta = result[0].Respuesta;
+    req.session.pregunta = pregunta;
+    req.session.respuesta = respuesta;
+
+    res.render('user/clienteRetoPregunta', {
+      pregunta: pregunta,
+      alerta: undefined,
+      puntos: puntos
+    });
+
+  });
+});
+
+function obtenerPreguntaAleatoria() {
+  return ejecutarQueryBBDD("SELECT * FROM PREGUNTAS ORDER BY RAND() LIMIT 1", [], "Obtener Pregunta", true);
+}
+
+app.post("/dashboard/user/retoPregunta", async function (req, res) {
   //TODO comprobar entrada??
-  let pregunta = req.body.pregunta;
-  let respuesta = req.body.respuesta;
+  let respuestaCorrecta = req.session.respuesta;
   let idUser = req.session.user
+  let puntos = await obtenerPuntosCliente(req.session.user);
 
   //TODO PONERLO ARRIBA
   const PUNTOS_PREGUNTA = 7;
+  let alerta = [];
 
-  obtenerRespuestaCorrecta(pregunta).then(function(respuestaCorrecta){
+  //Si se generó una pregunta con GET
+  if(req.session.pregunta){
+    if(req.body.respuesta.toLowerCase() === respuestaCorrecta.toLowerCase()){
 
-    respuestaCorrecta = respuestaCorrecta[0].Respuesta;
+      alerta.esValido = 1;
+  
+      actualizarPuntosCliente(puntos + PUNTOS_PREGUNTA, idUser).catch((error) => {console.log("Error al actualizar puntos")});
 
-    if(respuesta === respuestaCorrecta){
-
-      obtenerClientes(idUser).then(function(clientes){
-        let puntos = clientes[0].Puntos;
-
-        actualizarPuntosCliente(puntos+PUNTOS_PREGUNTA, idUser).then(
-          () => {res.send("Respuesta correcta. Se han actualizado tus puntos")},
-          (error) => {res.send(error.message)}
-        );
-
-      }, function(error){res.send(error.message);})
-
-
-    }else{
-      res.send("Respuesta incorrecta");
+      puntos = puntos + PUNTOS_PREGUNTA;
+  
+    } else {
+      
+      alerta.esValido = 0;
+  
     }
-
-  }, function(error){res.send(error.message);})
-
-
-
+  
+    obtenerPreguntaAleatoria().then((result) => {
+      let pregunta = result[0].Pregunta;
+      let respuesta = result[0].Respuesta;
+      req.session.pregunta = pregunta;
+      req.session.respuesta = respuesta;
+  
+      res.render('user/clienteRetoPregunta', {
+        pregunta: pregunta,
+        alerta: alerta,
+        puntos: puntos
+      });
+  
+    });
+  
+  } else {
+    res.sendStatus(403);
+  }
 });
-
-
-function obtenerRespuestaCorrecta(pregunta){
-  return ejecutarQueryBBDD("SELECT Respuesta FROM PREGUNTAS WHERE Pregunta = ?", [pregunta], "Obtener respuesta", true);
-}
