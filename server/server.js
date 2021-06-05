@@ -13,7 +13,6 @@ const {
   response
 } = require("express");
 app.use(express.urlencoded());
-//const jsdom = require("jsdom");
 const fs = require('fs');
 const ejs = require('ejs');
 app.set('view engine', 'ejs');
@@ -32,7 +31,6 @@ app.use((req, res, next) => {
 
 app.listen(port, () => {
   console.log(`Running ${port}`);
-  //pruebaBaseDatos();
 });
 
 const connection = mysql.createConnection({
@@ -56,7 +54,7 @@ app.use(
   })
 );
 
-//Autenticación comun
+//Autenticacion comun
 var auth = function (req, res, next) {
   if (req.session && req.session.userType !== undefined) return next();
   else return res.sendStatus(401);
@@ -89,9 +87,7 @@ app.get("/dashboard/admin", function (req, res) {
 
   let string = "SELECT * FROM COLECCIONES ";
   connection.query(string, function (err, result, fields) {
-    if (err) {
-      throw err;
-    }
+    if (err) throw err;
 
     res.render('admin/administradorPrincipal', {
       colecciones: result,
@@ -106,8 +102,11 @@ function comprobarCredenciales(req, res) {
   let username = req.body.username;
   let password = req.body.password;
 
-  obtenerUsuario(username).then(
-    function(usuario){
+  obtenerUsuarios(username).then(
+    function(usuarios){
+
+      let usuario = usuarios[0];
+
       if (usuario.length === 0 || usuario.Password !== password) {
         res.send("Autenticación incorrecta");
       } else {
@@ -224,14 +223,12 @@ function abrirSesionIniciada(req, res) {
 app.get("/dashboard/logout", auth, function (req, res) {
   req.session.destroy();
   res.redirect("/index.html");
-  // This prints "My First JSDOM!"
-
   //res.send("Sesión Finalizada correctamente");
 });
 
 //Para requerir la autenticacion al acceder a las paginas hay que agregar auth como aqui
 app.get("/content", auth, function (req, res) {
-  res.send("You can only see this after you've logged in.");
+  res.send("Solo podras ver esto una vez te hayas logueado");
 });
 
 app.post("/registro", function (req, res) {
@@ -392,8 +389,8 @@ app.get("/dashboard/user", function (req, res) {
     result.forEach(function(album){
         estadosAlbumes.push(album.Estado);
         console.log(estadosAlbumes);
-        obtenerColeccion(album.Coleccion).then(function(coleccion){
-        colecciones.push(coleccion);console.log(colecciones);
+        obtenerColecciones(album.Coleccion).then(function(coleccionesBBDD){
+        colecciones.push(coleccionesBBDD[0]);console.log(colecciones);
         
         let stringUser = "SELECT * FROM CLIENTES WHERE User = '" + req.session.user + "'";
         connection.query(stringUser, function (err, resultUser, fields) {
@@ -440,6 +437,32 @@ app.get("/dashboard/user/tiendaAlbumes", function (req, res) {
       });
   });
 });
+
+app.get("/dashboard/user/mostrarAlbum", function (req, res) {
+  //TODO comprobar entrada??
+  
+  let coleccion = req.query.nombreColeccion;
+  let idUser = "user";
+
+  let string = "SELECT * FROM CROMOS WHERE Coleccion = '" + coleccion + "'";
+  connection.query(string, function (err, todosCromos, fields) {
+    if (err) throw err;
+
+    let string = "SELECT * FROM CROMOS WHERE ID = (SELECT CromoID FROM CROMOS_ALBUMES WHERE AlbumUser = " + idUser + " AND AlbumColeccion = " + coleccion + " )";
+    connection.query(string, function (err, cromosComprados, fields) {
+      if (err) throw err;
+  
+      res.render('user/usuarioMostrarAlbum', {
+        todosCromos: todosCromos,
+        cromosComprados: cromosComprados
+      });
+  
+    });
+
+  });
+
+});
+
 
 
 app.post("/dashboard/admin/crearCromo", function (req, res) {
@@ -526,23 +549,32 @@ app.post("/comprarCromo", function (req, res) {
 
   var cromo, cliente;
 
-  obtenerCromo(idCromo).then(function(cromo){
-    cromo = cromo;
-    var precio = cromo.Precio;
-    var cantidad = cromo.Cantidad;
-    if (cantidad > 0){
-      obtenerCliente(idUser, precio).then(function(cliente){  
-        cliente = cliente;
-        if (cliente.Puntos > cromo.Precio){
-          consultarCromoAlbum(idCromo, idUser, coleccionAlbum).then(function(){
-            agregarCromoAAlbumAtomico(idCromo, coleccionAlbum, idUser, cromo.Precio, cromo.Cantidad, cliente.Puntos).then(function(){
-                console.log("Cromo comprado correctamente");
-              }, function (error){res.send(error.message)});
+  obtenerCromos(idCromo).then(function(cromos){
+    //TODO si no se permite enviar el ID del cromo a mano sobra
+    if(!cromos.length){
+      res.send("No existe ese cromo");
+    }else{
+
+      cromo = cromos[0];
+
+      var precio = cromo.Precio;
+      var cantidad = cromo.Cantidad;
+      if (cantidad > 0){
+        obtenerClientes(idUser, precio).then(function(clientes){  
+          cliente = clientes[0];
+          if (cliente.Puntos > cromo.Precio){
+            consultarCromoAlbum(idCromo, idUser, coleccionAlbum).then(function(){
+              agregarCromoAAlbumAtomico(idCromo, coleccionAlbum, idUser, cromo.Precio, cromo.Cantidad, cliente.Puntos).then(function(){
+                  res.send("Cromo comprado correctamente");
+                }, function (error){res.send(error.message)});
+            }, function(error){res.send(error.message)});
+          } else{res.send("Puntos insuficientes para comprar el cromo")};
           }, function(error){res.send(error.message)});
-        } else{res.send("Puntos insuficientes para comprar el cromo")};
-        }, function(error){res.send(error.message)});
-    } else{res.send("No hay existencias de ese cromo")}
-    }, function(error){res.send(error.message)});
+      } else{res.send("No hay existencias de ese cromo")}
+
+    }
+
+  }, function(error){res.send(error.message)});
 });
 
 function consultarCromoAlbum(idCromo, idUser, coleccionAlbum){
@@ -599,7 +631,7 @@ function agregarUsuario(username, password, nombre, apellidos, email, admin){
   return ejecutarQueryBBDD("INSERT INTO USUARIOS (User, Password, Nombre, Apellidos, Email, Admin) VALUES (?, ?, ?, ?, ?, ?)", [username,password,nombre,apellidos,email,admin], "Agregar usuario",false);
 }
 
-function obtenerUsuario(username){
+function obtenerUsuarios(username){
   return ejecutarQueryBBDD("SELECT User, Password, Admin FROM USUARIOS WHERE User = ?", [username], "Obtener usuario", true);
 }
 
@@ -619,40 +651,23 @@ function agregarAlbumCliente(idUser, nombreColeccion){
   return ejecutarQueryBBDD("INSERT INTO ALBUMES (User, Coleccion) VALUES (?, ?)", [idUser, nombreColeccion], "Agregar album al cliente", false);
 }
 
-function obtenerColeccion(nombreColeccion){
+function obtenerColecciones(nombreColeccion){
   return ejecutarQueryBBDD("SELECT * FROM COLECCIONES WHERE Nombre = ?", [nombreColeccion], "Obtener coleccion", true);
 }
 
-function obtenerCliente(idUser, precio){
+function obtenerClientes(idUser, precio){
   return ejecutarQueryBBDD("SELECT * FROM CLIENTES WHERE User = ?", [idUser], "Obtener cliente", true);
 }
 
-function obtenerCromo(idCromo){
+function obtenerCromos(idCromo){
   return ejecutarQueryBBDD("SELECT * FROM CROMOS WHERE ID = ?", [idCromo], "Obtener cromo", true);
 }
 
-function obtenerAlbum(coleccion, usuario){
+function obtenerAlbumes(coleccion, usuario){
   return ejecutarQueryBBDD("SELECT * FROM ALBUMES WHERE User = ? AND Coleccion = ?", [usuario, coleccion], "Obtener album", true);
 }
 
 function ejecutarQueryBBDD(query, arrayDatos, operacion, devolverResultado){
-  return new Promise(function(resolve, reject){
-    connection.query(query, arrayDatos, function (err, result) {
-      if(err){
-        reject (Error("Operacion " + operacion + " no completada"));
-      } else {
-
-        if(devolverResultado){
-          resolve(result[0]);
-        }else{
-          resolve("Operacion " + operacion + " completada con exito");
-        }
-      }
-    });
-  });
-}
-
-function ejecutarQueryBBDD_array(query, arrayDatos, operacion, devolverResultado){
   return new Promise(function(resolve, reject){
     connection.query(query, arrayDatos, function (err, result) {
       if(err){
@@ -676,16 +691,18 @@ app.post("/comprarAlbum", function (req, res) {
   //let idUser = req.session.user
   var coleccion, cliente;
 
-  obtenerColeccion(nombreColeccion).then(function(coleccion){
-    coleccion = coleccion;
+  obtenerColecciones(nombreColeccion).then(function(colecciones){
+    coleccion = colecciones[0];
     if(coleccion.Estado !== "Agotado"){
 
-      obtenerAlbum(coleccion.Nombre, idUser).then(function(album){
+      obtenerAlbumes(coleccion.Nombre, idUser).then(function(albumes){
+        let album = albumes[0];
+
         if(album){
           res.send("Ya ha adquirido un album para dicha coleccion");
         }else{
-          obtenerCliente(idUser).then(function(cliente){  
-            cliente = cliente;
+          obtenerClientes(idUser).then(function(clientes){  
+            cliente = clientes[0];
 
             if (cliente.Puntos > coleccion.PrecioAlbum){
 
