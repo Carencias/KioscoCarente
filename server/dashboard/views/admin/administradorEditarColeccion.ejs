@@ -41,7 +41,7 @@
   </nav>
   <div class="row register-form" style="padding-top: 25px;margin: 0px;">
     <div class="col-md-8 offset-md-2" style="margin-top: 25px;">
-        <form class="custom-form" style="box-shadow: 0px 0px 20px 0px var(--bs-teal);" method="post">
+        <form class="custom-form" style="box-shadow: 0px 0px 20px 0px var(--bs-teal);" name="file" enctype="multipart/form-data" method="post">
             <h1 style="border-bottom-color: var(--bs-teal);">Editar Colección</h1>
             <div class="row form-group">
                 <div class="col-sm-4 label-column"><label class="col-form-label" for="name-input-field">Título Colección</label></div>
@@ -57,7 +57,7 @@
             </div>
             <div class="row form-group">
                 <div class="col-sm-4 label-column"><label class="col-form-label" for="pawssword-input-field">Imagen Álbum</label></div>
-                <div class="col-sm-6 input-column"><input class="form-control" type="file" required="" accept="image/*"></div>
+                <div class="col-sm-6 input-column"><input class="form-control" type="file" name="file" required="" accept="image/*"></div>
             </div>
             <div class="row form-group">
                 <div class="col-sm-4 label-column"><label class="col-form-label" for="repeat-pawssword-input-field">Estado</label></div>
