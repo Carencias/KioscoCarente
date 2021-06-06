@@ -32,12 +32,9 @@
     </nav>
     <div class="row register-form" style="padding-top: 25px;margin: 0px;">
         <div class="col-md-8 offset-md-2" style="margin-top: 25px;">
-            <form class="custom-form" style="box-shadow: 0px 0px 20px 0px var(--bs-teal);" method="post">
-                <h1 style="border-bottom-color: var(--bs-teal);">Editar Colección</h1>
-                <div class="row form-group">
-                    <div class="col-sm-4 label-column"><label class="col-form-label" for="name-input-field">Título Colección</label></div>
-                    <div class="col-sm-6 input-column"><input class="form-control" type="text" name="nombre_coleccion" required=""></div>
-                </div>
+            <form class="custom-form" style="box-shadow: 0px 0px 20px 0px var(--bs-teal);" method="post" enctype="multipart/form-data">
+                <h1 style="border-bottom-color: var(--bs-teal);margin-bottom: 0px;">Editar Colección</h1>
+                <h2 style="margin-bottom: 31px;margin-top: 31px;">Java</h2>
                 <div class="row form-group">
                     <div class="col-sm-4 label-column"><label class="col-form-label" for="email-input-field">Precio Álbum</label></div>
                     <div class="col-sm-6 input-column"><input class="form-control form-control-lg" type="number" name="precio_coleccion" required=""></div>
@@ -48,7 +45,7 @@
                 </div>
                 <div class="row form-group">
                     <div class="col-sm-4 label-column"><label class="col-form-label" for="pawssword-input-field">Imagen Álbum</label></div>
-                    <div class="col-sm-6 input-column"><input class="form-control" type="file" required="" accept="image/*"></div>
+                    <div class="col-sm-6 input-column"><input class="form-control" type="file" required="" accept="image/*" name="file"></div>
                 </div>
                 <div class="row form-group">
                     <div class="col-sm-4 label-column"><label class="col-form-label" for="repeat-pawssword-input-field">Estado</label></div>
