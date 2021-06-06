@@ -386,35 +386,33 @@ app.post("/dashboard/admin/editarCromo", function (req, res) {
 
 //PAGINA PRINCIPAL USUARIO
 app.get("/dashboard/user", async function (req, res) {
-  let string = "SELECT * FROM ALBUMES WHERE User = '" + req.session.user + "'";
-  var colecciones = [];
-  let estadosAlbumes = [];
+  let string = "SELECT * FROM COLECCIONES WHERE Nombre IN(SELECT Coleccion FROM ALBUMES WHERE User = '" + req.session.user + "')";
+  var colecciones;
+  var estadosAlbumes;
   connection.query(string, function (err, result, fields) {
     if (err) {
       lanzarError(res,"Error al consultar la base de datos");
     }
-    result.forEach(function (album) {
-      estadosAlbumes.push(album.Estado);
-      obtenerColecciones(album.Coleccion).then(function (coleccionesBBDD) {
-        colecciones.push(coleccionesBBDD[0]);
+    colecciones = result;
+     let string = "SELECT Estado FROM ALBUMES WHERE User = '" + req.session.user + "'";
 
+    connection.query(string, function (err, resultEstados, fields) {
+     if (err) {
+     lanzarError(res,"Error al consultar la base de datos");
+     }
+     estadosAlbumes = resultEstados;
         let stringUser = "SELECT * FROM CLIENTES WHERE User = '" + req.session.user + "'";
-       
         connection.query(stringUser, function (err, resultUser, fields) {
-          if (err) {
-            lanzarError(res,"Error al consultar la base de datos");
-          }
-          res.render('user/clientePrincipal', {
-            colecciones: colecciones,
-            estados: estadosAlbumes,
-            nombre: req.session.user,
-            puntos: resultUser[0].Puntos
-          });
+             if (err) {
+             lanzarError(res,"Error al consultar la base de datos");
+             }
+             res.render('user/clientePrincipal', {
+                 colecciones: colecciones,
+                 estados: estadosAlbumes,
+                 nombre: req.session.user,
+                 puntos: resultUser[0].Puntos
+             });
         });
-
-      }, (error) => {
-        lanzarError(res,"Error al consultar la base de datos");
-      });
     });
   });
 });

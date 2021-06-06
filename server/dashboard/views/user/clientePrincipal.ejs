@@ -45,12 +45,12 @@
                     <div class="card"><img class="card-img-top w-100 d-block bg-danger bg-gradient border rounded-pill border-secondary shadow-lg" src="<%= "."+coleccion.FotoAlbum %>">
                         <div class="card-body">
                             <h1 class="card-title" style="text-align: center;"><strong><%= coleccion.Nombre %></strong><br></h1>
-                            <% if(estados[i] === "No iniciada"){ %>
-                                <h6 class="text-muted card-subtitle mb-2" style="text-align: center;background: rgb(238,195,195);"><%= estados[i] %></h6>
-                                <%}else if(estados[i] === "Completada parcialmente"){ %>
-                                <h6 class="text-muted card-subtitle mb-2" style="text-align: center;background: var(--bs-yellow);margin-bottom: 6px;"><%= estados[i] %></h6>
+                            <% if(estados[i][0] === "No iniciada"){ %>
+                                <h6 class="text-muted card-subtitle mb-2" style="text-align: center;background: rgb(238,195,195);"><%= estados[i][0] %></h6>
+                                <%}else if(estados[i][0] === "Completada parcialmente"){ %>
+                                <h6 class="text-muted card-subtitle mb-2" style="text-align: center;background: var(--bs-yellow);margin-bottom: 6px;"><%= estados[i][0] %></h6>
                                 <%}else { %>
-                                <h6 class="text-muted card-subtitle mb-2" style="text-align: center;background: rgb(157,224,156);margin-bottom: 6px;"><%= estados[i] %></h6>
+                                <h6 class="text-muted card-subtitle mb-2" style="text-align: center;background: rgb(157,224,156);margin-bottom: 6px;"><%= estados[i][0] %></h6>
                             <%} %>
                             
                             <p class="card-text" style="text-align: justify;"><%= coleccion.Descripcion %><br></p><a class="btn btn-primary" role="button" style="text-align: left;" href=<%= "clienteCromos?nombreColeccion=" + coleccion.Nombre %>>Ver cromos</a>
