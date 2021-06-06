@@ -961,3 +961,32 @@ app.post("/dashboard/user/retoPregunta", async function (req, res) {
     res.sendStatus(403);
   }
 });
+
+const fileUpload = require('express-fileupload');
+app.use(fileUpload());
+
+app.post("/dashboard/admin/editarColeccion",  function (req, res) {
+  let EDFile = req.files.file;
+  let nombreColeccionAntiguo = req.query.nombreColeccion;
+  let nombreColeccionNuevo = req.body.nombre_coleccion;
+  
+  let oldParentPath = __dirname +"/dashboard/resources/colecciones/"+nombreColeccionAntiguo+"/";
+  let newParentPath = __dirname +"/dashboard/resources/colecciones/"+nombreColeccionNuevo+"/";
+
+  //Crear carpeta nueva si la vieja no existia
+  if (!fs.existsSync(oldParentPath)){
+    //ERROR. Si estoy editando tiene que existir
+    //fs.mkdirSync(newParentPath, {recursive: true}); 
+    res.send(403);
+    //Renombro carpeta
+  } else {
+    fs.renameSync(oldParentPath, newParentPath);
+  
+    EDFile.mv(__dirname + `/dashboard/resources/colecciones/`+nombreColeccionNuevo+`/${EDFile.name}`,err => {
+        if(err) return res.status(500).send({ message : err })
+
+        return res.status(200).send({ message : 'File upload' })
+    })
+    
+  }
+});
