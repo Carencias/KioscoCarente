@@ -19,94 +19,118 @@
 </head>
 
 <body style="height: 619px;">
-    <nav class="navbar navbar-light navbar-expand-lg fixed-top bg-secondary text-uppercase" id="mainNav" style="height: 70px;">
-        <div class="container"><img src="assets/img/logoBlanco.svg" style="height: 60px;filter: brightness(0%) contrast(200%) invert(100%);"><a class="navbar-brand" href="#page-top">&nbsp; KIOSCO CARENTE</a><button data-bs-toggle="collapse" data-bs-target="#navbarResponsive" class="navbar-toggler text-white bg-primary navbar-toggler-right text-uppercase rounded" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><i class="fa fa-bars"></i></button>
+    <nav class="navbar navbar-light navbar-expand-lg fixed-top bg-secondary text-uppercase" id="mainNav"
+        style="height: 70px;">
+        <div class="container"><img src="assets/img/logoBlanco.svg"
+                style="height: 60px;filter: brightness(0%) contrast(200%) invert(100%);"><a class="navbar-brand"
+                href="#page-top">&nbsp; KIOSCO CARENTE</a><button data-bs-toggle="collapse"
+                data-bs-target="#navbarResponsive"
+                class="navbar-toggler text-white bg-primary navbar-toggler-right text-uppercase rounded"
+                aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><i
+                    class="fa fa-bars"></i></button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="."><i class="fa fa-home"></i>&nbsp;INICIO</a></li>
-                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="administradorPerfil.html"><i class="fa fa-user"></i>&nbsp;PERFIL</a></li>
-                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="../logout"><i class="fa fa-sign-out"></i>&nbsp;CERRAR SESIÓN</a></li>
+                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded"
+                            href="."><i class="fa fa-home"></i>&nbsp;INICIO</a></li>
+                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded"
+                            href="."><i class="fa fa-user"></i>&nbsp;PERFIL</a></li>
+                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="../logout"><i
+                                class="fa fa-sign-out"></i>&nbsp;CERRAR SESIÓN</a></li>
                 </ul>
             </div>
         </div>
     </nav>
     <div class="container" style="padding-top: 75px;margin-top: 30px;">
         <div class="row" style="padding-bottom: 65px;">
-            <div class="col-md-6 columnas_cromos" style="width: 536px;padding-left: 110px;"><div>
-                
-                
-<div class="cromo">
-      <div class="decoracion">
-        <div class="top">
-          <div class="nombreCromo">
-            <h3 id="nombre_cromo"><%= cromo.Nombre %></h3>
-          </div>
-          <div class="border">
-            <img id="imagen_cromo" src=<%= "../" + cromo.RutaImagen %> alt="imagen">
-          </div>
-        </div>
-        <div class="bottom">
-          <p id="dato_cromo" class="dato"><%= cromo.DatoInteresante %></p>
-          <p class="descripcion" id="descripcion_cromo" class="descripcion"><%= cromo.Descripcion %></p>
-          <ul>
-            <li><span class="frecuencia">Frecuencia: </span><a id="frecuencia_cromo" ><%= cromo.Frecuencia %></a></li>
-            <li><span class="lenguaje">Lenguaje: </span><a id="lenguaje_cromo"><%= cromo.Coleccion %></a></li>
-          </ul>
-  
-          <p class="info">
-          </p>
-        </div>
-      </div>
-    </div>
-    
-</div></div>
+            <div class="col-md-6 columnas_cromos" style="width: 536px;padding-left: 110px;">
+                <div>
+
+                    <div class="cromo">
+                        <div class="decoracion">
+                            <div class="top">
+                                <div class="nombreCromo">
+                                    <h3 id="nombre_cromo"><%= cromo.Nombre %></h3>
+                                </div>
+                                <div class="border">
+                                    <img id="imagen_cromo" src=<%= "../" + cromo.RutaImagen %> alt="imagen">
+                                </div>
+                            </div>
+                            <div class="bottom">
+                                <p id="dato_cromo" class="dato"><%= cromo.DatoInteresante %></p>
+                                <p class="descripcion" id="descripcion_cromo" class="descripcion">
+                                    <%= cromo.Descripcion %></p>
+                                <ul>
+                                    <li><span class="frecuencia">Frecuencia: </span><a
+                                            id="frecuencia_cromo"><%= cromo.Frecuencia %></a></li>
+                                    <li><span class="lenguaje">Lenguaje: </span><a
+                                            id="lenguaje_cromo"><%= cromo.Coleccion %></a></li>
+                                </ul>
+
+                                <p class="info">
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
             <div class="col-md-6" style="width: 597px;">
                 <div class="row register-form">
                     <div class="col-md-8 offset-md-2" style="margin: 0px;padding: 0px;">
-                        <form class="custom-form" style="margin: 0px;padding: 0px;width: 589px;padding-top: 33px;box-shadow: 0px 0px 20px var(--bs-primary);" method="post">
-                            <h1 style="border-bottom-color: var(--bs-teal);">Editar Cromo</h1>
+                        <form class="custom-form"
+                            style="margin: 0px;padding: 0px;width: 589px;padding-top: 33px;box-shadow: 0px 0px 20px var(--bs-primary);"
+                            method="post" enctype="multipart/form-data">
+                            <h1 style="border-bottom-color: var(--bs-teal);margin-bottom: 0px;">Editar Cromo</h1>
+                            <h2 style="margin-bottom: 31px;margin-top: 31px;"><%= cromo.Nombre %></h2>
                             <div class="row form-group">
-                                <div class="col-sm-4 label-column"><label class="col-form-label" for="name-input-field">Nombre</label></div>
-                                <div class="col-sm-6 input-column"><input class="form-control" type="text" id="formulario_editar_cromo_nombre" name="nombre_cromo_formulario" oninput="cargarDatosCromoEditar()" required="" value=<%= cromo.Nombre %>></div>
+                                <div class="col-sm-4 label-column"><label class="col-form-label"
+                                        for="email-input-field">Precio</label></div>
+                                <div class="col-sm-6 input-column"><input class="form-control form-control-lg"
+                                        type="number" id="formulario_editar_cromo_precio" name="precio_cromo_formulario"
+                                        required="" oninput="cargarDatosCromoEditar()"></div>
                             </div>
                             <div class="row form-group">
-                                <div class="col-sm-4 label-column"><label class="col-form-label" for="email-input-field">Precio</label></div>
-                                <div class="col-sm-6 input-column"><input class="form-control form-control-lg" type="number" id="formulario_editar_cromo_precio" name="precio_cromo_formulario" required="" oninput="cargarDatosCromoEditar()" value=<%= cromo.Precio %>></div>
+                                <div class="col-sm-4 label-column"><label class="col-form-label"
+                                        for="pawssword-input-field">Stock</label></div>
+                                <div class="col-sm-6 input-column"><input class="form-control form-control-lg"
+                                        type="number" id="formulario_editar_cromo_stock" name="stock_cromo_formulario"
+                                        required="" oninput="cargarDatosCromoEditar()"></div>
                             </div>
                             <div class="row form-group">
-                                <div class="col-sm-4 label-column"><label class="col-form-label" for="pawssword-input-field">Stock</label></div>
-                                <div class="col-sm-6 input-column"><input class="form-control form-control-lg" type="number" id="formulario_editar_cromo_stock" name="stock_cromo_formulario" required="" oninput="cargarDatosCromoEditar()" value=<%= cromo.Cantidad %>></div>
+                                <div class="col-sm-4 label-column"><label class="col-form-label"
+                                        for="repeat-pawssword-input-field">Imagen</label></div>
+                                <div class="col-sm-6 input-column"><input class="form-control" type="file"
+                                        id="formulario_editar_cromo_imagen" name="imagen_cromo_formulario" required=""
+                                        accept="image/*" oninput="cargarDatosCromoEditar()"></div>
                             </div>
                             <div class="row form-group">
-                                <div class="col-sm-4 label-column"><label class="col-form-label" for="repeat-pawssword-input-field">Imagen</label></div>
-                                <div class="col-sm-6 input-column"><input class="form-control" type="file" id="formulario_editar_cromo_imagen" name="imagen_cromo_formulario" required="" accept="image/*" oninput="cargarDatosCromoEditar()"></div>
+                                <div class="col-sm-4 label-column"><label class="col-form-label"
+                                        for="repeat-pawssword-input-field">Descripción</label></div>
+                                <div class="col-sm-6 input-column"><textarea class="form-control"
+                                        id="formulario_editar_cromo_descripcion" name="descripcion_cromo_formulario"
+                                        oninput="cargarDatosCromoEditar()" required=""></textarea></div>
                             </div>
                             <div class="row form-group">
-                                <div class="col-sm-4 label-column"><label class="col-form-label" for="repeat-pawssword-input-field">Descripción</label></div>
-                                <div class="col-sm-6 input-column"><textarea class="form-control" id="formulario_editar_cromo_descripcion" name="descripcion_cromo_formulario" oninput="cargarDatosCromoEditar()" required=""><%= cromo.Descripcion %></textarea></div>
+                                <div class="col-sm-4 label-column"><label class="col-form-label"
+                                        for="name-input-field">Dato Interesante</label></div>
+                                <div class="col-sm-6 input-column"><input class="form-control" type="text"
+                                        id="formulario_editar_cromo_dato" name="dato_cromo_formulario" required=""
+                                        oninput="cargarDatosCromoEditar()"></div>
                             </div>
                             <div class="row form-group">
-                                <div class="col-sm-4 label-column"><label class="col-form-label" for="name-input-field">Dato Interesante</label></div>
-                                <div class="col-sm-6 input-column"><input class="form-control" type="text" id="formulario_editar_cromo_dato" name="dato_cromo_formulario" required="" value="<%= cromo.DatoInteresante %>"></div>
-                            </div>
-                            <div class="row form-group">
-                                <div class="col-sm-4 label-column"><label class="col-form-label" for="name-input-field">Frecuencia</label></div>
-                                <div class="col-sm-6 input-column"><select class="form-select" id="formulario_editar_cromo_frecuencia" required="" name="frecuencia_cromo_formulario" oninput="cargarDatosCromoEditar()">
-                                    <% if(cromo.Frecuencia==="Comun"){ %>
+                                <div class="col-sm-4 label-column"><label class="col-form-label"
+                                        for="name-input-field">Frecuencia</label></div>
+                                <div class="col-sm-6 input-column"><select class="form-select"
+                                        id="formulario_editar_cromo_frecuencia" required=""
+                                        name="frecuencia_cromo_formulario" oninput="cargarDatosCromoEditar()">
                                         <option value="Comun" selected="">Común</option>
-                                        <option value="Raro">Raro</option>
-                                        <option value="Excepcional">Excepcional</option>
-                                    <% }else if(cromo.Frecuencia==="Raro"){ %>
-                                        <option value="Comun">Común</option>
                                         <option value="Raro" selected="">Raro</option>
                                         <option value="Excepcional">Excepcional</option>
-                                    <%} else{ %>
-                                        <option value="Comun">Común</option>
-                                        <option value="Raro">Raro</option>
-                                        <option value="Excepcional" selected="">Excepcional</option>
                                     </select></div>
-                                    <%} %>
-                            </div><button class="btn btn-light submit-button" type="submit" style="background: var(--bs-teal);color: var(--bs-white);">GUARDAR CROMO</button><button class="btn btn-light submit-button" type="reset" style="background: var(--bs-danger);">CANCELAR</button>
+                            </div><button class="btn btn-light submit-button" type="submit"
+                                style="background: var(--bs-teal);color: var(--bs-white);">GUARDAR CROMO</button><button
+                                class="btn btn-light submit-button" type="reset"
+                                style="background: var(--bs-danger);">CANCELAR</button>
                         </form>
                     </div>
                 </div>

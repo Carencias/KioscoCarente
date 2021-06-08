@@ -16,6 +16,7 @@
     <link rel="stylesheet" href="assets/css/Pretty-Registration-Form.css">
     <link rel="stylesheet" href="assets/css/Registration-Form-with-Photo.css">
     <link rel="stylesheet" href="assets/css/Team-Clean.css">
+    <link rel="stylesheet" href="https://unpkg.com/katex@0.12.0/dist/katex.min.css" />
 </head>
 
 <body style="margin: 0px;">
@@ -23,8 +24,8 @@
         <div class="container"><img src="assets/img/logoBlanco.svg" style="height: 60px;filter: brightness(0%) contrast(200%) invert(100%);"><a class="navbar-brand" href="#page-top">&nbsp; KIOSCO CARENTE</a><button data-bs-toggle="collapse" data-bs-target="#navbarResponsive" class="navbar-toggler text-white bg-primary navbar-toggler-right text-uppercase rounded" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation"><i class="fa fa-bars"></i></button>
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ms-auto">
-                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded"><i class="fa fa-star"></i>&nbsp;PUNTOS: 1200</a></li>
-                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="clientePrincipal.html"><i class="fa fa-home"></i>&nbsp;INICIO</a></li>
+                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded"><i class="fa fa-star"></i>&nbsp;PUNTOS: <%=puntos%></a></li>
+                    <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="."><i class="fa fa-home"></i>&nbsp;INICIO</a></li>
                     <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="clientePerfil.html"><i class="fa fa-user"></i>&nbsp;PERFIL</a></li>
                     <li class="nav-item mx-0 mx-lg-1"><a class="nav-link py-3 px-0 px-lg-3 rounded" href="../logout"><i class="fa fa-sign-out"></i>&nbsp;CERRAR SESIÓN</a></li>
                 </ul>
@@ -36,12 +37,18 @@
             <form class="custom-form" style="box-shadow: 0px 0px 20px var(--bs-teal);margin: 0px;margin-top: 76px;padding: 0px;padding-left: 0px;padding-bottom: 23px;" method="post">
                 <h1 style="margin-top: 25px;border-bottom-color: var(--bs-teal);margin-bottom: 23px;">ECUACIÓN MATEMÁTICA</h1>
                 <p class="text-center" style="margin-bottom: 27px;">Si logras encontrar la solución a esta ecuación obtendrás puntos.</p>
-                <div class="container" style="margin-bottom: 20px;"><div>x + 2 = (5x - 3 + 5x) + 6 * 7^4</div></div><input class="form-control" type="text" name="respuesta" required="" style="width: 343.062px;margin: 0 auto;margin-bottom: 30px;">
+                <div class="container" style="margin-bottom: 20px;"><div><%-ecuacion%></div></div><input class="form-control" type="text" name="respuesta" required="" style="width: 343.062px;margin: 0 auto;margin-bottom: 30px;">
                 <div class="container" id="contenedorAlertas">
-                    <div class="alert alert-success text-center alert-dismissible" role="alert" style="width: 516.062px;margin: 0 auto;margin-bottom: 10px;"><button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button><span><strong>Alert</strong> text.</span></div>
-                    <div class="alert alert-danger text-center alert-dismissible" role="alert" style="width: 516.062px;margin: 0 auto;margin-bottom: 10px;"><button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button><span><strong>Alert</strong> text.</span></div>
+                    <% if(alerta){ %>
+                        <% if(alerta.esValido){ %>
+                            <div class="alert alert-success text-center alert-dismissible" role="alert" style="width: 516.062px;margin: 0 auto;margin-bottom: 10px;"><button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button><span><strong>Enhorabuena</strong> has conseguido 10 puntos.</span></div>
+                        <% } else { %>
+                            <div class="alert alert-danger text-center alert-dismissible" role="alert" style="width: 516.062px;margin: 0 auto;margin-bottom: 10px;"><button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button><span><strong>¡Vaya!</strong> intentalo de nuevo.</span></div>
+                        <% } %>
+                        
+                    <% } %>
                 </div>
-                <div class="btn-group" role="group"><a class="btn btn-primary" role="button" href="./retoCaptcha"><i class="fa fa-refresh"></i></a><button class="btn btn-primary" type="submit" onclick="validarCaptcha()">VALIDAR</button></div>
+                <div class="btn-group" role="group"><a class="btn btn-primary" role="button" href="./retoEcuacion"><i class="fa fa-refresh"></i></a><button class="btn btn-primary" type="submit">VALIDAR</button></div>
             </form>
         </div>
     </div>

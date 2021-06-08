@@ -324,7 +324,8 @@ app.get("/dashboard/admin/editarColeccion", function (req, res) {
     }
     console.log(result)
     res.render('admin/administradorEditarColeccion', {
-      cromos: result
+      cromos: result,
+      nombreColeccion: coleccion
     });
 
   });
@@ -948,13 +949,9 @@ app.get("/dashboard/user/retoPregunta", async function (req, res) {
     let pregunta = result[0].Pregunta;
     let respuesta = result[0].Respuesta;
     req.session.pregunta = pregunta;
-    req.session.respuesta = respuesta;
+    req.session.respuestaPregunta = respuesta;
 
-    res.render('user/clienteRetoPregunta', {
-      pregunta: pregunta,
-      alerta: undefined,
-      puntos: puntos
-    });
+    renderPreguntaAleatoria(req, res, undefined);
 
   });
 });
@@ -988,12 +985,30 @@ app.post("/dashboard/user/retoPregunta", async function (req, res) {
       alerta.esValido = 0;
   
     }
+    
+    renderPreguntaAleatoria(req, res, alerta);
+
   
+  } else {
+    res.sendStatus(403);
+  }
+});
+
+async function renderPreguntaAleatoria(req, res, alerta){
+  let puntos = await obtenerPuntosCliente(req.session.user);
+
+  obtenerEcuacionAleatoria().then((result) => {
+    let ecuacion = result[0].Ecuacion;
+    let respuesta = result[0].Respuesta;
+    let ecuacionLatex = katex.renderToString(ecuacion);
+    req.session.ecuacion = ecuacionLatex;
+    req.session.respuestaEcuacion = respuesta;
+
     obtenerPreguntaAleatoria().then((result) => {
       let pregunta = result[0].Pregunta;
       let respuesta = result[0].Respuesta;
       req.session.pregunta = pregunta;
-      req.session.respuesta = respuesta;
+      req.session.respuestaPregunta = respuesta;
   
       res.render('user/clienteRetoPregunta', {
         pregunta: pregunta,
@@ -1002,11 +1017,71 @@ app.post("/dashboard/user/retoPregunta", async function (req, res) {
       });
   
     });
+
+  });
+}
+
+//ECUACIONES
+const katex = require('katex');
+app.get("/dashboard/user/retoEcuacion", async function (req, res) {
+  renderEcuacionAleatoria(req, res, undefined);
+});
+
+app.post("/dashboard/user/retoEcuacion", async function (req, res) {
+  //TODO comprobar entrada??
+  let respuestaCorrectaEcuacion = req.session.respuestaEcuacion;
+  let idUser = req.session.user
+  let puntos = await obtenerPuntosCliente(idUser);
+
+  //TODO PONERLO ARRIBA
+  const PUNTOS_PREGUNTA = 10;
+  let alerta = [];
+
+  //Si se generó una pregunta con GET
+  if(respuestaCorrectaEcuacion){
+    if(req.body.respuesta.toLowerCase() === respuestaCorrectaEcuacion.toLowerCase()){
+
+      alerta.esValido = 1;
+  
+      actualizarPuntosCliente(puntos + PUNTOS_PREGUNTA, idUser).catch((error) => {console.log("Error al actualizar puntos")});
+
+      puntos = puntos + PUNTOS_PREGUNTA;
+  
+    } else {
+      
+      alerta.esValido = 0;
+  
+    }
+  
+    renderEcuacionAleatoria(req, res, alerta);
   
   } else {
     res.sendStatus(403);
   }
 });
+
+async function renderEcuacionAleatoria(req, res, alerta){
+  let puntos = await obtenerPuntosCliente(req.session.user);
+
+  obtenerEcuacionAleatoria().then((result) => {
+    let ecuacion = result[0].Ecuacion;
+    let respuesta = result[0].Respuesta;
+    let ecuacionLatex = katex.renderToString(ecuacion);
+    req.session.ecuacion = ecuacionLatex;
+    req.session.respuestaEcuacion = respuesta;
+
+    res.render('user/clienteRetoEcuacion', {
+      ecuacion: ecuacionLatex,
+      alerta: alerta,
+      puntos: puntos
+    });
+
+  });
+}
+
+function obtenerEcuacionAleatoria() {
+  return ejecutarQueryBBDD("SELECT * FROM ECUACIONES ORDER BY RAND() LIMIT 1", [], "Obtener Pregunta", true);
+}
 
 const fileUpload = require('express-fileupload');
 app.use(fileUpload());
