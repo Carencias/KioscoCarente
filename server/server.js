@@ -21,11 +21,11 @@ const {
 
 
 app.use(express.json());
-app.use((req, res, next) => {
+/*app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Methods", "POST");
+  res.header("Access-Control-Allow-Methods", "POST" | "GET");
   next();
-});
+});*/
 
 app.listen(port, () => {
   console.log(`Running ${port}`);
@@ -568,32 +568,33 @@ app.post("/borrarColeccion", function (req, res) {
 
 });
 
-app.post("/dashboard/user/comprarCromo", function (req, res) {
+app.get("/dashboard/user/comprarCromo", async function (req, res) {
   //TODO comprobar entrada??
-  let idCromo = req.body.idCromo;
-  let coleccionAlbum = req.body.coleccionAlbum;
+  let idCromo = req.query.idCromo;
   //let idUser = req.session.user
   let idUser = "user";
 
   var cromo, cliente;
 
-  obtenerCromos(idCromo).then(function (cromos) {
-    //TODO si no se permite enviar el ID del cromo a mano sobra
+  obtenerCromos(idCromo).then(async function (cromos) {
     if (!cromos.length) {
       lanzarError(res, "No existe ese cromo");
     } else {
+
+      let coleccionAlbum = await obtenerColeccionCromo(idCromo);
+      coleccionAlbum = coleccionAlbum[0].Coleccion;
 
       cromo = cromos[0];
 
       var precio = cromo.Precio;
       var cantidad = cromo.Cantidad;
       if (cantidad > 0) {
-        obtenerClientes(idUser, precio).then(function (clientes) {
+        obtenerClientes(idUser).then(function (clientes) {
           cliente = clientes[0];
           if (cliente.Puntos > cromo.Precio) {
             consultarCromoAlbum(idCromo, idUser, coleccionAlbum).then(function () {
               agregarCromoAAlbumAtomico(idCromo, coleccionAlbum, idUser, cromo.Precio, cromo.Cantidad, cliente.Puntos).then(function () {
-                res.send("Cromo comprado correctamente");
+                res.redirect("./TiendaCromos?nombreColeccion=" + coleccionAlbum);
 
                 calcularNuevoEstadoAlbum(idUser, coleccionAlbum);
 
@@ -690,6 +691,10 @@ function cambiarEstadoAlbum(estado, usuario, coleccion) {
   return ejecutarQueryBBDD("UPDATE ALBUMES SET Estado = ? WHERE User = ? AND Coleccion = ?", [estado, usuario, coleccion], "Cambiar estado album", false);
 }
 
+function obtenerColeccionCromo(idCromo) {
+  return ejecutarQueryBBDD("SELECT Coleccion FROM CROMOS WHERE ID = ?", [idCromo], "Obtener coleccion de cromo", true);
+}
+
 function contarCromosComprados(usuario, coleccion) {
   return ejecutarQueryBBDD("SELECT COUNT(*) AS numCromosComprados FROM CROMOS_ALBUMES WHERE AlbumUser = ? AND AlbumColeccion = ?", [usuario, coleccion], "Contar cromos comprados", true);
 }
@@ -752,7 +757,7 @@ function obtenerColecciones(nombreColeccion) {
   return ejecutarQueryBBDD("SELECT * FROM COLECCIONES WHERE Nombre = ?", [nombreColeccion], "Obtener coleccion", true);
 }
 
-function obtenerClientes(idUser, precio) {
+function obtenerClientes(idUser) {
   return ejecutarQueryBBDD("SELECT * FROM CLIENTES WHERE User = ?", [idUser], "Obtener cliente", true);
 }
 
