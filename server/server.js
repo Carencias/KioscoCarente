@@ -721,8 +721,12 @@ function editarCromo(id, nombre, precio, cantidad, imagen, descripcion, datoInte
     [nombre, precio, cantidad, imagen, descripcion, datoInteresante, frecuencia, id], "Editar cromo", false);
 }
 
-function editarColeccion(precioAlbum, foto, descripcion, estado, nombre) {
+function actualizarColeccion(precioAlbum, foto, descripcion, estado, nombre) {
   return ejecutarQueryBBDD("UPDATE COLECCIONES SET PrecioAlbum = ?, FotoAlbum = ?, Descripcion = ?, Estado = ?  WHERE Nombre = ?", [precioAlbum, foto, descripcion, estado, nombre], "Editar coleccion", false);
+}
+
+function actualizarColeccionSinFoto(precioAlbum, descripcion, estado, nombre) {
+  return ejecutarQueryBBDD("UPDATE COLECCIONES SET PrecioAlbum = ?, Descripcion = ?, Estado = ?  WHERE Nombre = ?", [precioAlbum, descripcion, estado, nombre], "Editar coleccion", false);
 }
 
 function agregarColeccion(nombre, precioAlbum, foto, descripcion) {
@@ -1051,40 +1055,51 @@ app.post("/dashboard/admin/editarColeccion", function (req, res) {
   //TODO comprobar entrada??
   let nombreColeccion = req.query.nombreColeccion;
   let precioAlbum = req.body.precio_coleccion;
-  let EDFile = req.files.file;
+  let EDFile = req.files;
   let estado = req.body.estado;
   let descripcion = req.body.descripcion_coleccion;
 
-  console.log(estado);
+  let parentPath = "/dashboard/resources/colecciones/" + nombreColeccion + "/";
 
-  editarColeccion(precioAlbum, `resources/colecciones/` + nombreColeccion + `/${EDFile.name}`, descripcion, estado, nombreColeccion).then(
-    () => {
-      res.redirect("/dashboard/admin/");
-      //Crear carpeta nueva si la vieja no existia
-      if (!fs.existsSync(parentPath)) {
-        //ERROR. Si estoy editando tiene que existir
-        //fs.mkdirSync(newParentPath, {recursive: true}); 
-        res.send(403);
-        //Renombro carpeta
-      } else {
-        //fs.renameSync(oldParentPath, newParentPath);
+  if(EDFile){
 
-        EDFile.mv(parentPath + `${EDFile.name}`, err => {
-          if (err) return res.status(500).send({
-            message: err
+    EDFile = EDFile.file;
+
+    actualizarColeccion(precioAlbum, parentPath + `${EDFile.name}`, descripcion, estado, nombreColeccion).then(
+      () => {
+        //Crear carpeta nueva si la vieja no existia
+        if (!fs.existsSync(__dirname + parentPath)) {
+          //ERROR. Si estoy editando tiene que existir
+          //fs.mkdirSync(newParentPath, {recursive: true}); 
+          res.send("No existe el directorio en el que se almacena la imagen");
+          return;
+          //Renombro carpeta
+        } else {
+          //fs.renameSync(oldParentPath, newParentPath);
+  
+          EDFile.mv(__dirname + parentPath + `${EDFile.name}`, err => {
+            if (err) return res.status(500).send({
+              message: err
+            })
+  
+  
           })
-
-
-        })
-
+  
+        }
+  
+        res.redirect("/dashboard/admin/");
+  
+      },
+      (error) => {
+        lanzarError(res, "Error al editar la colección en la base de datos");
       }
-    },
-    (error) => {
-      lanzarError(res, "Error al editar la colección en la base de datos");
-    }
-  );
+    );
 
-  let parentPath = __dirname + "/dashboard/resources/colecciones/" + nombreColeccion + "/";
+  }else{
+    actualizarColeccionSinFoto(precioAlbum, descripcion, estado, nombreColeccion).then(()=>{    
+      res.redirect("/dashboard/admin/");
+    }, (err)=>{lanzarError(res, "No se ha podido actualizar la coleccion")});
+  }
 
 });
 
@@ -1094,23 +1109,24 @@ app.post("/dashboard/admin/crearColeccion", function (req, res) {
   let precioAlbum = req.body.precio_coleccion;
   let EDFile = req.files.imagen_album;
   //let foto = req.body.imagen_album;
-  let descripcion = req.body.descripcion_coleccion
+  let descripcion = req.body.descripcion_coleccion;
 
-  agregarColeccion(nombreColeccion, precioAlbum, `resources/colecciones/` + nombreColeccion + `/${EDFile.name}`, descripcion).then(
+  let parentPath = "/dashboard/resources/colecciones/" + nombreColeccion + "/";
+
+  agregarColeccion(nombreColeccion, precioAlbum, parentPath + `${EDFile.name}`, descripcion).then(
     () => {
       res.redirect("/dashboard/admin/");
-      let parentPath = __dirname + "/dashboard/resources/colecciones/" + nombreColeccion + "/";
 
       //Crear carpeta nueva si no existia
-      if (!fs.existsSync(parentPath)) {
+      if (!fs.existsSync(__dirname + parentPath)) {
 
-        fs.mkdirSync(parentPath, {
+        fs.mkdirSync(__dirname + parentPath, {
           recursive: true
         });
 
       }
 
-      EDFile.mv(parentPath + `/${EDFile.name}`, err => {
+      EDFile.mv(__dirname + parentPath + `/${EDFile.name}`, err => {
         if (err) return res.status(500).send({
           message: err
         })

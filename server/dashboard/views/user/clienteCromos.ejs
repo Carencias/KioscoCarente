@@ -42,10 +42,12 @@
                 <% if(i%3===0){ %>
                     <div class="row text-start justify-content-center">
                   <% } %>
+                  <div class="col-md-4 text-start columnas_cromos">
+
                       <div class="cromo">
                           <div class="decoracion">
                              <div class="top"><div class="nombreCromo"><h3><%= cromo.Nombre%></h3></div>
-                                  <div><img src="<%= "."+cromo.RutaImagen%>" alt="imagen"></div>
+                                  <div><img src=<%= cromo.RutaImagen%> alt="imagen"></div>
                              </div>
                              <div class="bottom">
                               <p class="dato"><%= cromo.DatoInteresante%></p>
