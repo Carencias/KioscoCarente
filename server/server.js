@@ -232,56 +232,24 @@ app.get("/content", auth, function (req, res) {
 app.post("/registro", function (req, res) {
   let nombre = req.body.nombre;
   let username = req.body.username;
-  let password = req.body.password;
+  let password = req.body.password_1;
   let apellidos = req.body.apellidos;
   let email = req.body.email;
 
-  agregarUsuario(username, password, nombre, apellidos, email, '0').then(
+  agregarUsuario(username, password, nombre, apellidos, email).then(
     () => {
       res.send("Se ha creado el usuario exitosamente")
     },
     (error) => {
-      lanzarError(res,"Error al agregar al nuevo usario a la base de datos");
+      lanzarError(res, "Error al agregar al nuevo usuario a la base de datos"+error);
     }
   );
 
 });
 
-app.post("/dashboard/admin/crearColeccion", function (req, res) {
-  //TODO comprobar entrada??
-  let nombre = req.body.titulo_coleccion;
-  let precioAlbum = req.body.precio_coleccion;
-  let foto = req.body.imagen_album;
-  let descripcion = req.body.descripcion_coleccion
 
-  agregarColeccion(nombre, precioAlbum, foto, descripcion).then(
-    () => {
-      res.redirect("/dashboard/admin/");
-    },
-    (error) => {
-      lanzarError(res,"Error al agregar la colección a la base de datos");
-    }
-  );
 
-});
 
-app.post("dashboard/admin/editarColeccion", function (req, res) {
-  //TODO comprobar entrada??
-  let nombre = req.body.nombre;
-  let precioAlbum = req.body.precio;
-  let foto = req.body.foto;
-  let estado = req.body.estado;
-  let coleccion = req.body.coleccion;
-
-  editarColeccion(precioAlbum, foto, nombre, estado, coleccion).then(
-    () => {
-      res.send("Coleccion Actualizada")
-    },
-    (error) => {
-      lanzarError(res,"Error al editar la colección en la base de datos");
-    }
-  );
-});
 
 app.set('views', path.join(__dirname, '/dashboard/views'));
 //app.use("/dashboard/resources/colecciones/java/imagenes/", express.static(__dirname + "/dashboard/resources/colecciones/java/imagenes/"));
@@ -320,7 +288,7 @@ app.get("/dashboard/admin/editarColeccion", function (req, res) {
   let string = "SELECT * FROM CROMOS WHERE Coleccion = '" + coleccion + "'";
   connection.query(string, function (err, result, fields) {
     if (err) {
-      lanzarError(res,"Error al consultar la base de datos");
+      lanzarError(res, "Error al consultar la base de datos");
     }
     console.log(result)
     res.render('admin/administradorEditarColeccion', {
@@ -332,6 +300,8 @@ app.get("/dashboard/admin/editarColeccion", function (req, res) {
 
 });
 
+
+
 app.get("/dashboard/admin/editarCromo", function (req, res) {
   //TODO comprobar entrada??
 
@@ -340,7 +310,7 @@ app.get("/dashboard/admin/editarCromo", function (req, res) {
   let string = "SELECT * FROM CROMOS WHERE ID ='" + id + "'";
   connection.query(string, function (err, result, fields) {
     if (err) {
-      lanzarError(res,"Error al consultar la base de datos");
+      lanzarError(res, "Error al consultar la base de datos");
     }
     console.log(result)
     res.render('admin/administradorEditarCromo', {
@@ -353,7 +323,7 @@ app.get("/dashboard/admin/editarCromo", function (req, res) {
 
 app.post("/dashboard/admin/editarCromo", function (req, res) {
   //TODO comprobar entrada??
-  
+
   let id = req.query.IDCromo;
   let nombre = req.body.nombre_cromo_formulario;
   let precio = req.body.precio_cromo_formulario;
@@ -368,21 +338,20 @@ app.post("/dashboard/admin/editarCromo", function (req, res) {
   let string = "SELECT Coleccion FROM CROMOS WHERE ID ='" + id + "'";
   connection.query(string, function (err, result, fields) {
     if (err) {
-      lanzarError(res,"Error al consultar la base de datos");
+      lanzarError(res, "Error al consultar la base de datos");
     }
     coleccion = result[0].Coleccion;
-    
-    let imagen = "./resources/colecciones/"+coleccion+"/imagenes/"+nombreImagen;
+
+    let imagen = "./resources/colecciones/" + coleccion + "/imagenes/" + nombreImagen;
 
     editarCromo(id, nombre, precio, cantidad, imagen, descripcion, datoInteresante, frecuencia).then(() => {
-        res.send("Cromo actualizado correctamente");
-      }, (error) => {
-        lanzarError(res,"Error al editar el cromo en la base de datos");
-      }
-    );
+      res.send("Cromo actualizado correctamente");
+    }, (error) => {
+      lanzarError(res, "Error al editar el cromo en la base de datos");
+    });
 
   });
-  
+
 });
 
 //PAGINA PRINCIPAL USUARIO
@@ -392,28 +361,28 @@ app.get("/dashboard/user", async function (req, res) {
   var estadosAlbumes;
   connection.query(string, function (err, result, fields) {
     if (err) {
-      lanzarError(res,"Error al consultar la base de datos");
+      lanzarError(res, "Error al consultar la base de datos");
     }
     colecciones = result;
-     let string = "SELECT Estado FROM ALBUMES WHERE User = '" + req.session.user + "'";
+    let string = "SELECT Estado FROM ALBUMES WHERE User = '" + req.session.user + "'";
 
     connection.query(string, function (err, resultEstados, fields) {
-     if (err) {
-     lanzarError(res,"Error al consultar la base de datos");
-     }
-     estadosAlbumes = resultEstados;
-        let stringUser = "SELECT * FROM CLIENTES WHERE User = '" + req.session.user + "'";
-        connection.query(stringUser, function (err, resultUser, fields) {
-             if (err) {
-             lanzarError(res,"Error al consultar la base de datos");
-             }
-             res.render('user/clientePrincipal', {
-                 colecciones: colecciones,
-                 estados: estadosAlbumes,
-                 nombre: req.session.user,
-                 puntos: resultUser[0].Puntos
-             });
+      if (err) {
+        lanzarError(res, "Error al consultar la base de datos");
+      }
+      estadosAlbumes = resultEstados;
+      let stringUser = "SELECT * FROM CLIENTES WHERE User = '" + req.session.user + "'";
+      connection.query(stringUser, function (err, resultUser, fields) {
+        if (err) {
+          lanzarError(res, "Error al consultar la base de datos");
+        }
+        res.render('user/clientePrincipal', {
+          colecciones: colecciones,
+          estados: estadosAlbumes,
+          nombre: req.session.user,
+          puntos: resultUser[0].Puntos
         });
+      });
     });
   });
 });
@@ -465,17 +434,17 @@ app.get("/dashboard/user/tiendaAlbumes", function (req, res) {
   let stringCompradas = "SELECT * FROM COLECCIONES AS c INNER JOIN ALBUMES AS a ON c.Nombre = a.Coleccion WHERE c.Estado = 'Activa' and a.User = '" + req.session.user + "'";
   connection.query(stringCompradas, function (err, coleccionesDisponiblesCompradas, fields) {
     if (err) {
-      lanzarError(res,"Error al consultar la base de datos");
+      lanzarError(res, "Error al consultar la base de datos");
     }
     let stringNoCompradas = "SELECT * FROM COLECCIONES WHERE Estado = 'Activa' AND Nombre not IN( SELECT Nombre FROM COLECCIONES AS c INNER JOIN ALBUMES AS a ON c.Nombre = a.Coleccion WHERE c.Estado = 'Activa' and a.User = '" + req.session.user + "' )";
     connection.query(stringNoCompradas, function (err, coleccionesDisponiblesNoCompradas, fields) {
       if (err) {
-        lanzarError(res,"Error al consultar la base de datos");
+        lanzarError(res, "Error al consultar la base de datos");
       }
       let stringUser = "SELECT * FROM CLIENTES WHERE User = '" + req.session.user + "'";
       connection.query(stringUser, function (err, resultUser, fields) {
         if (err) {
-          lanzarError(res,"Error al consultar la base de datos");
+          lanzarError(res, "Error al consultar la base de datos");
         }
         res.render('user/clienteTiendaAlbumes', {
           colecciones: coleccionesDisponiblesNoCompradas.concat(coleccionesDisponiblesCompradas),
@@ -496,18 +465,18 @@ app.get("/dashboard/user/tiendaCromos", function (req, res) {
 
   let string = "SELECT * FROM CROMOS AS c WHERE c.ID not IN(SELECT CromoID FROM CROMOS_ALBUMES WHERE AlbumUser = '" + idUser + "' AND AlbumColeccion = '" + coleccion + "') AND c.Coleccion = '" + coleccion + "'";
   connection.query(string, function (err, cromosNoComprados, fields) {
-    if (err) lanzarError(res,"Error al consultar la base de datos");
+    if (err) lanzarError(res, "Error al consultar la base de datos");
 
 
     let string = "SELECT * FROM CROMOS WHERE ID IN (SELECT CromoID FROM CROMOS_ALBUMES WHERE AlbumUser = '" + idUser + "' AND AlbumColeccion = '" + coleccion + "' )";
 
     connection.query(string, function (err, cromosComprados, fields) {
-      if (err) lanzarError(res,"Error al consultar la base de datos");
+      if (err) lanzarError(res, "Error al consultar la base de datos");
 
       let stringUser = "SELECT * FROM CLIENTES WHERE User = '" + req.session.user + "'";
       connection.query(stringUser, function (err, resultUser, fields) {
         if (err) {
-          lanzarError(res,"Error al consultar la base de datos");
+          lanzarError(res, "Error al consultar la base de datos");
         }
 
         res.render('user/clienteTiendaCromos', {
@@ -531,11 +500,11 @@ app.get("/dashboard/user/clienteCromos", function (req, res) {
 
   let stringUser = "SELECT * FROM CLIENTES WHERE User = '" + idUser + "'";
   connection.query(stringUser, function (err, resultUser, fields) {
-    if (err) lanzarError(res,"Error al consultar la base de datos");
+    if (err) lanzarError(res, "Error al consultar la base de datos");
 
     let string = "SELECT * FROM CROMOS WHERE ID IN (SELECT CromoID FROM CROMOS_ALBUMES WHERE AlbumUser = '" + idUser + "' AND AlbumColeccion = '" + coleccion + "' )";
     connection.query(string, function (err, cromosComprados, fields) {
-      if (err) lanzarError(res,"Error al consultar la base de datos");
+      if (err) lanzarError(res, "Error al consultar la base de datos");
       console.log(cromosComprados);
       res.render('user/clienteCromos', {
         cromos: cromosComprados,
@@ -565,7 +534,7 @@ app.post("/dashboard/admin/crearCromo", function (req, res) {
       res.send("Cromo creado correctamente")
     },
     (error) => {
-      lanzarError(res,"Error al crear el nuevo cromo");
+      lanzarError(res, "Error al crear el nuevo cromo");
     }
   );
 
@@ -579,7 +548,7 @@ app.post("/borrarCromo", function (req, res) {
       res.send("El cromo ha sido borrado")
     },
     (error) => {
-      lanzarError(res,"Error al intentar borrar el cromo de la base de datos");
+      lanzarError(res, "Error al intentar borrar el cromo de la base de datos");
     }
   );
 
@@ -593,7 +562,7 @@ app.post("/borrarColeccion", function (req, res) {
       res.send("La coleccion ha sido borrada")
     },
     (error) => {
-      lanzarError(res,"Error al borrar la colección de la base de datos");
+      lanzarError(res, "Error al borrar la colección de la base de datos");
     }
   );
 
@@ -611,7 +580,7 @@ app.post("/dashboard/user/comprarCromo", function (req, res) {
   obtenerCromos(idCromo).then(function (cromos) {
     //TODO si no se permite enviar el ID del cromo a mano sobra
     if (!cromos.length) {
-      lanzarError(res,"No existe ese cromo");
+      lanzarError(res, "No existe ese cromo");
     } else {
 
       cromo = cromos[0];
@@ -629,25 +598,25 @@ app.post("/dashboard/user/comprarCromo", function (req, res) {
                 calcularNuevoEstadoAlbum(idUser, coleccionAlbum);
 
               }, function (error) {
-                lanzarError(res,"Error al consultar la base de datos");
+                lanzarError(res, "Error al consultar la base de datos");
               });
             }, function (error) {
-              lanzarError(res,"Error al consultar la base de datos");
+              lanzarError(res, "Error al consultar la base de datos");
             });
           } else {
-            lanzarError(res,"Puntos insuficientes para comprar el cromo");
+            lanzarError(res, "Puntos insuficientes para comprar el cromo");
           };
         }, function (error) {
-          lanzarError(res,"Error al consultar la base de datos");
+          lanzarError(res, "Error al consultar la base de datos");
         });
       } else {
-        lanzarError(res,"No hay existencias de ese cromo");
+        lanzarError(res, "No hay existencias de ese cromo");
       }
 
     }
 
   }, function (error) {
-    lanzarError(res,"Error al consultar la base de datos");
+    lanzarError(res, "Error al consultar la base de datos");
   });
 });
 
@@ -675,10 +644,10 @@ function calcularNuevoEstadoAlbum(usuario, coleccion) {
       }
 
     }, function (error) {
-      lanzarError(res,"Error al consultar la base de datos");
+      lanzarError(res, "Error al consultar la base de datos");
     })
   }, function (error) {
-    lanzarError(res,"Error al consultar la base de datos");
+    lanzarError(res, "Error al consultar la base de datos");
   });
 }
 
@@ -742,21 +711,21 @@ function agregarCromo(nombre, coleccion, rutaImagen, precio, cantidad, descripci
     [nombre, coleccion, rutaImagen, precio, cantidad, descripcion, datoInteresante, frecuencia], "Agregar cromo", false);
 }
 
-function editarCromo(id, nombre, precio, cantidad, imagen, descripcion, datoInteresante, frecuencia){
-  return ejecutarQueryBBDD("UPDATE CROMOS SET Nombre = ?, Precio = ?, Cantidad = ?, RutaImagen = ?, Descripcion = ?, DatoInteresante = ?, Frecuencia = ? WHERE ID = ?", 
+function editarCromo(id, nombre, precio, cantidad, imagen, descripcion, datoInteresante, frecuencia) {
+  return ejecutarQueryBBDD("UPDATE CROMOS SET Nombre = ?, Precio = ?, Cantidad = ?, RutaImagen = ?, Descripcion = ?, DatoInteresante = ?, Frecuencia = ? WHERE ID = ?",
     [nombre, precio, cantidad, imagen, descripcion, datoInteresante, frecuencia, id], "Editar cromo", false);
 }
 
-function editarColeccion(precioAlbum, foto, nombre, estado, coleccion) {
-  return ejecutarQueryBBDD("UPDATE COLECCIONES SET (PrecioAlbum,FotoAlbum,Nombre,Estado) VALUES (?,?,?,?) WHERE Nombre = ?", [precioAlbum, foto, nombre, estado, coleccion], "Editar coleccion", false);
+function editarColeccion(precioAlbum, foto, descripcion, estado, nombre) {
+  return ejecutarQueryBBDD("UPDATE COLECCIONES SET PrecioAlbum = ?, FotoAlbum = ?, Descripcion = ?, Estado = ?  WHERE Nombre = ?", [precioAlbum, foto, descripcion, estado, nombre], "Editar coleccion", false);
 }
 
 function agregarColeccion(nombre, precioAlbum, foto, descripcion) {
   return ejecutarQueryBBDD("INSERT INTO COLECCIONES (Nombre,PrecioAlbum,FotoAlbum,Descripcion) VALUES (?,?,?,?)", [nombre, precioAlbum, foto, descripcion], "Agregar coleccion", false);
 }
 
-function agregarUsuario(username, password, nombre, apellidos, email, admin) {
-  return ejecutarQueryBBDD("INSERT INTO USUARIOS (User, Password, Nombre, Apellidos, Email, Admin) VALUES (?, ?, ?, ?, ?, ?)", [username, password, nombre, apellidos, email, admin], "Agregar usuario", false);
+function agregarUsuario(username, password, nombre, apellidos, email) {
+  return ejecutarQueryBBDD("INSERT INTO USUARIOS (User, Password, Nombre, Apellidos, Email) VALUES (?, ?, ?, ?, ?)", [username, password, nombre, apellidos, email], "Agregar usuario", false);
 }
 
 function obtenerUsuarios(username) {
@@ -834,7 +803,7 @@ app.post("/dashboard/user/comprarAlbum", function (req, res) {
         let album = albumes[0];
 
         if (album) {
-          lanzarError(res,"Ya ha adquirido un album para dicha coleccion");
+          lanzarError(res, "Ya ha adquirido un album para dicha coleccion");
         } else {
           obtenerClientes(idUser).then(function (clientes) {
             cliente = clientes[0];
@@ -842,34 +811,34 @@ app.post("/dashboard/user/comprarAlbum", function (req, res) {
             if (cliente.Puntos > coleccion.PrecioAlbum) {
 
               actualizarPuntosCliente(cliente.Puntos - coleccion.PrecioAlbum, idUser).then(function () {}, function (error) {
-                lanzarError(res,"Error al consultar la base de datos");
+                lanzarError(res, "Error al consultar la base de datos");
               });
               agregarAlbumCliente(idUser, coleccion.Nombre).then(function () {
                 res.send("Álbum comprado correctamente");
               }, function (error) {
-                lanzarError(res,"Error al consultar la base de datos");
+                lanzarError(res, "Error al consultar la base de datos");
               });
 
-            } else { 
-              lanzarError(res,"Puntos insuficientes para comprar el album");
+            } else {
+              lanzarError(res, "Puntos insuficientes para comprar el album");
             };
           }, function (error) {
-            lanzarError(res,"Error al consultar la base de datos");
+            lanzarError(res, "Error al consultar la base de datos");
           });
         }
 
       }, function (error) {
-        lanzarError(res,"Error al consultar la base de datos");
+        lanzarError(res, "Error al consultar la base de datos");
       });
 
     } else {
-      
-      lanzarError(res,"No hay existencias en álbumes de esa colección");
+
+      lanzarError(res, "No hay existencias en álbumes de esa colección");
       //res.send("No hay existencias en álbumes de esa colección")
     }
 
   }, function (error) {
-    lanzarError(res,"Error al consultar la base de datos");
+    lanzarError(res, "Error al consultar la base de datos");
   });
 });
 
@@ -879,22 +848,12 @@ app.post("/dashboard/user/comprarAlbum", function (req, res) {
 
 //CAPTCHA
 var svgCaptcha = require('svg-captcha');
-const { type } = require("os");
+const {
+  type
+} = require("os");
 
 app.get("/dashboard/user/retoCaptcha", async function (req, res) {
-  var captcha = generarCaptcha();
-  req.session.captcha = captcha.text;
-  let puntos = undefined;
-  puntos = await obtenerPuntosCliente(req.session.user).catch((error) => {
-    lanzarError(res,"Error al consultar la base de datos");
-  });
-  if (puntos) {
-    res.render('user/clienteRetoCaptcha', {
-      image: captcha.data,
-      alerta: undefined,
-      puntos: puntos
-    });
-  }
+  renderCaptchaAleatoria(req, res, undefined);
 
 });
 
@@ -919,14 +878,7 @@ app.post("/dashboard/user/retoCaptcha", async function (req, res) {
       alerta.esValido = 0;
     }
 
-    var captcha = generarCaptcha();
-    req.session.captcha = captcha.text;
-
-    res.render('user/clienteRetoCaptcha', {
-      image: captcha.data,
-      alerta: alerta,
-      puntos: puntos
-    });
+    renderCaptchaAleatoria(req, res, alerta);
 
   } else {
     res.sendStatus(403);
@@ -939,21 +891,28 @@ function generarCaptcha() {
   return svgCaptcha.create(8);
 }
 
+async function renderCaptchaAleatoria(req, res, alerta) {
+  var captcha = generarCaptcha();
+  req.session.captcha = captcha.text;
+  let puntos = undefined;
+  puntos = await obtenerPuntosCliente(req.session.user).catch((error) => {
+    lanzarError(res, "Error al consultar la base de datos");
+  });
+  if (puntos) {
+    res.render('user/clienteRetoCaptcha', {
+      image: captcha.data,
+      alerta: alerta,
+      puntos: puntos
+    });
+  }
+}
+
 //PREGUNTAS
 
 app.get("/dashboard/user/retoPregunta", async function (req, res) {
 
-  let puntos = await obtenerPuntosCliente(req.session.user);
+  renderPreguntaAleatoria(req, res, undefined);
 
-  obtenerPreguntaAleatoria().then((result) => {
-    let pregunta = result[0].Pregunta;
-    let respuesta = result[0].Respuesta;
-    req.session.pregunta = pregunta;
-    req.session.respuestaPregunta = respuesta;
-
-    renderPreguntaAleatoria(req, res, undefined);
-
-  });
 });
 
 function obtenerPreguntaAleatoria() {
@@ -962,7 +921,7 @@ function obtenerPreguntaAleatoria() {
 
 app.post("/dashboard/user/retoPregunta", async function (req, res) {
   //TODO comprobar entrada??
-  let respuestaCorrecta = req.session.respuesta;
+  let respuestaCorrecta = req.session.respuestaPregunta;
   let idUser = req.session.user
   let puntos = await obtenerPuntosCliente(req.session.user);
 
@@ -971,54 +930,49 @@ app.post("/dashboard/user/retoPregunta", async function (req, res) {
   let alerta = [];
 
   //Si se generó una pregunta con GET
-  if(req.session.pregunta){
-    if(req.body.respuesta.toLowerCase() === respuestaCorrecta.toLowerCase()){
+  if (req.session.pregunta) {
+    if (req.body.respuesta.toLowerCase() === respuestaCorrecta.toLowerCase()) {
 
       alerta.esValido = 1;
-  
-      actualizarPuntosCliente(puntos + PUNTOS_PREGUNTA, idUser).catch((error) => {console.log("Error al actualizar puntos")});
+
+      actualizarPuntosCliente(puntos + PUNTOS_PREGUNTA, idUser).catch((error) => {
+        console.log("Error al actualizar puntos")
+      });
 
       puntos = puntos + PUNTOS_PREGUNTA;
-  
+
     } else {
-      
+
       alerta.esValido = 0;
-  
+
     }
-    
+
     renderPreguntaAleatoria(req, res, alerta);
 
-  
+
   } else {
     res.sendStatus(403);
   }
 });
 
-async function renderPreguntaAleatoria(req, res, alerta){
+async function renderPreguntaAleatoria(req, res, alerta) {
   let puntos = await obtenerPuntosCliente(req.session.user);
 
-  obtenerEcuacionAleatoria().then((result) => {
-    let ecuacion = result[0].Ecuacion;
+  obtenerPreguntaAleatoria().then((result) => {
+    let pregunta = result[0].Pregunta;
     let respuesta = result[0].Respuesta;
-    let ecuacionLatex = katex.renderToString(ecuacion);
-    req.session.ecuacion = ecuacionLatex;
-    req.session.respuestaEcuacion = respuesta;
 
-    obtenerPreguntaAleatoria().then((result) => {
-      let pregunta = result[0].Pregunta;
-      let respuesta = result[0].Respuesta;
-      req.session.pregunta = pregunta;
-      req.session.respuestaPregunta = respuesta;
-  
-      res.render('user/clienteRetoPregunta', {
-        pregunta: pregunta,
-        alerta: alerta,
-        puntos: puntos
-      });
-  
+    req.session.pregunta = pregunta;
+    req.session.respuestaPregunta = respuesta;
+
+    res.render('user/clienteRetoPregunta', {
+      pregunta: pregunta,
+      alerta: alerta,
+      puntos: puntos
     });
 
   });
+
 }
 
 //ECUACIONES
@@ -1038,29 +992,31 @@ app.post("/dashboard/user/retoEcuacion", async function (req, res) {
   let alerta = [];
 
   //Si se generó una pregunta con GET
-  if(respuestaCorrectaEcuacion){
-    if(req.body.respuesta.toLowerCase() === respuestaCorrectaEcuacion.toLowerCase()){
+  if (respuestaCorrectaEcuacion) {
+    if (req.body.respuesta.toLowerCase() === respuestaCorrectaEcuacion.toLowerCase()) {
 
       alerta.esValido = 1;
-  
-      actualizarPuntosCliente(puntos + PUNTOS_PREGUNTA, idUser).catch((error) => {console.log("Error al actualizar puntos")});
+
+      actualizarPuntosCliente(puntos + PUNTOS_PREGUNTA, idUser).catch((error) => {
+        console.log("Error al actualizar puntos")
+      });
 
       puntos = puntos + PUNTOS_PREGUNTA;
-  
+
     } else {
-      
+
       alerta.esValido = 0;
-  
+
     }
-  
+
     renderEcuacionAleatoria(req, res, alerta);
-  
+
   } else {
     res.sendStatus(403);
   }
 });
 
-async function renderEcuacionAleatoria(req, res, alerta){
+async function renderEcuacionAleatoria(req, res, alerta) {
   let puntos = await obtenerPuntosCliente(req.session.user);
 
   obtenerEcuacionAleatoria().then((result) => {
@@ -1086,28 +1042,79 @@ function obtenerEcuacionAleatoria() {
 const fileUpload = require('express-fileupload');
 app.use(fileUpload());
 
-app.post("/dashboard/admin/editarColeccion",  function (req, res) {
+app.post("/dashboard/admin/editarColeccion", function (req, res) {
+  //TODO comprobar entrada??
+  let nombreColeccion = req.query.nombreColeccion;
+  let precioAlbum = req.body.precio_coleccion;
   let EDFile = req.files.file;
-  let nombreColeccionAntiguo = req.query.nombreColeccion;
-  let nombreColeccionNuevo = req.body.nombre_coleccion;
-  
-  let oldParentPath = __dirname +"/dashboard/resources/colecciones/"+nombreColeccionAntiguo+"/";
-  let newParentPath = __dirname +"/dashboard/resources/colecciones/"+nombreColeccionNuevo+"/";
+  let estado = req.body.estado;
+  let descripcion = req.body.descripcion_coleccion;
 
-  //Crear carpeta nueva si la vieja no existia
-  if (!fs.existsSync(oldParentPath)){
-    //ERROR. Si estoy editando tiene que existir
-    //fs.mkdirSync(newParentPath, {recursive: true}); 
-    res.send(403);
-    //Renombro carpeta
-  } else {
-    fs.renameSync(oldParentPath, newParentPath);
-  
-    EDFile.mv(__dirname + `/dashboard/resources/colecciones/`+nombreColeccionNuevo+`/${EDFile.name}`,err => {
-        if(err) return res.status(500).send({ message : err })
+  console.log(estado);
 
-        return res.status(200).send({ message : 'File upload' })
-    })
-    
-  }
+  editarColeccion(precioAlbum, `resources/colecciones/` + nombreColeccion + `/${EDFile.name}`, descripcion, estado, nombreColeccion).then(
+    () => {
+      res.redirect("/dashboard/admin/");
+      //Crear carpeta nueva si la vieja no existia
+      if (!fs.existsSync(parentPath)) {
+        //ERROR. Si estoy editando tiene que existir
+        //fs.mkdirSync(newParentPath, {recursive: true}); 
+        res.send(403);
+        //Renombro carpeta
+      } else {
+        //fs.renameSync(oldParentPath, newParentPath);
+
+        EDFile.mv(parentPath + `${EDFile.name}`, err => {
+          if (err) return res.status(500).send({
+            message: err
+          })
+
+
+        })
+
+      }
+    },
+    (error) => {
+      lanzarError(res, "Error al editar la colección en la base de datos");
+    }
+  );
+
+  let parentPath = __dirname + "/dashboard/resources/colecciones/" + nombreColeccion + "/";
+
+});
+
+app.post("/dashboard/admin/crearColeccion", function (req, res) {
+  //TODO comprobar entrada??
+  let nombreColeccion = req.body.titulo_coleccion;
+  let precioAlbum = req.body.precio_coleccion;
+  let EDFile = req.files.imagen_album;
+  //let foto = req.body.imagen_album;
+  let descripcion = req.body.descripcion_coleccion
+
+  agregarColeccion(nombreColeccion, precioAlbum, `resources/colecciones/` + nombreColeccion + `/${EDFile.name}`, descripcion).then(
+    () => {
+      res.redirect("/dashboard/admin/");
+      let parentPath = __dirname + "/dashboard/resources/colecciones/" + nombreColeccion + "/";
+
+      //Crear carpeta nueva si no existia
+      if (!fs.existsSync(parentPath)) {
+
+        fs.mkdirSync(parentPath, {
+          recursive: true
+        });
+
+      }
+
+      EDFile.mv(parentPath + `/${EDFile.name}`, err => {
+        if (err) return res.status(500).send({
+          message: err
+        })
+
+      })
+    },
+    (error) => {
+      lanzarError(res, "Error al agregar la colección a la base de datos");
+    }
+  );
+
 });
