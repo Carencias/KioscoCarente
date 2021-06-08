@@ -793,9 +793,9 @@ function ejecutarQueryBBDD(query, arrayDatos, operacion, devolverResultado) {
   });
 }
 
-app.post("/dashboard/user/comprarAlbum", function (req, res) {
+app.get("/dashboard/user/comprarAlbum", function (req, res) {
   //TODO comprobar entrada??
-  let nombreColeccion = req.body.nombreColeccion;
+  let nombreColeccion = req.query.nombreColeccion;
   let idUser = "user";
   //let idUser = req.session.user
   var coleccion, cliente;
@@ -819,7 +819,7 @@ app.post("/dashboard/user/comprarAlbum", function (req, res) {
                 lanzarError(res, "Error al consultar la base de datos");
               });
               agregarAlbumCliente(idUser, coleccion.Nombre).then(function () {
-                res.send("Álbum comprado correctamente");
+                res.redirect("./tiendaAlbumes");
               }, function (error) {
                 lanzarError(res, "Error al consultar la base de datos");
               });
