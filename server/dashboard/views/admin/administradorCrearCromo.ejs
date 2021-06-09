@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
-    <title>Editar Cromo</title>
+    <title>Crear Cromo</title>
     <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Montserrat:400,700">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Lato:400,700,400italic,700italic">
@@ -63,7 +63,7 @@
             <div class="col-md-6" style="width: 597px;">
                 <div class="row register-form">
                     <div class="col-md-8 offset-md-2" style="margin: 0px;padding: 0px;">
-                        <form class="custom-form" style="margin: 0px;padding: 0px;width: 589px;padding-top: 33px;box-shadow: 0px 0px 20px var(--bs-primary);" method="post">
+                        <form class="custom-form" style="margin: 0px;padding: 0px;width: 589px;padding-top: 33px;box-shadow: 0px 0px 20px var(--bs-primary);" method="post" action="#">
                             <h1 style="border-bottom-color: var(--bs-teal);">Crear Cromo</h1>
                             <div class="row form-group">
                                 <div class="col-sm-4 label-column"><label class="col-form-label" for="name-input-field">Nombre</label></div>
@@ -82,12 +82,12 @@
                                 <div class="col-sm-6 input-column"><input class="form-control" type="file" id="formulario_crear_cromo_imagen" name="imagen_cromo_formulario" required="" accept="image/*" oninput="cargarDatosCromoCrear()"></div>
                             </div>
                             <div class="row form-group">
-                                <div class="col-sm-4 label-column"><label class="col-form-label" for="repeat-pawssword-input-field">Descripción</label></div>
-                                <div class="col-sm-6 input-column"><textarea class="form-control" id="formulario_crear_cromo_descripcion" name="descripcion_cromo_formulario" oninput="cargarDatosCromoCrear()" required=""></textarea></div>
-                            </div>
-                            <div class="row form-group">
                                 <div class="col-sm-4 label-column"><label class="col-form-label" for="name-input-field">Dato Interesante</label></div>
                                 <div class="col-sm-6 input-column"><input class="form-control" type="text" id="formulario_crear_cromo_dato" name="dato_cromo_formulario" required="" oninput="cargarDatosCromoCrear()"></div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-sm-4 label-column"><label class="col-form-label" for="repeat-pawssword-input-field">Descripción</label></div>
+                                <div class="col-sm-6 input-column"><textarea class="form-control" id="formulario_crear_cromo_descripcion" name="descripcion_cromo_formulario" oninput="cargarDatosCromoCrear()" required=""></textarea></div>
                             </div>
                             <div class="row form-group">
                                 <div class="col-sm-4 label-column"><label class="col-form-label" for="name-input-field">Frecuencia</label></div>
@@ -113,6 +113,7 @@
     <script src="assets/js/editarCromo.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/6.4.8/swiper-bundle.min.js"></script>
     <script src="assets/js/script.js"></script>
+    <script src="assets/js/admin.js"></script>
     <script src="assets/js/Simple-Slider.js"></script>
 </body>
 
