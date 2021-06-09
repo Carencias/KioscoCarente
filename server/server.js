@@ -47,8 +47,9 @@ app.use(
     saveUninitialized: false, //La sesion no se almacena si está vacia
     cookie: {
       //secure: true --> Requiere HTTPS
-    },
-    expires: new Date(Date.now() + 30 * 60 * 1000), //miliseconds??
+      maxAge: (30 * 60 * 1000) //miliseconds
+    }
+    //expires: new Date(Date.now() + 30 * 60 * 1000), //miliseconds??
   })
 );
 
@@ -60,28 +61,33 @@ var auth = function (req, res, next) {
 
 var userAuth = function (req, res, next) {
   if (req.session && req.session.userType === USUARIO_ESTANDAR) {
-    console.log(req.session);
-    console.log(req.session.userType);
+    //console.log(req.session);
+    //console.log(req.session.userType);
     return next();
   } else {
-    return res.sendStatus(401);
+    return res.redirect("/login");
   }
 };
 
 var adminAuth = function (req, res, next) {
   if (req.session && req.session.userType === ADMIN) return next();
-  else return res.sendStatus(401);
+  else return res.redirect("/login");
 };
+
+app.get("/cookie", function(req, res){
+  res.write('<p>expires in: ' + (req.session.cookie.maxAge / 1000) + 's</p>');
+  res.end();
+});
 
 //TODO
 //Permite acceder a los recursos de una carpeta. El primer parametro es la ruta virtual sobre la que se monta, el segundo el real.
 app.use("/", express.static(__dirname + "/webpage"));
 //app.use("/dashboard/admin", adminAuth);
 //app.use("/dashboard/user", userAuth);
-app.use("/dashboard/user", express.static(__dirname + "/dashboard/user"));
-app.use("/dashboard/admin", express.static(__dirname + "/dashboard/admin"));
+app.use("/dashboard/user", userAuth, express.static(__dirname + "/dashboard/user"));
+app.use("/dashboard/admin", adminAuth, express.static(__dirname + "/dashboard/admin"));
 
-app.get("/dashboard/admin", function (req, res) {
+app.get("/dashboard/admin", adminAuth, function (req, res) {
 
   let string = "SELECT * FROM COLECCIONES ";
   connection.query(string, function (err, result, fields) {
@@ -320,11 +326,13 @@ app.get("/dashboard/admin/editarPerfil", function (req, res) {
 
 
 app.set('views', path.join(__dirname, '/dashboard/views'));
+app.use("/dashboard/assets", express.static(__dirname+"/dashboard/assets"));
+app.use("/dashboard/resources", express.static(__dirname+"/dashboard/resources"));
 //app.use("/dashboard/resources/colecciones/java/imagenes/", express.static(__dirname + "/dashboard/resources/colecciones/java/imagenes/"));
 //app.use("/dashboard/resources/*", express.static(__dirname + "/dashboard/resources/media"));
 
 //Acceso a subdirectorios público
-app.get("/dashboard/assets/*", function (req, res) {
+/*app.get("/dashboard/assets/*", function (req, res) {
   let url = req.originalUrl;
   console.log(url.toString());
 
@@ -334,10 +342,10 @@ app.get("/dashboard/assets/*", function (req, res) {
     res.sendStatus(404);
   }
 
-});
+});*/
 
 
-app.get("/dashboard/resources/*", function (req, res) {
+/*app.get("/dashboard/resources/*", function (req, res) {
   let url = req.originalUrl;
   //console.log(url.toString());
 
@@ -347,7 +355,7 @@ app.get("/dashboard/resources/*", function (req, res) {
     res.sendStatus(404);
   }
 
-});
+});*/
 
 app.get("/dashboard/admin/editarColeccion", function (req, res) {
   //TODO comprobar entrada??
