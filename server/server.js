@@ -241,11 +241,30 @@ app.post("/registro", function (req, res) {
       res.send("Se ha creado el usuario exitosamente")
     },
     (error) => {
-      lanzarError(res, "Error al agregar al nuevo usuario a la base de datos"+error);
+      lanzarError(res, "Error al agregar al nuevo usuario a la base de datos");
     }
   );
 
 });
+
+app.post("/dashboard/user/editarPerfil", function (req, res) {
+  let nombre = req.body.nombre_perfil;
+  let apellidos = req.body.apellidos_perfil;
+  let email = req.body.email_perfil;
+  let idUser = req.session.user;
+
+  actualizarUsuario(nombre, apellidos, email, idUser).then(
+    () => {
+      res.send("Se ha actualizado el perfil correctamente");
+    },
+    (error) => {
+      lanzarError(res, "Error al actualizar el perfil");
+    }
+  );
+
+});
+
+
 
 
 
@@ -540,7 +559,7 @@ app.post("/dashboard/admin/crearCromo", function (req, res) {
 
 });
 
-app.post("/borrarCromo", function (req, res) {
+app.post("/dashboard/admin/borrarCromo", function (req, res) {
   let id = req.body.id;
 
   borrarCromo(id).then(
@@ -554,7 +573,7 @@ app.post("/borrarCromo", function (req, res) {
 
 });
 
-app.post("/borrarColeccion", function (req, res) {
+app.post("/dashboard/admin/borrarColeccion", function (req, res) {
   let nombre = req.body.nombre;
 
   borrarColeccion(nombre).then(
@@ -735,6 +754,10 @@ function agregarColeccion(nombre, precioAlbum, foto, descripcion) {
 
 function agregarUsuario(username, password, nombre, apellidos, email) {
   return ejecutarQueryBBDD("INSERT INTO USUARIOS (User, Password, Nombre, Apellidos, Email) VALUES (?, ?, ?, ?, ?)", [username, password, nombre, apellidos, email], "Agregar usuario", false);
+}
+
+function actualizarUsuario(nombre, apellidos, email, idUser){
+  return ejecutarQueryBBDD("UPDATE USUARIOS SET Nombre = ?, Apellidos = ?, Email = ?  WHERE User = ?", [nombre, apellidos, email, idUser], "Actualizar perfil", false);
 }
 
 function obtenerUsuarios(username) {

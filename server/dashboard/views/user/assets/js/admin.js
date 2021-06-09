@@ -9,7 +9,7 @@ function obtenerNombreColeccion() {
 
 function eliminarCromo(id){
     $.post(
-        "http://localhost:8000/borrarCromo",
+        "./borrarCromo",
         { id: id},
         function (result) {
           alert(result)
@@ -19,7 +19,7 @@ function eliminarCromo(id){
 function borrarColeccion(){
     let coleccion = obtenerNombreColeccion();
     $.post(
-        "http://localhost:8000/borrarColeccion",
+        "./borrarColeccion",
         { nombre: coleccion},
         function (result) {
           alert(result)
