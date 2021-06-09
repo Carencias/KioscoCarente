@@ -259,7 +259,7 @@ app.post("/dashboard/user/editarPerfil", function (req, res) {
 
   actualizarUsuario(nombre, apellidos, email, idUser).then(
     () => {
-      res.send("Se ha actualizado el perfil correctamente");
+      res.redirect("/dashboard/user");
     },
     (error) => {
       lanzarError(res, "Error al actualizar el perfil");
@@ -268,10 +268,22 @@ app.post("/dashboard/user/editarPerfil", function (req, res) {
 
 });
 
+app.get("/dashboard/user/editarPerfil", function (req, res) {
 
+  let string = "SELECT * FROM USUARIOS WHERE User = '" + req.session.user + "'";
 
+  connection.query(string, function (err, result, fields) {
+    console.log(result);
+    if (err) {
+      lanzarError(res, "Error al consultar la base de datos");
+    }
+    res.render('user/clientePerfil', {
+      user: result[0],
+    });
 
+  });
 
+});
 
 
 app.set('views', path.join(__dirname, '/dashboard/views'));
@@ -313,7 +325,6 @@ app.get("/dashboard/admin/editarColeccion", function (req, res) {
     if (err) {
       lanzarError(res, "Error al consultar la base de datos");
     }
-    console.log(result)
     res.render('admin/administradorEditarColeccion', {
       cromos: result,
       nombreColeccion: coleccion
@@ -335,7 +346,6 @@ app.get("/dashboard/admin/editarCromo", function (req, res) {
     if (err) {
       lanzarError(res, "Error al consultar la base de datos");
     }
-    console.log(result)
     res.render('admin/administradorEditarCromo', {
       cromo: result[0]
     });
@@ -409,47 +419,6 @@ app.get("/dashboard/user", async function (req, res) {
     });
   });
 });
-
-/*Intento de fumada, tambien intente con awit,  hacer otra funcion no se, hay que sacar el render del for each
-//PAGINA PRINCIPAL USUARIO
-app.get("/dashboard/user", async function (req, res) {
-  let string = "SELECT * FROM ALBUMES WHERE User = '" + req.session.user + "'";
-  var colecciones = [];
-  let estadosAlbumes = [];
-  connection.query(string, function (err, result, fields) {
-    if (err) {
-      lanzarError(res,"Error al consultar la base de datos");
-    }
-
-    new Promise(function (result) {
-      result.forEach(function (album) {
-        estadosAlbumes.push(album.Estado);
-        obtenerColecciones(album.Coleccion).then(function (coleccionesBBDD) {
-        colecciones.push(coleccionesBBDD[0]);
-        console.log(coleccionesBBDD[0])
-      }, (error) => {
-        lanzarError(res,"Error de datos");
-      });
-    });
-    }).then( function(estadosAlbumes, colecciones) {
-        let stringUser = "SELECT * FROM CLIENTES WHERE User = '" + req.session.user + "'";
-       
-        connection.query(stringUser, function (err, resultUser, fields) {
-          if (err) {
-            lanzarError(res," al consultar la base de datos");
-          }
-          res.render('user/clientePrincipal', {
-            colecciones: colecciones,
-            estados: estadosAlbumes,
-            nombre: req.session.user,
-            puntos: resultUser[0].Puntos
-          });
-        });
-      }, (error) => {
-        lanzarError(res," asdal consultar la base de datos");
-    });
-  });
-});*/
 
 //TIENDA USUARIO ALBUMES
 app.get("/dashboard/user/tiendaAlbumes", function (req, res) {
@@ -976,7 +945,6 @@ app.post("/dashboard/user/retoPregunta", async function (req, res) {
       alerta.esValido = 1;
 
       actualizarPuntosCliente(puntos + PUNTOS_PREGUNTA, idUser).catch((error) => {
-        console.log("Error al actualizar puntos")
       });
 
       puntos = puntos + PUNTOS_PREGUNTA;
@@ -1038,7 +1006,6 @@ app.post("/dashboard/user/retoEcuacion", async function (req, res) {
       alerta.esValido = 1;
 
       actualizarPuntosCliente(puntos + PUNTOS_PREGUNTA, idUser).catch((error) => {
-        console.log("Error al actualizar puntos")
       });
 
       puntos = puntos + PUNTOS_PREGUNTA;
