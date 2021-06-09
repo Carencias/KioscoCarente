@@ -543,20 +543,27 @@ app.get("/dashboard/user/clienteCromos", function (req, res) {
 
 });
 
+app.get("/dashboard/admin/crearCromo", function (req, res) {
+
+    res.render('admin/administradorCrearCromo', {
+    });
+
+});
+
 app.post("/dashboard/admin/crearCromo", function (req, res) {
   //TODO comprobar entrada??
-  let nombre = req.body.nombre;
-  let coleccion = req.body.coleccion;
-  let rutaImagen = req.body.rutaImagen;
-  let precio = req.body.precio;
-  let cantidad = req.body.cantidad;
-  let descripcion = req.body.descripcion;
-  let datoInteresante = req.body.datoInteresante;
-  let frecuencia = req.body.frecuencia;
+  let nombre = req.body.nombre_cromo_formulario;
+  let coleccion = req.query.nombreColeccion;
+  let rutaImagen = req.body.imagen_cromo_formulario;
+  let precio = req.body.precio_cromo_formulario;
+  let cantidad = req.body.stock_cromo_formulario;
+  let descripcion = req.body.descripcion_cromo_formulario;
+  let datoInteresante = req.body.dato_cromo_formulario;
+  let frecuencia = req.body.frecuencia_cromo_formulario;
 
   agregarCromo(nombre, coleccion, rutaImagen, precio, cantidad, descripcion, datoInteresante, frecuencia).then(
     () => {
-      res.send("Cromo creado correctamente")
+      res.redirect("./editarColeccion?nombreColeccion=" + coleccion);
     },
     (error) => {
       lanzarError(res, "Error al crear el nuevo cromo");

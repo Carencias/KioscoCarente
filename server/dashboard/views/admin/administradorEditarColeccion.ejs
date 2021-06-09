@@ -60,7 +60,7 @@
         </div>
     </div>
     <div class="container text-start">
-        <h3 class="text-uppercase text-center text-secondary" style="margin: 0;height: 25px;padding-left: 10px;">CROMOS COLECCIÓN</h3><a class="btn btn-primary" role="button" style="text-align: left;background: var(--bs-teal);margin: 14px;padding: 3.5px 9px;margin-left: 47px;" href="administradorCrearCromo.html"><i class="fa fa-plus"></i>&nbsp;Nuevo Cromo</a>
+        <h3 class="text-uppercase text-center text-secondary" style="margin: 0;height: 25px;padding-left: 10px;">CROMOS COLECCIÓN</h3><a class="btn btn-primary" role="button" style="text-align: left;background: var(--bs-teal);margin: 14px;padding: 3.5px 9px;margin-left: 47px;" href=<%="./crearCromo?nombreColeccion=" + nombreColeccion %>><i class="fa fa-plus"></i>&nbsp;Nuevo Cromo</a>
 
                 <% cromos.forEach(function(cromo, i) { %>
                     <% if(i%3===0){ %>
