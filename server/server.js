@@ -193,7 +193,6 @@ app.get("/login", function (req, res) {
 
 app.get("/registro", function (req, res) {
   res.sendFile(__dirname + "/registro/registro.html");
-
 });
 
 function checkSesionIniciada(req) {
