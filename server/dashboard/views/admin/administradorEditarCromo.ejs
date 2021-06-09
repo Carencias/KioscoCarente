@@ -80,7 +80,7 @@
                     <div class="col-md-8 offset-md-2" style="margin: 0px;padding: 0px;">
                         <form class="custom-form"
                             style="margin: 0px;padding: 0px;width: 589px;padding-top: 33px;box-shadow: 0px 0px 20px var(--bs-primary);"
-                            method="post" enctype="multipart/form-data">
+                            method="post" enctype="multipart/form-data" onreset="editarCromo();restaurarImagen();">
                             <h1 style="border-bottom-color: var(--bs-teal);margin-bottom: 0px;">Editar Cromo</h1>
                             <h2 style="margin-bottom: 31px;margin-top: 31px;"><%= cromo.Nombre %></h2>
                             <div class="row form-group">
@@ -88,48 +88,60 @@
                                         for="email-input-field">Precio</label></div>
                                 <div class="col-sm-6 input-column"><input class="form-control form-control-lg"
                                         type="number" id="formulario_editar_cromo_precio" name="precio_cromo_formulario"
-                                        required="" oninput="cargarDatosCromoEditar()"></div>
+                                        required="" value=<%= cromo.Precio %>></div>
                             </div>
                             <div class="row form-group">
                                 <div class="col-sm-4 label-column"><label class="col-form-label"
                                         for="pawssword-input-field">Stock</label></div>
                                 <div class="col-sm-6 input-column"><input class="form-control form-control-lg"
                                         type="number" id="formulario_editar_cromo_stock" name="stock_cromo_formulario"
-                                        required="" oninput="cargarDatosCromoEditar()"></div>
+                                        value=<%= cromo.Cantidad %>></div>
                             </div>
                             <div class="row form-group">
                                 <div class="col-sm-4 label-column"><label class="col-form-label"
                                         for="repeat-pawssword-input-field">Imagen</label></div>
                                 <div class="col-sm-6 input-column"><input class="form-control" type="file"
                                         id="formulario_editar_cromo_imagen" name="imagen_cromo_formulario" required=""
-                                        accept="image/*" oninput="cargarDatosCromoEditar()"></div>
-                            </div>
-                            <div class="row form-group">
-                                <div class="col-sm-4 label-column"><label class="col-form-label"
-                                        for="repeat-pawssword-input-field">Descripción</label></div>
-                                <div class="col-sm-6 input-column"><textarea class="form-control"
-                                        id="formulario_editar_cromo_descripcion" name="descripcion_cromo_formulario"
-                                        oninput="cargarDatosCromoEditar()" required=""></textarea></div>
+                                        accept="image/*" oninput="editarImagen(event)"></div>
                             </div>
                             <div class="row form-group">
                                 <div class="col-sm-4 label-column"><label class="col-form-label"
                                         for="name-input-field">Dato Interesante</label></div>
                                 <div class="col-sm-6 input-column"><input class="form-control" type="text"
                                         id="formulario_editar_cromo_dato" name="dato_cromo_formulario" required=""
-                                        oninput="cargarDatosCromoEditar()"></div>
+                                        oninput="editarCromo()" value="<%= cromo.DatoInteresante %>"></div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-sm-4 label-column"><label class="col-form-label"
+                                        for="repeat-pawssword-input-field">Descripción</label></div>
+                                <div class="col-sm-6 input-column"><textarea class="form-control"
+                                        id="formulario_editar_cromo_descripcion" name="descripcion_cromo_formulario"
+                                        oninput="editarCromo()" required=""><%= cromo.Descripcion %></textarea></div>
                             </div>
                             <div class="row form-group">
                                 <div class="col-sm-4 label-column"><label class="col-form-label"
                                         for="name-input-field">Frecuencia</label></div>
                                 <div class="col-sm-6 input-column"><select class="form-select"
                                         id="formulario_editar_cromo_frecuencia" required=""
-                                        name="frecuencia_cromo_formulario" oninput="cargarDatosCromoEditar()">
-                                        <option value="Comun" selected="">Común</option>
-                                        <option value="Raro" selected="">Raro</option>
-                                        <option value="Excepcional">Excepcional</option>
+                                        name="frecuencia_cromo_formulario" oninput="editarCromo()">
+                                        <% if(cromo.Frecuencia==="Comun"){ %>
+                                            <option value="Comun" selected="">Común</option>
+                                            <option value="Raro">Raro</option>
+                                            <option value="Excepcional">Excepcional</option>
+                                        <% }else if(cromo.Frecuencia==="Raro"){ %>
+                                            <option value="Comun">Común</option>
+                                            <option value="Raro" selected="">Raro</option>
+                                            <option value="Excepcional">Excepcional</option>
+                                        <%} else{ %>
+                                            <option value="Comun">Común</option>
+                                            <option value="Raro">Raro</option>
+                                            <option value="Excepcional" selected="">Excepcional</option>
+                                        
+                                        <%} %>
                                     </select></div>
                             </div><button class="btn btn-light submit-button" type="submit"
-                                style="background: var(--bs-teal);color: var(--bs-white);">GUARDAR CROMO</button><button
+                                style="background: var(--bs-teal);color: var(--bs-white);">GUARDAR CROMO</button>
+                                <button
                                 class="btn btn-light submit-button" type="reset"
                                 style="background: var(--bs-danger);">CANCELAR</button>
                         </form>
