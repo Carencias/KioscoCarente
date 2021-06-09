@@ -105,7 +105,7 @@ function comprobarCredenciales(req, res) {
 
       let usuario = usuarios[0];
 
-      if (usuario.length === 0 || usuario.Password !== password) {
+      if (!usuario || usuario.Password !== password) {
         res.send("Autenticación incorrecta");
       } else {
         console.log("Login Username: ", usuario.User);
@@ -123,6 +123,7 @@ function comprobarCredenciales(req, res) {
     },
     function (error) {
       console.log(error);
+      lanzarError("Fallo al comprobar usuario");
       //throw error;
     });
   /*connection.query(
@@ -238,7 +239,10 @@ app.post("/registro", function (req, res) {
 
   agregarUsuario(username, password, nombre, apellidos, email).then(
     () => {
-      res.send("Se ha creado el usuario exitosamente")
+      agregarCliente(username).then(
+        () => {console.log("Se ha creado el usuario exitosamente");
+                res.redirect("/login");}, 
+        (error) => {lanzarError(res, "Error al agregar al cliente a la base de datos");});
     },
     (error) => {
       lanzarError(res, "Error al agregar al nuevo usuario a la base de datos");
@@ -754,6 +758,10 @@ function agregarColeccion(nombre, precioAlbum, foto, descripcion) {
 
 function agregarUsuario(username, password, nombre, apellidos, email) {
   return ejecutarQueryBBDD("INSERT INTO USUARIOS (User, Password, Nombre, Apellidos, Email) VALUES (?, ?, ?, ?, ?)", [username, password, nombre, apellidos, email], "Agregar usuario", false);
+}
+
+function agregarCliente(username){
+  return ejecutarQueryBBDD("INSERT INTO CLIENTES (User) VALUES (?)", [username], "Agregar cliente", false);
 }
 
 function actualizarUsuario(nombre, apellidos, email, idUser){
