@@ -68,27 +68,27 @@
                             <h2 style="margin-bottom: 31px;margin-top: 31px;">NullPointer</h2>
                             <div class="row form-group">
                                 <div class="col-sm-4 label-column"><label class="col-form-label" for="email-input-field">Precio</label></div>
-                                <div class="col-sm-6 input-column"><input class="form-control form-control-lg" type="number" id="formulario_editar_cromo_precio" name="precio_cromo_formulario" required="" oninput="cargarDatosCromoEditar()"></div>
+                                <div class="col-sm-6 input-column"><input class="form-control form-control-lg" type="number" id="formulario_editar_cromo_precio" name="precio_cromo_formulario" required=""></div>
                             </div>
                             <div class="row form-group">
                                 <div class="col-sm-4 label-column"><label class="col-form-label" for="pawssword-input-field">Stock</label></div>
-                                <div class="col-sm-6 input-column"><input class="form-control form-control-lg" type="number" id="formulario_editar_cromo_stock" name="stock_cromo_formulario" required="" oninput="cargarDatosCromoEditar()"></div>
+                                <div class="col-sm-6 input-column"><input class="form-control form-control-lg" type="number" id="formulario_editar_cromo_stock" name="stock_cromo_formulario" required=""></div>
                             </div>
                             <div class="row form-group">
                                 <div class="col-sm-4 label-column"><label class="col-form-label" for="repeat-pawssword-input-field">Imagen</label></div>
-                                <div class="col-sm-6 input-column"><input class="form-control" type="file" id="formulario_editar_cromo_imagen" name="imagen_cromo_formulario" required="" accept="image/*" oninput="cargarDatosCromoEditar()"></div>
-                            </div>
-                            <div class="row form-group">
-                                <div class="col-sm-4 label-column"><label class="col-form-label" for="repeat-pawssword-input-field">Descripción</label></div>
-                                <div class="col-sm-6 input-column"><textarea class="form-control" id="formulario_editar_cromo_descripcion" name="descripcion_cromo_formulario" oninput="cargarDatosCromoEditar()" required=""></textarea></div>
+                                <div class="col-sm-6 input-column"><input class="form-control" type="file" id="formulario_editar_cromo_imagen" name="imagen_cromo_formulario" accept="image/*" oninput="editarImagen()"></div>
                             </div>
                             <div class="row form-group">
                                 <div class="col-sm-4 label-column"><label class="col-form-label" for="name-input-field">Dato Interesante</label></div>
-                                <div class="col-sm-6 input-column"><input class="form-control" type="text" id="formulario_editar_cromo_dato" name="dato_cromo_formulario" required="" oninput="cargarDatosCromoEditar()"></div>
+                                <div class="col-sm-6 input-column"><input class="form-control" type="text" id="formulario_editar_cromo_dato" name="dato_cromo_formulario" required="" oninput="editarCromo()"></div>
+                            </div>
+                            <div class="row form-group">
+                                <div class="col-sm-4 label-column"><label class="col-form-label" for="repeat-pawssword-input-field">Descripción</label></div>
+                                <div class="col-sm-6 input-column"><textarea class="form-control" id="formulario_editar_cromo_descripcion" name="descripcion_cromo_formulario" oninput="editarCromo()" required=""></textarea></div>
                             </div>
                             <div class="row form-group">
                                 <div class="col-sm-4 label-column"><label class="col-form-label" for="name-input-field">Frecuencia</label></div>
-                                <div class="col-sm-6 input-column"><select class="form-select" id="formulario_editar_cromo_frecuencia" required="" name="frecuencia_cromo_formulario" oninput="cargarDatosCromoEditar()">
+                                <div class="col-sm-6 input-column"><select class="form-select" id="formulario_editar_cromo_frecuencia" required="" name="frecuencia_cromo_formulario" oninput="editarCromo()">
                                         <option value="Comun" selected="">Común</option>
                                         <option value="Raro" selected="">Raro</option>
                                         <option value="Excepcional">Excepcional</option>
