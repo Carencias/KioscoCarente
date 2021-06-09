@@ -453,6 +453,19 @@ app.get("/dashboard/user", async function (req, res) {
   });
 });
 
+//PASATIEMPO
+app.get("/dashboard/user/retoPasatiempo", async function (req, res) {
+      let stringUser = "SELECT * FROM CLIENTES WHERE User = '" + req.session.user + "'";
+      connection.query(stringUser, function (err, resultUser, fields) {
+        if (err) {
+          lanzarError(res, "Error al consultar la base de datos");
+        }
+        res.render('user/clienteRetoPasatiempo', {
+          puntos: resultUser[0].Puntos
+        });
+      });
+});
+
 //TIENDA USUARIO ALBUMES
 app.get("/dashboard/user/tiendaAlbumes", function (req, res) {
 
