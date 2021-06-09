@@ -285,6 +285,40 @@ app.get("/dashboard/user/editarPerfil", function (req, res) {
 
 });
 
+app.post("/dashboard/admin/editarPerfil", function (req, res) {
+  let nombre = req.body.nombre_perfil;
+  let apellidos = req.body.apellidos_perfil;
+  let email = req.body.email_perfil;
+  let idUser = req.session.user;
+
+  actualizarUsuario(nombre, apellidos, email, idUser).then(
+    () => {
+      res.redirect("/dashboard/admin");
+    },
+    (error) => {
+      lanzarError(res, "Error al actualizar el perfil");
+    }
+  );
+
+});
+
+app.get("/dashboard/admin/editarPerfil", function (req, res) {
+
+  let string = "SELECT * FROM USUARIOS WHERE User = '" + req.session.user + "'";
+
+  connection.query(string, function (err, result, fields) {
+    console.log(result);
+    if (err) {
+      lanzarError(res, "Error al consultar la base de datos");
+    }
+    res.render('admin/administradorPerfil', {
+      user: result[0],
+    });
+
+  });
+
+});
+
 
 app.set('views', path.join(__dirname, '/dashboard/views'));
 //app.use("/dashboard/resources/colecciones/java/imagenes/", express.static(__dirname + "/dashboard/resources/colecciones/java/imagenes/"));
