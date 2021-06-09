@@ -1,0 +1,8 @@
+.nav_contenedor_botones {
+  background-color: var(--bs-secondary);
+}
+
+.nav_lista_botones {
+  padding-left: 20px;
+}
+
