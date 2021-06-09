@@ -324,9 +324,9 @@ app.set('views', path.join(__dirname, '/dashboard/views'));
 //app.use("/dashboard/resources/*", express.static(__dirname + "/dashboard/resources/media"));
 
 //Acceso a subdirectorios público
-app.get("/assets/*", function (req, res) {
+app.get("/dashboard/assets/*", function (req, res) {
   let url = req.originalUrl;
-  //console.log(url.toString());
+  console.log(url.toString());
 
   if (fs.existsSync(__dirname + url.toString())) {
     res.sendFile(__dirname + url.toString());
@@ -335,6 +335,7 @@ app.get("/assets/*", function (req, res) {
   }
 
 });
+
 
 app.get("/dashboard/resources/*", function (req, res) {
   let url = req.originalUrl;

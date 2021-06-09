@@ -101,15 +101,17 @@ h3.nombreCromo {
 }
 
 .columnas_coleccion {
-  width: 300px;
-  height: 320px;
-  margin-bottom: 20px;
+    width: 300px;
+    height: 320px;
+    margin-bottom: 20px;
+    margin-right: 30px;
 }
 
 .columnas_coleccion_tienda {
-  width: 300px;
-  height: 340px;
-  margin-bottom: 20px;
+    width: 300px;
+    height: 340px;
+    margin-bottom: 20px;
+    margin-right: 30px;
 }
 
 .columnas_cromos_boton {
