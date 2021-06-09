@@ -33,19 +33,16 @@
             </div>
         </div>
     </nav>
-    <header class="text-center" style="margin-top: 67px;">
-        <h1 class="font-monospace text-uppercase" style="margin: 30px;margin-top: 92px;">Consigue Puntos Resolviendo el Pasatiempo</h1>
-    </header>
     <div class="container" style="margin-top: 0px;height: 754px;">
         <div id="centro">
-        <header id="header_pasatiempo" class="color1">
-            <h1 class="titulo">EN CASCADA</h1>
-        </header>
         <nav id="barra" class="color1">
-            <button id="botonResolver" type="button" onclick="resolverPasatiempo()" disabled>Resolver</button>
+            <h1 class="font-monospace text-uppercase" style="text-align:center;color:white;margin-top: 100px;margin-bottom:40px">Consigue Puntos Resolviendo el Pasatiempo</h1>
         </nav>
+
         <section class="section_pasatiempo">
+
             <article id="tablero" class="color2">
+
                 <form>
                     <table id="tabla">
                         <th colspan="9">Tablero del Pasatiempo</th>
@@ -365,13 +362,19 @@
                                     <textarea id="pista" rows="5" cols="7" readonly></textarea>
                                 </td>
                             </tr>
-                             <label class="switch">
-                                <input type="checkbox" id="guardar" onchange="almacenamiento()"> 
-                            <span class="slider round"></span>
-                        </label>
+                            
                         </table>
                     </form>
                 </article>
+                <div class="alert alert-success text-center alert-dismissible" id="mensajeAcierto" role="alert" style="margin: auto 10px auto 10px;display:none;width: 516.062px;margin: 0 auto;margin-bottom: 10px;"><button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button><span><strong>Enhorabuena</strong> has conseguido 15 puntos.</span></div>
+
+                <hr>        
+                <h6 style="float:left;margin-top:15px;margin-right:10px">GUARDADO AUTOMATICO | </h6><label class="switch">
+                                <input type="checkbox" id="guardar" onchange="almacenamiento()"> 
+                            <span class="slider round"></span>
+                            </label>
+                                <button id="botonResolver" type="button" onclick="resolverPasatiempo()" disabled>Resolver</button>
+
             </article>
         </section>
     
@@ -386,6 +389,7 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/6.4.8/swiper-bundle.min.js"></script>
     <script src="/assets/js/script.js"></script>
     <script src="/assets/js/Simple-Slider.js"></script>
+    <script src="https://code.jquery.com/jquery-3.5.0.js"></script>
 </body>
 
 </html>

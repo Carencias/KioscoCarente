@@ -269,6 +269,12 @@ function resolverPasatiempo(){
         anterior = palabra;
         palabra = "";
     });
+    if(filasErroneas.length == 0){
+        $.post("http://localhost:8000/dashboard/user/retoPasatiempo", {});
+        document.getElementById("mensajeAcierto").style.display = "block";
+        document.getElementById("mensajeAcierto").style.marginTop = "10px";
+        //TODO FUNCION RESETEAR PASATIEMPO
+    }
     //console.log("Filas erroneas: " + filasErroneas)
     corregirTablero();
 }

@@ -927,6 +927,17 @@ app.get("/dashboard/user/retoCaptcha", async function (req, res) {
 
 });
 
+app.post("/dashboard/user/retoPasatiempo", async function (req, res) {
+  let idUser = req.session.user;
+  let PUNTOS_PREGUNTA = 15;
+  let puntos = await obtenerPuntosCliente(idUser);
+
+  //SUMAR PUNTOS
+  puntos = puntos + PUNTOS_PREGUNTA;
+  actualizarPuntosCliente(puntos, idUser);
+
+});
+
 app.post("/dashboard/user/retoCaptcha", async function (req, res) {
   let respuesta = req.body.respuesta;
   let idUser = req.session.user;

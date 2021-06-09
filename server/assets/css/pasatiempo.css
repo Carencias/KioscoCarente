@@ -1,18 +1,24 @@
 /* Variables globales del css */
 
 :root {
-  --color1: #7ab6da;
-  --color2: #4e89ae;
-  --color3: #43658b;
-  --color4: #ed6663;
-  --color5: #ffa372;
-  --color6: #D7D4D3;
-  --verde: #BCEB6E;
-  --rojo: #F56352;
-  --fuente: Georgia, 'Times New Roman', Times, serif;
+    --color1: #D7D4D3;
+    --color2: #20c997;
+    --color3: #43658b;
+    --color4: #868e96;
+    --color5: #D7D4D3;
+    --color6: #20c997;
+    --verde: #BCEB6E;
+    --rojo: #F56352;
 }
 
 /* Elementos generales ya incluidos */
+#centro {
+    border-style: solid;
+    border-color: black;
+    border-top: none;
+    border-bottom: none;
+    border-width: 4px;
+}
 
 #header_pasatiempo {
   text-align: center;
@@ -22,6 +28,7 @@
 .section_pasatiempo {
   display: -webkit-flex;
   display: flex;
+  padding:0px;
 }
 
 #footer_pasatiempo {
@@ -56,15 +63,19 @@
 }
 
 #tablero {
-  background-color: var(--color2);
-  width: 50%;
-  padding: 6px;
+    background-color: var(--color2);
+    width: 50%;
+    padding-top: 100px;
+    padding-left: 50px;
 }
 
 #instrucciones {
   background-color: var(--color2);
   width: 100%;
   padding: 6px;
+  padding-top:100px;
+  padding-bottom:200px;
+
 }
 
 #datos {
@@ -84,6 +95,7 @@
   text-align: center;
   text-decoration: none;
   display: inline-block;
+  float:right;
   font-size: 16px;
   margin: 4px 2px;
   border-radius: 8px;
@@ -216,6 +228,7 @@
 /* TOGGLE DE GUARDAR INFO EN MEMORIA */
 
 .switch {
+  margin-top:15px;
   position: relative;
   display: inline-block;
   width: 30px;
