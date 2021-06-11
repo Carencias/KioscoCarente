@@ -1,12 +1,10 @@
 /* Variables globales del css */
 
 :root {
-    --color1: #D7D4D3;
-    --color2: #20c997;
-    --color3: #43658b;
-    --color4: #868e96;
-    --color5: #D7D4D3;
-    --color6: #20c997;
+    --azul: #43658b;
+    --gris: #868e96;
+    --verdeHover: #20c997;
+    --blanco: #D7D4D3;
     --verde: #BCEB6E;
     --rojo: #F56352;
 }
@@ -22,7 +20,7 @@
 
 #header_pasatiempo {
   text-align: center;
-  background-color: var(--color5);
+  background-color: var(--gris);
 }
 
 .section_pasatiempo {
@@ -32,21 +30,22 @@
 }
 
 #footer_pasatiempo {
-  background-color: var(--color5);
+  background-color: var(--gris);
 }
 
 /* CLASES */
 
 .pagina {
-  background-color: var(--color3);
+  background-color: var(--azul);
 }
 
 .texto {
   font-family: var(--fuente);
+  color: var(--blanco);
 }
 
 .divisor {
-  border: 5px solid var(--color3);
+  border: 5px solid var(--azul);
 }
 
 .titulo {
@@ -57,20 +56,20 @@
 
 #barra {
   text-align: right;
-  background-color: var(--color4);
+  background-color: var(--gris);
   width: (100%)-6px;
   padding: 6px;
 }
 
 #tablero {
-    background-color: var(--color2);
+    background-color: var(--gris);
     width: 50%;
     padding-top: 100px;
     padding-left: 50px;
 }
 
 #instrucciones {
-  background-color: var(--color2);
+  background-color: var(--gris);
   width: 100%;
   padding: 6px;
   padding-top:100px;
@@ -79,7 +78,7 @@
 }
 
 #datos {
-  background-color: var(--color1);
+  background-color: var(--gris);
   width: (100%)-6px;
   padding: 6px;
   font-family: var(--fuente);
@@ -89,8 +88,8 @@
 
 #botonResolver {
   transition-duration: 0.2s;
-  background-color: var(--color1);
-  border: 2px solid var(--color2);
+  background-color: var(--blanco);
+  border: 2px solid var(--gris);
   padding: 4px 8px;
   text-align: center;
   text-decoration: none;
@@ -104,14 +103,14 @@
 }
 
 #botonResolver:enabled:hover {
-  background-color: var(--color5);
+  background-color: var(--verdeHover);
   color: white;
 }
 
 /* TABLA DEL PASATIEMPO */
 
 #tabla {
-  background-color: var(--color5);
+  background-color: var(--gris);
   max-width: 287px;
   max-height: 454px;
   min-width: 227px;
@@ -147,14 +146,14 @@
 }
 
 .celda:hover {
-  background-color: var(--color6);
+  background-color: var(--verdeHover);
   color: black;
 }
 
 /* PISTAS DEL PASATIEMPO */
 
 #seccionPista {
-  background-color: var(--color4);
+  background-color: var(--gris);
   width: (100%)-6px;
   padding: 6px;
 }
@@ -176,14 +175,14 @@
 }
 
 #letrasPista:enabled:hover {
-  background-color: var(--color6);
+  background-color: var(--verdeHover);
   color: black;
 }
 
 #botonPista {
   transition-duration: 0.2s;
-  background-color: var(--color1);
-  border: 2px solid var(--color2);
+  background-color: var(--blanco);
+  border: 2px solid var(--gris);
   padding: 4px 8px;
   text-align: center;
   text-decoration: none;
@@ -196,7 +195,7 @@
 }
 
 #botonPista:hover {
-  background-color: var(--color5);
+  background-color: var(--verdeHover);
   color: white;
 }
 
@@ -221,7 +220,7 @@
 }
 
 #pista:hover {
-  background-color: var(--color6);
+  background-color: var(--verdeHover);
   color: black;
 }
 
