@@ -39,18 +39,18 @@
       <div class="decoracion">
         <div class="top">
           <div class="nombreCromo">
-            <h3 id="nombre_cromo">NullPointer</h3>
+            <h3 id="nombre_cromo"></h3>
           </div>
           <div class="border">
-            <img id="imagen_cromo" src="/dashboard/assets/img//AssertionError.jpg" alt="imagen">
+            <img id="imagen_cromo" src="" alt="imagen">
           </div>
         </div>
         <div class="bottom">
-          <p id="dato_cromo" class="dato">"De los que le gustan a Camino"</p>
-          <p class="descripcion" id="descripcion_cromo" class="descripcion">NullPointerException es una RuntimeException. En java, un valor especial "null" se puede asignar a la referencia de un objeto. Se lanza NullPointer cuando una aplicacion intenta usar una referencia a un objeto que tiene ese valor "null"</p>
+          <p id="dato_cromo" class="dato"></p>
+          <p class="descripcion" id="descripcion_cromo" class="descripcion"></p>
           <ul>
             <li><span class="frecuencia">Frecuencia: </span><a id="frecuencia_cromo" >Común</a></li>
-            <li><span class="lenguaje">Lenguaje: </span><a id="lenguaje_cromo">Java</a></li>
+            <li><span class="lenguaje">Lenguaje: </span><a id="lenguaje_cromo"><%= lenguaje %></a></li>
           </ul>
   
           <p class="info">
@@ -63,40 +63,40 @@
             <div class="col-md-6" style="width: 597px;">
                 <div class="row register-form">
                     <div class="col-md-8 offset-md-2" style="margin: 0px;padding: 0px;">
-                        <form class="custom-form" style="margin: 0px;padding: 0px;width: 589px;padding-top: 33px;box-shadow: 0px 0px 20px var(--bs-primary);" method="post" action="#">
+                        <form class="custom-form" style="margin: 0px;padding: 0px;width: 589px;padding-top: 33px;box-shadow: 0px 0px 20px var(--bs-primary);" method="post" enctype="multipart/form-data">
                             <h1 style="border-bottom-color: var(--bs-teal);">Crear Cromo</h1>
                             <div class="row form-group">
                                 <div class="col-sm-4 label-column"><label class="col-form-label" for="name-input-field">Nombre</label></div>
-                                <div class="col-sm-6 input-column"><input class="form-control" type="text" id="formulario_crear_cromo_nombre" name="nombre_cromo_formulario" oninput="cargarDatosCromoCrear()" required=""></div>
+                                <div class="col-sm-6 input-column"><input class="form-control" type="text" id="nombre" name="nombre" oninput="editarCromo()" required=""></div>
                             </div>
                             <div class="row form-group">
                                 <div class="col-sm-4 label-column"><label class="col-form-label" for="email-input-field">Precio</label></div>
-                                <div class="col-sm-6 input-column"><input class="form-control form-control-lg" type="number" id="formulario_crear_cromo_precio" name="precio_cromo_formulario" required="" oninput="cargarDatosCromoCrear()"></div>
+                                <div class="col-sm-6 input-column"><input class="form-control form-control-lg" type="number" id="precio" name="precio" required="" oninput="editarCromo()"></div>
                             </div>
                             <div class="row form-group">
                                 <div class="col-sm-4 label-column"><label class="col-form-label" for="pawssword-input-field">Stock</label></div>
-                                <div class="col-sm-6 input-column"><input class="form-control form-control-lg" type="number" id="formulario_crear_cromo_stock" name="stock_cromo_formulario" required="" oninput="cargarDatosCromoCrear()"></div>
+                                <div class="col-sm-6 input-column"><input class="form-control form-control-lg" type="number" id="stock" name="stock" required="" oninput="editarCromo()"></div>
                             </div>
                             <div class="row form-group">
                                 <div class="col-sm-4 label-column"><label class="col-form-label" for="repeat-pawssword-input-field">Imagen</label></div>
-                                <div class="col-sm-6 input-column"><input class="form-control" type="file" id="formulario_crear_cromo_imagen" name="imagen_cromo_formulario" required="" accept="image/*" oninput="cargarDatosCromoCrear()"></div>
+                                <div class="col-sm-6 input-column"><input class="form-control" type="file" id="imagen" name="file" required="" accept="image/*" oninput="editarImagen(event)"></div>
                             </div>
                             <div class="row form-group">
                                 <div class="col-sm-4 label-column"><label class="col-form-label" for="name-input-field">Dato Interesante</label></div>
-                                <div class="col-sm-6 input-column"><input class="form-control" type="text" id="formulario_crear_cromo_dato" name="dato_cromo_formulario" required="" oninput="cargarDatosCromoCrear()"></div>
+                                <div class="col-sm-6 input-column"><input class="form-control" type="text" id="dato" name="dato" required="" oninput="editarCromo()"></div>
                             </div>
                             <div class="row form-group">
                                 <div class="col-sm-4 label-column"><label class="col-form-label" for="repeat-pawssword-input-field">Descripción</label></div>
-                                <div class="col-sm-6 input-column"><textarea class="form-control" id="formulario_crear_cromo_descripcion" name="descripcion_cromo_formulario" oninput="cargarDatosCromoCrear()" required=""></textarea></div>
+                                <div class="col-sm-6 input-column"><textarea class="form-control" id="descripcion" name="descripcion" oninput="editarCromo()" required=""></textarea></div>
                             </div>
                             <div class="row form-group">
                                 <div class="col-sm-4 label-column"><label class="col-form-label" for="name-input-field">Frecuencia</label></div>
-                                <div class="col-sm-6 input-column"><select class="form-select" id="formulario_crear_cromo_frecuencia" required="" name="frecuencia_cromo_formulario" oninput="cargarDatosCromoCrear()">
+                                <div class="col-sm-6 input-column"><select class="form-select" id="frecuencia" required="" name="frecuencia" oninput="editarCromo()">
                                         <option value="Comun" selected="">Común</option>
-                                        <option value="Raro" selected="">Raro</option>
+                                        <option value="Raro">Raro</option>
                                         <option value="Excepcional">Excepcional</option>
                                     </select></div>
-                            </div><button class="btn btn-light submit-button" type="submit" style="background: var(--bs-teal);color: var(--bs-white);">GUARDAR CROMO</button><button class="btn btn-light submit-button" type="reset" style="background: var(--bs-danger);">CANCELAR</button>
+                            </div><button class="btn btn-light submit-button" type="submit" style="background: var(--bs-teal);color: var(--bs-white);">GUARDAR CROMO</button><button class="btn btn-light submit-button" type="reset" style="background: var(--bs-danger);">DESHACER CAMBIOS</button>
                         </form>
                     </div>
                 </div>
@@ -110,7 +110,6 @@
     <script src="/dashboard/assets/js/bs-init.js"></script>
     <script src="/dashboard/assets/js/freelancer.js"></script>
     <script src="/dashboard/assets/js/crearCromo.js"></script>
-    <script src="/dashboard/assets/js/editarCromo.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/Swiper/6.4.8/swiper-bundle.min.js"></script>
     <script src="/dashboard/assets/js/script.js"></script>
     <script src="/dashboard/assets/js/admin.js"></script>
