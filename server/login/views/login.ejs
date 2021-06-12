@@ -38,12 +38,20 @@
                     <h1 style="margin-top: 25px;border-bottom-color: var(--bs-teal);">INICIAR SESIÓN</h1>
                     <div class="row form-group">
                         <div class="col-sm-4 label-column"><label class="col-form-label" for="name-input-field">Usuario</label></div>
-                        <div class="col-sm-6 input-column"><input class="form-control" type="text" name="username"></div>
+                        <div class="col-sm-6 input-column"><input class="form-control" type="text" name="username" required=""></div>
                     </div>
                     <div class="row form-group">
                         <div class="col-sm-4 label-column"><label class="col-form-label" for="email-input-field">Contraseña</label></div>
-                        <div class="col-sm-6 input-column"><input class="form-control" type="password" name="password"></div>
-                    </div><button class="btn btn-light submit-button" type="submit" style="background: var(--bs-teal);">ENTRAR</button>
+                        <div class="col-sm-6 input-column"><input class="form-control" type="password" name="password" required=""></div>
+                    </div>
+                    <% if(alert){ %>
+                        <div class="alert alert-danger text-center alert-dismissible" role="alert" style="width: 376.062px;margin: 0 auto;">
+                            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                            <span> <%= alert.text %> </span>
+                        </div>
+                    <% } %>
+
+                        <button class="btn btn-light submit-button" type="submit" style="background: var(--bs-teal);">ENTRAR</button>
                 </form>
             </div>
         </div>
