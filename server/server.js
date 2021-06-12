@@ -2,6 +2,7 @@ const USUARIO_INCORRECTO = -1;
 const USUARIO_ESTANDAR = 0;
 const ADMIN = 1;
 
+const bcrypt = require("bcrypt");
 const express = require("express");
 const app = express();
 const port = 8000;
@@ -110,22 +111,24 @@ function comprobarCredenciales(req, res) {
     function (usuarios) {
 
       let usuario = usuarios[0];
+      bcrypt.compare(password, usuario.Password, function (err, result) {
+        
+        if (!usuario || result==false) {
+          res.send("Autenticación incorrecta");
+        } else {
+          console.log("Login Username: ", usuario.User);
+          console.log("Login Password: ", usuario.Password);
 
-      if (!usuario || usuario.Password !== password) {
-        res.send("Autenticación incorrecta");
-      } else {
-        console.log("Login Username: ", usuario.User);
-        console.log("Login Password: ", usuario.Password);
+          let tipoUsuario = usuario.Tipo;
+          //Guardo en la sesión los datos obtenidos de la bbdd
+          req.session.user = usuario.User;
+          req.session.password = usuario.Password;
+          req.session.userType = usuario.Admin;
 
-        let tipoUsuario = usuario.Tipo;
-        //Guardo en la sesión los datos obtenidos de la bbdd
-        req.session.user = usuario.User;
-        req.session.password = usuario.Password;
-        req.session.userType = usuario.Admin;
-
-        console.log(tipoUsuario);
-        abrirSesionIniciada(req, res);
-      }
+          console.log(tipoUsuario);
+          abrirSesionIniciada(req, res);
+        }
+      })
     },
     function (error) {
       console.log(error);
@@ -242,17 +245,22 @@ app.post("/registro", function (req, res) {
   let apellidos = req.body.apellidos;
   let email = req.body.email;
 
-  agregarUsuario(username, password, nombre, apellidos, email).then(
-    () => {
-      agregarCliente(username).then(
-        () => {console.log("Se ha creado el usuario exitosamente");
-                res.redirect("/login");}, 
-        (error) => {lanzarError(res, "Error al agregar al cliente a la base de datos");});
-    },
-    (error) => {
-      lanzarError(res, "Error al agregar al nuevo usuario a la base de datos");
-    }
-  );
+  bcrypt.hash(password, 10, (err, encrypted) => {
+    let hash = encrypted;
+    console.log(hash);
+    agregarUsuario(username, hash, nombre, apellidos, email).then(
+      () => {
+        agregarCliente(username).then(
+          () => {console.log("Se ha creado el usuario exitosamente");
+                  res.redirect("/login");}, 
+          (error) => {lanzarError(res, "Error al agregar al cliente a la base de datos");});
+      },
+      (error) => {
+        lanzarError(res, "Error al agregar al nuevo usuario a la base de datos");
+      }
+    );
+
+  });
 
 });
 
