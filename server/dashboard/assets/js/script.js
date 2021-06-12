@@ -365,3 +365,27 @@ function pintarRojo(elemento){
     //console.log(elemento);
     elemento.style.backgroundColor=colores.rojo;
 }
+
+//FUNCIONES NUEVAS
+function vaciarTablero(){
+    let fila = [];
+    valorCasillas = [];
+    for(var l=0; l<12; l++){
+        if(l<6){
+            for(var i=0; i<4; i++){
+                fila.push("");
+                casillas[l][i].value = "";
+            }
+            valorCasillas.push(fila);
+            fila = [];
+        }else{
+            for(var i=0; i<6; i++){
+                fila.push("");
+                casillas[l][i].value = "";
+            }
+            valorCasillas.push(fila);
+            fila = [];
+        }
+    }
+    guardarEnMemoria();
+}

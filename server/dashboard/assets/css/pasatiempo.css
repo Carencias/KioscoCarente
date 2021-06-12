@@ -3,7 +3,7 @@
 :root {
     --azul: #43658b;
     --gris: #868e96;
-    --verdeHover: #20c997;
+    --hover: #73a6e0;
     --blanco: #D7D4D3;
     --verde: #BCEB6E;
     --rojo: #F56352;
@@ -99,7 +99,27 @@
 }
 
 #botonResolver:enabled:hover {
-  background-color: var(--verdeHover);
+  background-color: var(--hover);
+  color: white;
+}
+
+#botonVaciar {
+  transition-duration: 0.2s;
+  background-color: var(--blanco);
+  border: 2px solid var(--gris);
+  padding: 4px 8px;
+  text-align: center;
+  text-decoration: none;
+  float: right;
+  font-size: 16px;
+  margin: 4px 2px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-family: var(--fuente);
+}
+
+#botonVaciar:hover {
+  background-color: var(--hover);
   color: white;
 }
 
@@ -119,6 +139,18 @@
   font-size: 14px;
   font-weight: bold;
   text-align: center;
+}
+
+.texto_columna_num {
+  font-family: var(--fuente);
+  color: var(--blanco); 
+  text-decoration:none;
+}
+
+.texto_columna_num:hover{
+  font-family: var(--fuente);
+  color: var(--blanco);
+  text-decoration:none;
 }
 
 .columna_input {
@@ -141,9 +173,9 @@
   text-transform: uppercase;
 }
 
-.celda:hover {
-  background-color: var(--verdeHover);
-  color: black;
+.columna_input > .celda:hover {
+  background-color: var(--hover);
+  color: white;
 }
 
 /* PISTAS DEL PASATIEMPO */
@@ -171,7 +203,7 @@
 }
 
 #letrasPista:enabled:hover {
-  background-color: var(--verdeHover);
+  background-color: var(--hover);
   color: black;
 }
 
@@ -191,7 +223,7 @@
 }
 
 #botonPista:hover {
-  background-color: var(--verdeHover);
+  background-color: var(--hover);
   color: white;
 }
 
@@ -216,7 +248,7 @@
 }
 
 #pista:hover {
-  background-color: var(--verdeHover);
+  background-color: var(--hover);
   color: black;
 }
 

@@ -72,7 +72,7 @@
                             <td class="columna_input" colspan="1">
                                 <input id="celdaA3" class="celda" type="text" size="1" maxlength="1" onblur="guardarCasillas()"/>
                             </td>
-                            <td class="columna_num" colspan="1"><a class="texto">1</a></td>
+                            <td class="columna_num" colspan="1"><a class="texto_columna_num">1</a></td>
                             <td class="columna_vacio" colspan="1"><p></p></td>
                             <td class="columna_vacio" colspan="1"><p></p></td>
                         </tr>
@@ -167,13 +167,13 @@
                             <td class="columna_input" colspan="1">
                                 <input id="celdaF3" class="celda" type="text" size="1" maxlength="1" onblur="guardarCasillas()"/>
                             </td>
-                            <td class="columna_num" colspan="1"><a class="texto">2</a></td>
+                            <td class="columna_num" colspan="1"><a class="texto_columna_num">2</a></td>
                             <td class="columna_vacio" colspan="1"><p></p></td>
                             <td class="columna_vacio" colspan="1"><p></p></td>
                         </tr>
                         <tr class="fila">
                             <td class="columna_vacio" colspan="1"><p></p></td>
-                            <td class="columna_num" colspan="1"><a class="texto">3</a></td>
+                            <td class="columna_num" colspan="1"><a class="texto_columna_num">3</a></td>
                             <td class="columna_input" colspan="1">
                                 <input id="celdaG0" class="celda" type="text" size="1" maxlength="1" onblur="guardarCasillas()"/>
                             </td>
@@ -288,7 +288,7 @@
                         </tr>
                         <tr class="fila">
                             <td class="columna_vacio" colspan="1"><p></p></td>
-                            <td class="columna_num" colspan="1"><a class="texto">4</a></td>
+                            <td class="columna_num" colspan="1"><a class="texto_columna_num">4</a></td>
                             <td class="columna_input" colspan="1">
                                 <input id="celdaL0" class="celda" type="text" size="1" maxlength="1" onblur="guardarCasillas()"/>
                             </td>
@@ -373,7 +373,8 @@
                                 <input type="checkbox" id="guardar" onchange="almacenamiento()"> 
                             <span class="slider round"></span>
                             </label>
-                                <button id="botonResolver" type="button" onclick="resolverPasatiempo()" disabled>Resolver</button>
+                            <button id="botonResolver" type="button" onclick="resolverPasatiempo()" disabled>Resolver</button>
+                            <button id="botonVaciar" type="button" onclick="vaciarTablero()">Vaciar Tablero</button>
 
             </article>
         </section>
