@@ -64,7 +64,6 @@
 #tablero {
     background-color: var(--gris);
     width: 50%;
-    padding-top: 100px;
     padding-left: 50px;
 }
 
@@ -72,8 +71,6 @@
   background-color: var(--gris);
   width: 100%;
   padding: 6px;
-  padding-top:100px;
-  padding-bottom:200px;
 
 }
 
