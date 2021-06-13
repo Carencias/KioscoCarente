@@ -115,36 +115,38 @@ function comprobarCredenciales(req, res) {
         res.render(__dirname + "/login/views/login", {
           alert: alerta
         });
+      }else{
+        bcrypt.compare(password, usuario.Password, function (err, result) {
+
+          if (result == false) {
+            let alerta = {
+              text: "Usuario y/o contraseña incorrectos"
+            };
+            res.render(__dirname + "/login/views/login", {
+              alert: alerta
+            });
+          } else {
+            console.log("Login Username: ", usuario.User);
+            console.log("Login Password: ", usuario.Password);
+  
+            let tipoUsuario = usuario.Tipo;
+            //Guardo en la sesión los datos obtenidos de la bbdd
+            req.session.user = usuario.User;
+            req.session.password = usuario.Password;
+            req.session.userType = usuario.Admin;
+  
+            console.log(tipoUsuario);
+            abrirSesionIniciada(req, res);
+          }
+        })
       }
-      bcrypt.compare(password, usuario.Password, function (err, result) {
 
-        if (result == false) {
-          let alerta = {
-            text: "Usuario y/o contraseña incorrectos"
-          };
-          res.render(__dirname + "/login/views/login", {
-            alert: alerta
-          });
-        } else {
-          console.log("Login Username: ", usuario.User);
-          console.log("Login Password: ", usuario.Password);
-
-          let tipoUsuario = usuario.Tipo;
-          //Guardo en la sesión los datos obtenidos de la bbdd
-          req.session.user = usuario.User;
-          req.session.password = usuario.Password;
-          req.session.userType = usuario.Admin;
-
-          console.log(tipoUsuario);
-          abrirSesionIniciada(req, res);
-        }
-      })
     },
     function (error) {
       console.log(error);
       lanzarError(res, "Fallo en la base de datos");
       //throw error;
-    });
+  });
   /*connection.query(
     "SELECT User, Password, Admin FROM USUARIOS WHERE User='" + username + "'",
     function (err, result) {
@@ -659,29 +661,6 @@ function contarCromosColeccion(coleccion) {
   return ejecutarQueryBBDD("SELECT COUNT(*) AS numCromosColeccion FROM CROMOS WHERE Coleccion = ?", [coleccion], "Contar cromos coleccion", true);
 }
 
-function borrarColeccion(nombre) {
-  return ejecutarQueryBBDD("DELETE FROM COLECCIONES WHERE Nombre = ?", [nombre], "Borrar coleccion", false);
-}
-
-function borrarCromo(id) {
-  return ejecutarQueryBBDD("DELETE FROM CROMOS WHERE ID = ?", [id], "Borrar cromo", false);
-}
-
-function agregarCromo(nombre, coleccion, rutaImagen, precio, cantidad, descripcion, datoInteresante, frecuencia) {
-  return ejecutarQueryBBDD("INSERT INTO CROMOS (Nombre, Coleccion, RutaImagen, Precio, Cantidad, Descripcion, DatoInteresante, Frecuencia) VALUES (?,?,?,?,?,?,?,?)",
-    [nombre, coleccion, rutaImagen, precio, cantidad, descripcion, datoInteresante, frecuencia], "Agregar cromo", false);
-}
-
-function editarCromo(id, precio, cantidad, imagen, descripcion, datoInteresante, frecuencia) {
-  return ejecutarQueryBBDD("UPDATE CROMOS SET Precio = ?, Cantidad = ?, RutaImagen = ?, Descripcion = ?, DatoInteresante = ?, Frecuencia = ? WHERE ID = ?",
-    [precio, cantidad, imagen, descripcion, datoInteresante, frecuencia, id], "Editar cromo", false);
-}
-
-function actualizarCromoSinFoto(id, precio, cantidad, descripcion, datoInteresante, frecuencia) {
-  return ejecutarQueryBBDD("UPDATE CROMOS SET Precio = ?, Cantidad = ?, Descripcion = ?, DatoInteresante = ?, Frecuencia = ? WHERE ID = ?",
-    [precio, cantidad, descripcion, datoInteresante, frecuencia, id], "Editar cromo", false);
-}
-
 function agregarUsuario(username, password, nombre, apellidos, email) {
   return ejecutarQueryBBDD("INSERT INTO USUARIOS (User, Password, Nombre, Apellidos, Email) VALUES (?, ?, ?, ?, ?)", [username, password, nombre, apellidos, email], "Agregar usuario", false);
 }
@@ -740,10 +719,7 @@ function ejecutarQueryBBDD(query, arrayDatos, operacion, devolverResultado) {
   return new Promise(function (resolve, reject) {
     connection.query(query, arrayDatos, function (err, result) {
       if (err) {
-        //reject (Error("Operacion " + operacion + " no completada"));
-        console.log("ENTROOOOOOOOO");
-        reject(err);
-
+        reject (Error("Operacion " + operacion + " no completada"));
       } else {
         if (devolverResultado) {
           return resolve(result);
