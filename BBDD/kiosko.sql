@@ -222,5 +222,9 @@ INSERT INTO `ECUACIONES` (`Ecuacion`,`x`) VALUES
 CREATE TRIGGER actualizarEstadoAlbum
 	AFTER INSERT ON CROMOS FOR EACH ROW
 	UPDATE ALBUMES SET Estado = 'Completada parcialmente' WHERE (Estado = 'Finalizada' AND Coleccion = NEW.Coleccion);
+    
+CREATE TRIGGER actualizarEstadoColeccion
+	AFTER INSERT ON CROMOS_ALBUMES FOR EACH ROW
+    UPDATE COLECCIONES SET Estado = 'Agotada' WHERE (SELECT SUM(Cantidad) FROM CROMOS WHERE Coleccion = NEW.AlbumColeccion) = 0 AND Nombre = NEW.AlbumColeccion;
 
 
