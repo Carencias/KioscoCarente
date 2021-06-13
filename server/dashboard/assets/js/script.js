@@ -270,9 +270,17 @@ function resolverPasatiempo(){
         palabra = "";
     });
     if(filasErroneas.length == 0){
-        $.post("http://localhost:8000/dashboard/user/retoPasatiempo", {});
-        document.getElementById("mensajeAcierto").style.display = "block";
-        document.getElementById("mensajeAcierto").style.marginTop = "10px";
+        $.ajax({
+            type: "POST",
+            url: "http://localhost:8000/dashboard/user/retoPasatiempo",
+            success: function(data) {
+                console.log('success');
+                 $('body').html(data); 
+                 document.getElementById("mensajeAcierto").style.display = "block";
+                 document.getElementById("mensajeAcierto").style.marginTop = "10px";
+            }
+        
+        });        
         //TODO FUNCION RESETEAR PASATIEMPO
     }
     //console.log("Filas erroneas: " + filasErroneas)
