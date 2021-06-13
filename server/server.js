@@ -809,6 +809,7 @@ app.post("/dashboard/user/retoPasatiempo", async function (req, res) {
   puntos = puntos + PUNTOS_PREGUNTA;
   actualizarPuntosCliente(puntos, idUser);
 
+  return res.redirect('/dashboard/user/retoPasatiempo');
 });
 
 app.post("/dashboard/user/retoCaptcha", async function (req, res) {
