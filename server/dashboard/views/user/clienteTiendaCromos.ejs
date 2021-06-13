@@ -59,8 +59,13 @@
                             </div>
 
                     <%if(i < numeroNoComprados){ %>
-                        <div class="text-center"><a class="btn btn-primary" role="button" style="margin: 10px;background: var(--bs-teal);width: 188PX;" href=<%= "comprarCromo?idCromo=" + cromo.ID %>><%=cromo.Precio%> PUNTOS</a></div>
+                        <%if(cromo.Cantidad <= 0){%>
+                              <div class="text-center"><button class="btn btn-primary disabled" type="button" style="margin: 10px;background: var(--bs-teal);width: 188PX;">AGOTADO</button></div>
 
+                        <%}else{%>
+                              <div class="text-center"><a class="btn btn-primary" role="button" style="margin: 10px;background: var(--bs-teal);width: 188PX;" href=<%= "comprarCromo?idCromo=" + cromo.ID %>><%=cromo.Precio%> PUNTOS</a></div>
+
+                        <%}%>
                     <%}else{%>
                         <div class="text-center"><button class="btn btn-primary disabled" type="button" style="margin: 10px;background: var(--bs-teal);width: 188PX;">YA COMPRADO</button></div>
                     <%}%>
