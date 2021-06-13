@@ -283,29 +283,59 @@ app.set('views', path.join(__dirname, '/dashboard/views'));
   
   router.post("/dashboard/admin/borrarCromo", function (req, res) {
     let id = req.body.id;
-  
-    borrarCromo(id).then(
-      () => {
-        res.send("El cromo ha sido borrado")
+
+    cromosComprados(id).then(
+      (cromosComprados) => {
+        if(cromosComprados.length){
+          lanzarError(res, "No se puede borrar un cromo que ya ha sido comprado por algun cliente");
+        }else{
+          borrarCromo(id).then(
+            () => {
+              res.send("El cromo ha sido borrado")
+            },
+            (error) => {
+              lanzarError(res, "Error al intentar borrar el cromo de la base de datos");
+            }
+          );
+        }
       },
       (error) => {
         lanzarError(res, "Error al intentar borrar el cromo de la base de datos");
       }
-    );
+    )
   
   });
+
+  function cromosComprados(idCromo){
+    return ejecutarQueryBBDD("SELECT * FROM CROMOS_ALBUMES WHERE CromoID = ?", [idCromo], "Comprobar si cromo esta comprado", true);
+  }
+
+  function cromosCompradosColeccion(coleccion){
+    return ejecutarQueryBBDD("SELECT * FROM CROMOS_ALBUMES WHERE AlbumColeccion = ?", [coleccion], "Comprobar si la coleccion tiene algun cromo esta comprado", true);
+  }
   
   router.post("/dashboard/admin/borrarColeccion", function (req, res) {
     let nombre = req.body.nombre;
-  
-    borrarColeccion(nombre).then(
-      () => {
-        res.send("La coleccion ha sido borrada")
+
+    cromosCompradosColeccion(nombre).then(
+      (cromosComprados) => {
+        if(cromosComprados.length){
+          lanzarError(res, "No se puede borrar una coleccion que tiene cromos que ya han sido comprados por algun cliente");
+        }else{
+          borrarColeccion(nombre).then(
+            () => {
+              res.send("La coleccion ha sido borrada")
+            },
+            (error) => {
+              lanzarError(res, "Error al borrar la colección de la base de datos");
+            }
+          );
+        }
       },
       (error) => {
-        lanzarError(res, "Error al borrar la colección de la base de datos");
+        lanzarError(res, "Error al intentar borrar el cromo de la base de datos");
       }
-    );
+    )
   
   });
 
@@ -384,4 +414,5 @@ app.set('views', path.join(__dirname, '/dashboard/views'));
       error: mensaje
     });
   }
+
 module.exports = router;
