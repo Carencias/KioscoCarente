@@ -14,7 +14,7 @@ app.use(fileUpload());
 const {
   response
 } = require("express");
-app.use(express.urlencoded());
+app.use(express.urlencoded({ extended: true }));
 const fs = require('fs');
 const ejs = require('ejs');
 app.set('view engine', 'ejs');
@@ -468,7 +468,8 @@ app.get("/dashboard/user/tiendaCromos", function (req, res) {
   //TODO comprobar entrada??
 
   let coleccion = req.query.nombreColeccion;
-  let idUser = "user";
+  let idUser = req.session.user;
+  //let idUser = "user";
 
   let string = "SELECT * FROM CROMOS AS c WHERE c.ID not IN(SELECT CromoID FROM CROMOS_ALBUMES WHERE AlbumUser = '" + idUser + "' AND AlbumColeccion = '" + coleccion + "') AND c.Coleccion = '" + coleccion + "'";
   connection.query(string, function (err, cromosNoComprados, fields) {
@@ -528,8 +529,8 @@ app.get("/dashboard/user/clienteCromos", function (req, res) {
 app.get("/dashboard/user/comprarCromo", async function (req, res) {
   //TODO comprobar entrada??
   let idCromo = req.query.idCromo;
-  //let idUser = req.session.user
-  let idUser = "user";
+  let idUser = req.session.user;
+  //let idUser = "user";
 
   var cromo, cliente;
 
@@ -735,7 +736,7 @@ app.get("/dashboard/user/comprarAlbum", function (req, res) {
   //TODO comprobar entrada??
   let nombreColeccion = req.query.nombreColeccion;
   //let idUser = "user";
-  let idUser = req.session.user
+  let idUser = req.session.user;
   var coleccion, cliente;
 
   obtenerColecciones(nombreColeccion).then(function (colecciones) {
