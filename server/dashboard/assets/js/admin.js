@@ -12,19 +12,31 @@ function eliminarCromo(id){
         "./borrarCromo",
         { id: id},
         function (result) {
-          alert(result)
-          document.location.href= "/dashboard/admin/editarColeccion?nombreColeccion=" + obtenerNombreColeccion();
+
+          if(result.charAt(0)!=='<'){
+            alert(result)
+            document.location.href= "/dashboard/admin/editarColeccion?nombreColeccion=" + obtenerNombreColeccion();
+          }else{
+            $('body').html(result);
+          }
+
         }
       );
 }
+
 function borrarColeccion(){
     let coleccion = obtenerNombreColeccion();
     $.post(
         "./borrarColeccion",
         { nombre: coleccion},
         function (result) {
-          alert(result)
-          document.location.href= "/dashboard/admin";
+
+          if(result.charAt(0)!=='<'){
+            alert(result)
+            document.location.href= "/dashboard/admin";
+          }else{
+            $('body').html(result);
+          }
         }
       );
 }
