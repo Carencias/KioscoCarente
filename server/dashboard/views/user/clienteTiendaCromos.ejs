@@ -58,7 +58,7 @@
                               <div class="text-center"><button class="btn btn-primary disabled" type="button" style="margin: 10px;background: var(--bs-teal);width: 188PX;">AGOTADO</button></div>
 
                         <%}else{%>
-                              <div class="text-center"><a class="btn btn-primary" role="button" style="margin: 10px;background: var(--bs-teal);width: 188PX;" href=<%= "comprarCromo?idCromo=" + cromo.ID %>><%=cromo.Precio%> PUNTOS</a></div>
+                              <div class="text-center"><a class="btn btn-primary" role="button" onclick="return confirmacionCompra()" style="margin: 10px;background: var(--bs-teal);width: 188PX;" href=<%= "comprarCromo?idCromo=" + cromo.ID %>><%=cromo.Precio%> PUNTOS</a></div>
 
                         <%}%>
                     <%}else{%>
@@ -77,6 +77,15 @@
             </div>
      
     </div>
+    <script>
+        function confirmacionCompra(){
+            if(confirm("¿Desea comprar este cromo?")){
+                return true;
+            }else{
+                return false;
+            }
+        }
+    </script>
 
     <div class="text-center text-white copyright py-4 fixed-bottom" style="padding-top: 0px;padding-bottom: 0px;padding-right: 0px;padding-left: 0px;margin-top: 0px;">
         <div class="container"><small>Copyright ©&nbsp;Carentes 2021</small></div>
