@@ -1,6 +1,11 @@
 const USUARIO_INCORRECTO = -1;
 const USUARIO_ESTANDAR = 0;
 const ADMIN = 1;
+const PUNTOS_PREGUNTA = 7;
+const PUNTOS_CAPTCHA = 3;
+const PUNTOS_PASATIEMPO = 15;
+const PUNTOS_ECUACION = 10;
+
 
 const bcrypt = require("bcrypt");
 const express = require("express");
@@ -27,11 +32,6 @@ app.use(require('./admin.js'));
 const connection = require('./database.js')
 
 app.use(express.json());
-/*app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Methods", "POST" | "GET");
-  next();
-});*/
 
 app.listen(port, () => {
   console.log(`Running ${port}`);
@@ -47,7 +47,6 @@ app.use(
       //secure: true --> Requiere HTTPS
       maxAge: (30 * 60 * 1000) //miliseconds
     }
-    //expires: new Date(Date.now() + 30 * 60 * 1000), //miliseconds??
   })
 );
 
@@ -59,8 +58,6 @@ var auth = function (req, res, next) {
 
 var userAuth = function (req, res, next) {
   if (req.session && req.session.userType === USUARIO_ESTANDAR) {
-    //console.log(req.session);
-    //console.log(req.session.userType);
     return next();
   } else {
     return res.redirect("/login");
@@ -80,8 +77,6 @@ app.get("/cookie", function (req, res) {
 //TODO
 //Permite acceder a los recursos de una carpeta. El primer parametro es la ruta virtual sobre la que se monta, el segundo el real.
 app.use("/", express.static(__dirname + "/webpage"));
-//app.use("/dashboard/admin", adminAuth);
-//app.use("/dashboard/user", userAuth);
 app.use("/dashboard/user", userAuth, express.static(__dirname + "/dashboard/user"));
 app.use("/dashboard/admin", adminAuth, express.static(__dirname + "/dashboard/admin"));
 
@@ -126,16 +121,12 @@ function comprobarCredenciales(req, res) {
               alert: alerta
             });
           } else {
-            console.log("Login Username: ", usuario.User);
-            console.log("Login Password: ", usuario.Password);
-  
             let tipoUsuario = usuario.Tipo;
             //Guardo en la sesión los datos obtenidos de la bbdd
             req.session.user = usuario.User;
             req.session.password = usuario.Password;
             req.session.userType = usuario.Admin;
   
-            console.log(tipoUsuario);
             abrirSesionIniciada(req, res);
           }
         })
@@ -147,30 +138,6 @@ function comprobarCredenciales(req, res) {
       lanzarError(res, "Fallo en la base de datos");
       //throw error;
   });
-  /*connection.query(
-    "SELECT User, Password, Admin FROM USUARIOS WHERE User='" + username + "'",
-    function (err, result) {
-      if (err) throw err;
-      //No se encontro el usuario o bien la contraseña no es válida
-      if (result.length === 0 || result[0].Password !== password) {
-        res.send("Autenticación incorrecta");
-      } else {
-        console.log("Login Username: ", result[0].User);
-        console.log("Login Password: ", result[0].Password);
-
-        let tipoUsuario = result[0].Tipo;
-
-        //Guardo en la sesión los datos obtenidos de la bbdd
-        req.session.user = result[0].User;
-        req.session.password = result[0].Password;
-        req.session.userType = result[0].Admin;
-
-        console.log(tipoUsuario);
-
-        abrirSesionIniciada(req, res);
-      }
-    }
-  );*/
 }
 
 app.post("/login", function (req, res) {
@@ -185,11 +152,6 @@ app.post("/login", function (req, res) {
       res.render(__dirname + "/login/views/login", {
         alert: alerta
       });
-      /*res.send(
-        "Usuario o contraseña no introducido" +
-        req.body.username +
-        req.body.password
-      );*/
     } else {
       comprobarCredenciales(req, res);
     }
@@ -209,13 +171,11 @@ app.get("/login", function (req, res) {
   //Comprobar si ya está logueado
   console.log(req.session);
   if (checkSesionIniciada(req)) {
-    //res.redirect("webpage/dashboard");
     abrirSesionIniciada(req, res);
   } else {
     res.render(__dirname + "/login/views/login", {
       alert: undefined
     });
-    //res.sendFile(__dirname + "/login/login.html");
   }
 });
 
@@ -234,14 +194,8 @@ function abrirSesionIniciada(req, res) {
   //Se abre la sesión del dashboard según el tipo de usuario
   if (checkSesionIniciada(req)) {
     if (req.session.userType === USUARIO_ESTANDAR) {
-      //res.send("Bienvenido al dashboard de USUARIO_ESTANDAR");
-
-      //res.sendFile(__dirname + "/webpage/dashboard/user/index.html");
       res.redirect("/dashboard/user");
     } else if (req.session.userType === ADMIN) {
-      //res.send("Bienvenido al dashboard de ADMIN");
-
-      //res.sendFile(__dirname + "/webpage/admin/index.html");
       res.redirect("/dashboard/admin/");
     }
   }
@@ -249,7 +203,6 @@ function abrirSesionIniciada(req, res) {
 app.get("/dashboard/logout", auth, function (req, res) {
   req.session.destroy();
   res.redirect("/index.html");
-  //res.send("Sesión Finalizada correctamente");
 });
 
 //Para requerir la autenticacion al acceder a las paginas hay que agregar auth como aqui
@@ -359,34 +312,6 @@ app.get("/dashboard/admin/editarPerfil", function (req, res) {
 app.set('views', path.join(__dirname, '/dashboard/views'));
 app.use("/dashboard/assets", express.static(__dirname + "/dashboard/assets"));
 app.use("/dashboard/resources", express.static(__dirname + "/dashboard/resources"));
-//app.use("/dashboard/resources/colecciones/java/imagenes/", express.static(__dirname + "/dashboard/resources/colecciones/java/imagenes/"));
-//app.use("/dashboard/resources/*", express.static(__dirname + "/dashboard/resources/media"));
-
-//Acceso a subdirectorios público
-/*app.get("/dashboard/assets/*", function (req, res) {
-  let url = req.originalUrl;
-  console.log(url.toString());
-
-  if (fs.existsSync(__dirname + url.toString())) {
-    res.sendFile(__dirname + url.toString());
-  } else {
-    res.sendStatus(404);
-  }
-
-});*/
-
-
-/*app.get("/dashboard/resources/*", function (req, res) {
-  let url = req.originalUrl;
-  //console.log(url.toString());
-
-  if (fs.existsSync(__dirname + url.toString())) {
-    res.sendFile(__dirname + url.toString());
-  } else {
-    res.sendStatus(404);
-  }
-
-});*/
 
 
 //PAGINA PRINCIPAL USUARIO
@@ -469,7 +394,6 @@ app.get("/dashboard/user/tiendaCromos", function (req, res) {
 
   let coleccion = req.query.nombreColeccion;
   let idUser = req.session.user;
-  //let idUser = "user";
 
   let string = "SELECT * FROM CROMOS AS c WHERE c.ID not IN(SELECT CromoID FROM CROMOS_ALBUMES WHERE AlbumUser = '" + idUser + "' AND AlbumColeccion = '" + coleccion + "') AND c.Coleccion = '" + coleccion + "'";
   connection.query(string, function (err, cromosNoComprados, fields) {
@@ -530,7 +454,6 @@ app.get("/dashboard/user/comprarCromo", async function (req, res) {
   //TODO comprobar entrada??
   let idCromo = req.query.idCromo;
   let idUser = req.session.user;
-  //let idUser = "user";
 
   var cromo, cliente;
 
@@ -735,7 +658,6 @@ function ejecutarQueryBBDD(query, arrayDatos, operacion, devolverResultado) {
 app.get("/dashboard/user/comprarAlbum", function (req, res) {
   //TODO comprobar entrada??
   let nombreColeccion = req.query.nombreColeccion;
-  //let idUser = "user";
   let idUser = req.session.user;
   var coleccion, cliente;
 
@@ -778,17 +700,12 @@ app.get("/dashboard/user/comprarAlbum", function (req, res) {
     } else {
 
       lanzarError(res, "No hay existencias en álbumes de esa colección");
-      //res.send("No hay existencias en álbumes de esa colección")
     }
 
   }, function (error) {
     lanzarError(res, "Error al consultar la base de datos");
   });
 });
-
-
-
-//RETOS
 
 //CAPTCHA
 var svgCaptcha = require('svg-captcha');
@@ -803,11 +720,10 @@ app.get("/dashboard/user/retoCaptcha", async function (req, res) {
 
 app.post("/dashboard/user/retoPasatiempo", async function (req, res) {
   let idUser = req.session.user;
-  let PUNTOS_PREGUNTA = 15;
   let puntos = await obtenerPuntosCliente(idUser);
 
   //SUMAR PUNTOS
-  puntos = puntos + PUNTOS_PREGUNTA;
+  puntos = puntos + PUNTOS_PASATIEMPO;
   actualizarPuntosCliente(puntos, idUser);
 
   return res.redirect('/dashboard/user/retoPasatiempo');
@@ -816,7 +732,6 @@ app.post("/dashboard/user/retoPasatiempo", async function (req, res) {
 app.post("/dashboard/user/retoCaptcha", async function (req, res) {
   let respuesta = req.body.respuesta;
   let idUser = req.session.user;
-  let PUNTOS_PREGUNTA = 3;
   let puntos = await obtenerPuntosCliente(idUser);
 
   if (req.session.captcha) {
@@ -826,7 +741,7 @@ app.post("/dashboard/user/retoCaptcha", async function (req, res) {
       alerta.esValido = 1;
 
       //SUMAR PUNTOS
-      puntos = puntos + PUNTOS_PREGUNTA;
+      puntos = puntos + PUNTOS_CAPTCHA;
       actualizarPuntosCliente(puntos, idUser);
 
     } else {
@@ -864,7 +779,6 @@ async function renderCaptchaAleatoria(req, res, alerta) {
 }
 
 //PREGUNTAS
-
 app.get("/dashboard/user/retoPregunta", async function (req, res) {
 
   renderPreguntaAleatoria(req, res, undefined);
@@ -881,8 +795,6 @@ app.post("/dashboard/user/retoPregunta", async function (req, res) {
   let idUser = req.session.user
   let puntos = await obtenerPuntosCliente(req.session.user);
 
-  //TODO PONERLO ARRIBA
-  const PUNTOS_PREGUNTA = 7;
   let alerta = [];
 
   //Si se generó una pregunta con GET
@@ -942,7 +854,6 @@ app.post("/dashboard/user/retoEcuacion", async function (req, res) {
   let puntos = await obtenerPuntosCliente(idUser);
 
   //TODO PONERLO ARRIBA
-  const PUNTOS_PREGUNTA = 10;
   let alerta = [];
 
   //Si se generó una pregunta con GET
@@ -951,9 +862,9 @@ app.post("/dashboard/user/retoEcuacion", async function (req, res) {
 
       alerta.esValido = 1;
 
-      actualizarPuntosCliente(puntos + PUNTOS_PREGUNTA, idUser).catch((error) => {});
+      actualizarPuntosCliente(puntos + PUNTOS_ECUACION, idUser).catch((error) => {});
 
-      puntos = puntos + PUNTOS_PREGUNTA;
+      puntos = puntos + PUNTOS_ECUACION;
 
     } else {
 
