@@ -30,7 +30,6 @@ const {
   send
 } = require("process");
 
-const connection = require('./database.js')
 
 app.use(express.json());
 
