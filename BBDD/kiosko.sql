@@ -218,3 +218,9 @@ INSERT INTO `ECUACIONES` (`Ecuacion`,`x`) VALUES
 	('2[3(x+5)-9]=-3(2x-4)', '0'),
 	('2(3x+2)=4[2x-5(x-2)]', '2'),
 	('3(12-x)-4x=2(11-x)+9x', '1');
+    
+CREATE TRIGGER actualizarEstadoAlbum
+	AFTER INSERT ON CROMOS FOR EACH ROW
+	UPDATE ALBUMES SET Estado = 'Completada parcialmente' WHERE (Estado = 'Finalizada' AND Coleccion = NEW.Coleccion);
+
+
