@@ -52,7 +52,6 @@ app.use(
     resave: false, //No se para que sirve
     saveUninitialized: false, //La sesion no se almacena si está vacia
     cookie: {
-      //secure: true --> Requiere HTTPS
       maxAge: (30 * 60 * 1000) //miliseconds
     }
   })
@@ -77,12 +76,6 @@ var adminAuth = function (req, res, next) {
   else return res.redirect("/login");
 };
 
-app.get("/cookie", function (req, res) {
-  res.write('<p>expires in: ' + (req.session.cookie.maxAge / 1000) + 's</p>');
-  res.end();
-});
-
-//TODO
 //Permite acceder a los recursos de una carpeta. El primer parametro es la ruta virtual sobre la que se monta, el segundo el real.
 app.use("/", express.static(__dirname + "/webpage"));
 app.use("/dashboard/user", userAuth, express.static(__dirname + "/dashboard/user"));
@@ -92,7 +85,7 @@ app.get("/dashboard/admin", adminAuth, function (req, res) {
 
   let string = "SELECT * FROM COLECCIONES ";
   connection.query(string, function (err, result, fields) {
-    if (err) throw err;
+    if (err) lanzarError(res, "Error al acceder a las colecciones");
 
     res.render('admin/administradorPrincipal', {
       colecciones: result,
@@ -142,20 +135,15 @@ function comprobarCredenciales(req, res) {
 
     },
     function (error) {
-      console.log(error);
       lanzarError(res, "Fallo en la base de datos");
-      //throw error;
   });
 }
 
 app.post("/login", function (req, res) {
-  //Comprobar si ya está logueado
-  console.log(req.session);
   if (checkSesionIniciada(req)) {
     res.redirect("/dashboard");
   } else {
     if (!req.body.username || !req.body.password) {
-      //TODO Con javascript del lado del cliente se avisa si no introduce usuario o contraseña
       alerta.text = "Usuario y/o contraseña no introducidos";
       res.render(__dirname + "/login/views/login", {
         alert: alerta
@@ -176,8 +164,6 @@ app.get("/dashboard", function (req, res) {
 });
 
 app.get("/login", function (req, res) {
-  //Comprobar si ya está logueado
-  console.log(req.session);
   if (checkSesionIniciada(req)) {
     abrirSesionIniciada(req, res);
   } else {
@@ -213,11 +199,6 @@ app.get("/dashboard/logout", auth, function (req, res) {
   res.redirect("/index.html");
 });
 
-//Para requerir la autenticacion al acceder a las paginas hay que agregar auth como aqui
-app.get("/content", auth, function (req, res) {
-  res.send("Solo podras ver esto una vez te hayas logueado");
-});
-
 app.post("/registro", function (req, res) {
   let nombre = req.body.nombre;
   let username = req.body.username;
@@ -227,12 +208,10 @@ app.post("/registro", function (req, res) {
 
   bcrypt.hash(password, 10, (err, encrypted) => {
     let hash = encrypted;
-    console.log(hash);
     agregarUsuario(username, hash, nombre, apellidos, email).then(
       () => {
         agregarCliente(username).then(
           () => {
-            console.log("Se ha creado el usuario exitosamente");
             res.redirect("/login");
           },
           (error) => {
@@ -270,7 +249,6 @@ app.get("/dashboard/user/editarPerfil", function (req, res) {
   let string = "SELECT * FROM USUARIOS WHERE User = '" + req.session.user + "'";
 
   connection.query(string, function (err, result, fields) {
-    console.log(result);
     if (err) {
       lanzarError(res, "Error al consultar la base de datos");
     }
@@ -304,7 +282,6 @@ app.get("/dashboard/admin/editarPerfil", function (req, res) {
   let string = "SELECT * FROM USUARIOS WHERE User = '" + req.session.user + "'";
 
   connection.query(string, function (err, result, fields) {
-    console.log(result);
     if (err) {
       lanzarError(res, "Error al consultar la base de datos");
     }
@@ -398,8 +375,6 @@ app.get("/dashboard/user/tiendaAlbumes", function (req, res) {
 
 //TIENDA CROMOS
 app.get("/dashboard/user/tiendaCromos", function (req, res) {
-  //TODO comprobar entrada??
-
   let coleccion = req.query.nombreColeccion;
   let idUser = req.session.user;
 
@@ -433,7 +408,6 @@ app.get("/dashboard/user/tiendaCromos", function (req, res) {
 
 //CROMOS USUARIO
 app.get("/dashboard/user/clienteCromos", function (req, res) {
-  //TODO comprobar entrada??
 
   let coleccion = req.query.nombreColeccion;
   let idUser = req.session.user;
@@ -445,7 +419,6 @@ app.get("/dashboard/user/clienteCromos", function (req, res) {
     let string = "SELECT * FROM CROMOS WHERE ID IN (SELECT CromoID FROM CROMOS_ALBUMES WHERE AlbumUser = '" + idUser + "' AND AlbumColeccion = '" + coleccion + "' )";
     connection.query(string, function (err, cromosComprados, fields) {
       if (err) lanzarError(res, "Error al consultar la base de datos");
-      console.log(cromosComprados);
       res.render('user/clienteCromos', {
         cromos: cromosComprados,
         nombreColeccion: coleccion,
@@ -459,7 +432,6 @@ app.get("/dashboard/user/clienteCromos", function (req, res) {
 });
 
 app.get("/dashboard/user/comprarCromo", async function (req, res) {
-  //TODO comprobar entrada??
   let idCromo = req.query.idCromo;
   let idUser = req.session.user;
 
@@ -475,7 +447,6 @@ app.get("/dashboard/user/comprarCromo", async function (req, res) {
 
         cromo = cromos[0];
 
-        var precio = cromo.Precio;
         var cantidad = cromo.Cantidad;
         if (cantidad > 0) {
           obtenerClientes(idUser).then(function (clientes) {
@@ -578,7 +549,6 @@ function agregarCromoAAlbumAtomico(idCromo, coleccionAlbum, idUser, precio, cant
 }
 
 app.get("/dashboard/admin/editarColeccion", function (req, res) {
-  //TODO comprobar entrada??
 
   let nomColeccion = req.query.nombreColeccion;
 
@@ -605,7 +575,6 @@ app.get("/dashboard/admin/editarColeccion", function (req, res) {
 });
 
 app.post("/dashboard/admin/editarColeccion", function (req, res) {
-  //TODO comprobar entrada??
   let nombreColeccion = req.query.nombreColeccion;
   let precioAlbum = req.body.precio_coleccion;
   let EDFile = req.files;
@@ -624,12 +593,9 @@ app.post("/dashboard/admin/editarColeccion", function (req, res) {
         //Crear carpeta nueva si la vieja no existia
         if (!fs.existsSync(__dirname + parentPath)) {
           //ERROR. Si estoy editando tiene que existir
-          //fs.mkdirSync(newParentPath, {recursive: true}); 
-          res.send("No existe el directorio en el que se almacena la imagen");
+          lanzarError(res, "No existe el directorio en el que se almacena la imagen");
           return;
-          //Renombro carpeta
         } else {
-          //fs.renameSync(oldParentPath, newParentPath);
 
           EDFile.mv(__dirname + rutaCompleta, err => {
             if (err) return res.status(500).send({
@@ -660,11 +626,9 @@ app.post("/dashboard/admin/editarColeccion", function (req, res) {
 });
 
 app.post("/dashboard/admin/crearColeccion", function (req, res) {
-  //TODO comprobar entrada??
   let nombreColeccion = req.body.titulo_coleccion;
   let precioAlbum = req.body.precio_coleccion;
   let EDFile = req.files;
-  //let foto = req.body.imagen_album;
   let descripcion = req.body.descripcion_coleccion;
 
   let parentPath = "/dashboard/resources/colecciones/" + nombreColeccion + "/";
@@ -705,8 +669,6 @@ app.post("/dashboard/admin/crearColeccion", function (req, res) {
 });
 
 app.get("/dashboard/admin/editarCromo", function (req, res) {
-  //TODO comprobar entrada??
-
   let id = req.query.IDCromo;
 
   let string = "SELECT * FROM CROMOS WHERE ID ='" + id + "'";
@@ -723,7 +685,6 @@ app.get("/dashboard/admin/editarCromo", function (req, res) {
 });
 
 app.post("/dashboard/admin/editarCromo", function (req, res) {
-  //TODO comprobar entrada??
 
   let id = req.query.IDCromo;
   let precio = req.body.precio_cromo_formulario;
@@ -750,12 +711,9 @@ app.post("/dashboard/admin/editarCromo", function (req, res) {
             //Crear carpeta nueva si la vieja no existia
             if (!fs.existsSync(__dirname + parentPath)) {
               //ERROR. Si estoy editando tiene que existir
-              //fs.mkdirSync(newParentPath, {recursive: true}); 
               res.send("No existe el directorio en el que se almacena la imagen");
               return;
-              //Renombro carpeta
             } else {
-              //fs.renameSync(oldParentPath, newParentPath);
 
               EDFile.mv(__dirname + rutaCompleta, err => {
                 if (err) return res.status(500).send({
@@ -798,10 +756,8 @@ app.get("/dashboard/admin/crearCromo", function (req, res) {
 });
 
 app.post("/dashboard/admin/crearCromo", function (req, res) {
-  //TODO comprobar entrada??
   let nombre = req.body.nombre;
   let coleccion = req.query.nombreColeccion;
-  //let rutaImagen = req.body.imagen_cromo_formulario;
   let EDFile = req.files;
   let precio = req.body.precio;
   let cantidad = req.body.stock;
@@ -1042,7 +998,6 @@ function ejecutarQueryBBDD(query, arrayDatos, operacion, devolverResultado) {
 }
 
 app.get("/dashboard/user/comprarAlbum", function (req, res) {
-  //TODO comprobar entrada??
   let nombreColeccion = req.query.nombreColeccion;
   let idUser = req.session.user;
   var coleccion, cliente;
@@ -1176,7 +1131,6 @@ function obtenerPreguntaAleatoria() {
 }
 
 app.post("/dashboard/user/retoPregunta", async function (req, res) {
-  //TODO comprobar entrada??
   let respuestaCorrecta = req.session.respuestaPregunta;
   let idUser = req.session.user
   let puntos = await obtenerPuntosCliente(req.session.user);
@@ -1234,12 +1188,9 @@ app.get("/dashboard/user/retoEcuacion", async function (req, res) {
 });
 
 app.post("/dashboard/user/retoEcuacion", async function (req, res) {
-  //TODO comprobar entrada??
   let respuestaCorrectaEcuacion = req.session.respuestaEcuacion;
   let idUser = req.session.user
   let puntos = await obtenerPuntosCliente(idUser);
-
-  //TODO PONERLO ARRIBA
   let alerta = [];
 
   //Si se generó una pregunta con GET
