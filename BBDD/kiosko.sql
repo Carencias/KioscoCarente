@@ -15,7 +15,7 @@ SET FOREIGN_KEY_CHECKS = 1;
 
 CREATE TABLE USUARIOS(
     User VARCHAR(20),
-    Password VARCHAR(50) NOT NULL,
+    Password VARCHAR(200) NOT NULL,
     Nombre VARCHAR(20) NOT NULL,
     Apellidos VARCHAR(30) NOT NULL,
     Email VARCHAR(35) NOT NULL,
@@ -95,10 +95,11 @@ CREATE TABLE ECUACIONES(
 
 #Insertar usuarios y admins
 INSERT INTO `USUARIOS` (`User`, `Password`, `Nombre`, `Apellidos`, `Email`, `Admin`) VALUES 
-	('admin', 'admin', 'Alejandro', 'Perez Fernandez', 'aperef04@estudiantes.unileon.es', '1'), 
-	('user', 'user', 'Diego', 'Simon Gonzalez', 'dsimog01@estudiantes.unileon.es', '0');
+	('admin', '$2b$10$u8tuN78/XTW22g2NcnpqbOqzBlPCtscu3uzIURZdANGUd1mCnF3jy', 'Alejandro', 'Perez Fernandez', 'aperef04@estudiantes.unileon.es', '1'), 
+	('user', '$2b$10$xHtwTdexNi3vSqTFpwI.fOuFhNY.1t2alogTyANLDeu6KE9zki3YW', 'Diego', 'Simon Gonzalez', 'dsimog01@estudiantes.unileon.es', '0'),
+    ('user2', '$2b$10$irkbizuts8hDwwN8qXWSr.a.CAnbUPaTRxPpMbkfxktRBV4VfG7kW', 'Marcos','Ferreras Rodriguez', 'mferrr03@estudiantes.unileon.es', '0');
 INSERT INTO `ADMINISTRADORES` (`User`) VALUES ('admin');
-INSERT INTO `CLIENTES` (`User`, `Puntos`) VALUES ('user', '100');
+INSERT INTO `CLIENTES` (`User`, `Puntos`) VALUES ('user', '40'), ('user2', '40');
 
 #INSERTAR LAS COLECCIONES JAVA Y C
 INSERT INTO `COLECCIONES` (`Nombre`, `Estado`, `PrecioAlbum`, `FotoAlbum`, `Descripcion`) VALUES 
@@ -107,29 +108,44 @@ INSERT INTO `COLECCIONES` (`Nombre`, `Estado`, `PrecioAlbum`, `FotoAlbum`, `Desc
 
 #INSERTAR LOS CROMOS DE LA COLECCION DE JAVA
 INSERT INTO `CROMOS` (`ID`, `Nombre`, `Coleccion`, `RutaImagen`, `Precio`, `Cantidad`, `Descripcion`, `DatoInteresante`, `Frecuencia`) VALUES 
-	(NULL, 'ArrayIndexOutOfBoundsException', 'Java', '/dashboard/resources/cromos/Java/ArrayIndexOutOfBoundsException.JPG', '1', '3', 'Se lanza para indicar que se esta intentando acceder a una posicion fuera de un array. El indice elegido es negativo o mayor que la longitud del array', 'Parece que te falta algun elemento en el array amigo', 'Comun'),
-	(NULL, 'ClassCastException', 'Java', '/dashboard/resources/cromos/Java/ClassCastException.JPG', '2', '2', 'Se lanza para indicar que el código ha intentado convertir un objeto en una subclase de la que no es una instancia.', 'Parece ser que no eres muy de OOP', 'Raro'),
-	(NULL, 'IllegalArgumentException', 'Java', '/dashboard/resources/cromos/Java/IllegalArgumentException.JPG', '2', '2', 'Lanzada cuando a un metodo se le pasa un argumento ilegal o inapropiado', 'Creo que deberias conocer mejor los metodos que has programado campeon', 'Raro'),
-	(NULL, 'IllegalStateException', 'Java', '/dashboard/resources/cromos/Java/IllegalStateException.JPG', '3', '1', 'Lanzada cuando se llama a un método en un momento inapropiado o ilegal. Esto quiere decir que el entorno de Java no se encuentra en el estado adecuado para la ejecucion de este metodo', 'Que habras hecho para que te pase esto... Surrealista', 'Excepcional'),   
-	(NULL, 'NullPointerException', 'Java', '/dashboard/resources/cromos/Java/NullPointerException.JPG', '1', '3', 'Es una excepcion de tipo RuntimeException. En Java, un valor especial null se puede asignar a un objeto. Se lanzara esta excepcion cuando la aplicacion trate de usar una referencia que apunte a null', 'No te preocupes, nos ha pasado a todos...', 'Comun'),
-	(NULL, 'NumberFormatException', 'Java', '/dashboard/resources/cromos/Java/NumberFormatException.JPG', '2', '2', 'Se lanza para alertar de que la aplicacion ha intentado convertir una cadena de texto a algun formato numerico, sin que esta cumpla las condiciones para poder hacerlo', 'Esto te pasa por no usar Python', 'Comun'),
-	(NULL, 'AssertionError', 'Java', '/dashboard/resources/cromos/Java/AssertionError.JPG', '1', '3', 'Se lanza al detectar un fallo en alguna afirmacion (assertion), generalmente en el codigo de test de la aplicacion', 'Por lo menos has hecho tests, ni tan mal', 'Comun'),
-	(NULL, 'ExceptionInInitializerError', 'Java', '/dashboard/resources/cromos/Java/ExceptionInInitializerError.JPG', '3', '1', 'Lanzada cuando ocurre alguna excepcion inesperada durante la inicializacion de una variable estatica o la evaluacion de un inicializador estatico', 'No me ha pasado en la vida', 'Excepcional'),    
-	(NULL, 'StackOverflowError', 'Java', '/dashboard/resources/cromos/Java/StackOverflowError.JPG', '1', '3', 'Lanzada cuando una aplicacion intenta acceder a recursos en memoria que no le han sido asignados. Los permisos concedidos a esta aplicacion por el sistema no permitiran dicho acceso', 'Este error da nombre a la Biblia de la informatica', 'Comun'),    
-	(NULL, 'NoClassDefFoundError', 'Java', '/dashboard/resources/cromos/Java/NoClassDefFoundError.JPG', '2', '2', 'Lanzada cuando la Java Virtual Machine no consigue encontrar un fichero .class concreto durante la ejecucion que si fue compilado previamente', 'Vuelve a compilar, crack!', 'Raro');    
+	(NULL, 'ArrayIndexOutOfBoundsException', 'Java', '/dashboard/resources/cromos/Java/ArrayIndexOutOfBoundsException.JPG', '5', '10', 'Se lanza para indicar que se esta intentando acceder a una posicion fuera de un array. El indice elegido es negativo o mayor que la longitud del array', 'Parece que te falta algun elemento en el array amigo', 'Comun'),
+	(NULL, 'ClassCastException', 'Java', '/dashboard/resources/cromos/Java/ClassCastException.JPG', '8', '8', 'Se lanza para indicar que el código ha intentado convertir un objeto en una subclase de la que no es una instancia.', 'Parece ser que no eres muy de OOP', 'Raro'),
+	(NULL, 'IllegalArgumentException', 'Java', '/dashboard/resources/cromos/Java/IllegalArgumentException.JPG', '8', '8', 'Lanzada cuando a un metodo se le pasa un argumento ilegal o inapropiado', 'Creo que deberias conocer mejor los metodos que has programado campeon', 'Raro'),
+	(NULL, 'IllegalStateException', 'Java', '/dashboard/resources/cromos/Java/IllegalStateException.JPG', '10', '5', 'Lanzada cuando se llama a un método en un momento inapropiado o ilegal. Esto quiere decir que el entorno de Java no se encuentra en el estado adecuado para la ejecucion de este metodo', 'Que habras hecho para que te pase esto... Surrealista', 'Excepcional'),   
+	(NULL, 'NullPointerException', 'Java', '/dashboard/resources/cromos/Java/NullPointerException.JPG', '5', '10', 'Es una excepcion de tipo RuntimeException. En Java, un valor especial null se puede asignar a un objeto. Se lanzara esta excepcion cuando la aplicacion trate de usar una referencia que apunte a null', 'No te preocupes, nos ha pasado a todos...', 'Comun'),
+	(NULL, 'NumberFormatException', 'Java', '/dashboard/resources/cromos/Java/NumberFormatException.JPG', '8', '8', 'Se lanza para alertar de que la aplicacion ha intentado convertir una cadena de texto a algun formato numerico, sin que esta cumpla las condiciones para poder hacerlo', 'Esto te pasa por no usar Python', 'Comun'),
+	(NULL, 'AssertionError', 'Java', '/dashboard/resources/cromos/Java/AssertionError.JPG', '5', '10', 'Se lanza al detectar un fallo en alguna afirmacion (assertion), generalmente en el codigo de test de la aplicacion', 'Por lo menos has hecho tests, ni tan mal', 'Comun'),
+	(NULL, 'ExceptionInInitializerError', 'Java', '/dashboard/resources/cromos/Java/ExceptionInInitializerError.JPG', '10', '5', 'Lanzada cuando ocurre alguna excepcion inesperada durante la inicializacion de una variable estatica o la evaluacion de un inicializador estatico', 'No me ha pasado en la vida', 'Excepcional'),    
+	(NULL, 'StackOverflowError', 'Java', '/dashboard/resources/cromos/Java/StackOverflowError.JPG', '5', '10', 'Lanzada cuando una aplicacion intenta acceder a recursos en memoria que no le han sido asignados. Los permisos concedidos a esta aplicacion por el sistema no permitiran dicho acceso', 'Este error da nombre a la Biblia de la informatica', 'Comun'),    
+	(NULL, 'NoClassDefFoundError', 'Java', '/dashboard/resources/cromos/Java/NoClassDefFoundError.JPG', '8', '8', 'Lanzada cuando la Java Virtual Machine no consigue encontrar un fichero .class concreto durante la ejecucion que si fue compilado previamente', 'Vuelve a compilar, crack!', 'Raro');    
  
  #INSERTAR LOS CROMOS DE LA COLECCCION DE C
 INSERT INTO `CROMOS` (`ID`, `Nombre`, `Coleccion`, `RutaImagen`, `Precio`, `Cantidad`, `Descripcion`, `DatoInteresante`, `Frecuencia`) VALUES 
-	(NULL, 'var_undeclared', 'C', '/dashboard/resources/cromos/C/var_undeclared.JPG', '1', '3', 'Mostrado cuando en el codigo desarrollado en C se utiliza una variable que no ha sido declarada previamente', 'Vayamos por partes... Lo primero es delcarar las variables!', 'Comun'),
-	(NULL, 'implicit_declaration_of_function', 'C', '/dashboard/resources/cromos/C/implicit_declaration_of_function.JPG', '1', '3', 'Mostrado cuando en el codigo desarrollado en C se utiliza una funcion que no ha sido declarada previamente o que ha sido definida posterior a su llamada', 'Estas programando en C melon, esto no es Java', 'Comun'),
-	(NULL, 'undefined_reference_to', 'C', '/dashboard/resources/cromos/C/undefined_reference_to.JPG', '2', '2', 'Mostrado cuando en el codigo desarrollado en C se utiliza una funcion propia de una libreria que no se ha indicado al compilar', 'Compilando en consola es lo que hay', 'Raro'),
-	(NULL, 'conflicting_types_for', 'C', '/dashboard/resources/cromos/C/conflicting_types_for.JPG', '2', '2', 'Normalmente se muestra cuando en la declaracion de una funcion los parametros entran en conflicto con los de su definicion', 'Copia y pega, pones ; al final y listo!', 'Raro'),
-	(NULL, 'segmentation_fault(core_dumped)', 'C', '/dashboard/resources/cromos/C/segmentation_fault(core_dumped).JPG', '1', '3', 'Mostrado cuando una aplicacion intenta acceder a recursos en memoria que no le han sido asignados. Los permisos concedidos a esta aplicacion por el sistema no permitiran dicho acceso', 'Cuidado con el core dump que la puedes liar parda', 'Comun'),    
-	(NULL, 'integer_from_pointer_without_a_cast', 'C', '/dashboard/resources/cromos/C/integer_from_pointer_without_a_cast.JPG', '1', '3', 'Cuando se intenta utilizar un puntero en un contexto en el que se espera un entero, se muestra este error', 'Aunque lo diga el error, no tiene pinta de que castear sea la solucion', 'Comun'),    
-	(NULL, 'dereferencing_pointer_to_incomplete_type', 'C', '/dashboard/resources/cromos/C/dereferencing_pointer_to_incomplete_type.JPG', '3', '1', 'Aparece cuando se utiliza un puntero a una estructura de datos para acceder a alguno de sus campos, pero el compilador no tiene información suficiente sobre esa estructura de datos', 'Puede que tengas la definicion de la estructura en otro fichero, espabila!', 'Excepcional'),  
-	(NULL, 'unused_variable', 'C', '/dashboard/resources/cromos/C/unused_variable.JPG', '1', '3', 'Advertencia que se muestra cuando se ha declarado una variable que no se usa posteriormente', 'Si el programa funciona, borra sin miedo', 'Comun'),  
-	(NULL, 'syntax_error_before_token', 'C', '/dashboard/resources/cromos/C/syntax_error_before_token.JPG', '1', '3', 'Hay algun error en algun punto anterior al token que se te indica, normalmente previo a ; o }', 'El error puede estar en cualquier sitio anterior al token, a buscar!', 'Comun'),  
-	(NULL, 'invalid_operands', 'C', '/dashboard/resources/cromos/C/invalid_operands.JPG', '2', '2', 'Este error indica que se esta intentando operar con dos operandos que no son compatibles entre si para dicha operacion', 'Procura fijarte en los tipos de las variables que operas', 'Raro'); 
+	(NULL, 'var_undeclared', 'C', '/dashboard/resources/cromos/C/var_undeclared.JPG', '5', '10', 'Mostrado cuando en el codigo desarrollado en C se utiliza una variable que no ha sido declarada previamente', 'Vayamos por partes... Lo primero es delcarar las variables!', 'Comun'),
+	(NULL, 'implicit_declaration_of_function', 'C', '/dashboard/resources/cromos/C/implicit_declaration_of_function.JPG', '5', '10', 'Mostrado cuando en el codigo desarrollado en C se utiliza una funcion que no ha sido declarada previamente o que ha sido definida posterior a su llamada', 'Estas programando en C melon, esto no es Java', 'Comun'),
+	(NULL, 'undefined_reference_to', 'C', '/dashboard/resources/cromos/C/undefined_reference_to.JPG', '8', '8', 'Mostrado cuando en el codigo desarrollado en C se utiliza una funcion propia de una libreria que no se ha indicado al compilar', 'Compilando en consola es lo que hay', 'Raro'),
+	(NULL, 'conflicting_types_for', 'C', '/dashboard/resources/cromos/C/conflicting_types_for.JPG', '8', '8', 'Normalmente se muestra cuando en la declaracion de una funcion los parametros entran en conflicto con los de su definicion', 'Copia y pega, pones ; al final y listo!', 'Raro'),
+	(NULL, 'segmentation_fault(core_dumped)', 'C', '/dashboard/resources/cromos/C/segmentation_fault(core_dumped).JPG', '5', '10', 'Mostrado cuando una aplicacion intenta acceder a recursos en memoria que no le han sido asignados. Los permisos concedidos a esta aplicacion por el sistema no permitiran dicho acceso', 'Cuidado con el core dump que la puedes liar parda', 'Comun'),    
+	(NULL, 'integer_from_pointer_without_a_cast', 'C', '/dashboard/resources/cromos/C/integer_from_pointer_without_a_cast.JPG', '5', '10', 'Cuando se intenta utilizar un puntero en un contexto en el que se espera un entero, se muestra este error', 'Aunque lo diga el error, no tiene pinta de que castear sea la solucion', 'Comun'),    
+	(NULL, 'dereferencing_pointer_to_incomplete_type', 'C', '/dashboard/resources/cromos/C/dereferencing_pointer_to_incomplete_type.JPG', '10', '5', 'Aparece cuando se utiliza un puntero a una estructura de datos para acceder a alguno de sus campos, pero el compilador no tiene información suficiente sobre esa estructura de datos', 'Puede que tengas la definicion de la estructura en otro fichero, espabila!', 'Excepcional'),  
+	(NULL, 'unused_variable', 'C', '/dashboard/resources/cromos/C/unused_variable.JPG', '5', '10', 'Advertencia que se muestra cuando se ha declarado una variable que no se usa posteriormente', 'Si el programa funciona, borra sin miedo', 'Comun'),  
+	(NULL, 'syntax_error_before_token', 'C', '/dashboard/resources/cromos/C/syntax_error_before_token.JPG', '5', '10', 'Hay algun error en algun punto anterior al token que se te indica, normalmente previo a ; o }', 'El error puede estar en cualquier sitio anterior al token, a buscar!', 'Comun'),  
+	(NULL, 'invalid_operands', 'C', '/dashboard/resources/cromos/C/invalid_operands.JPG', '8', '8', 'Este error indica que se esta intentando operar con dos operandos que no son compatibles entre si para dicha operacion', 'Procura fijarte en los tipos de las variables que operas', 'Raro'); 
+    
+   
+INSERT INTO `ALBUMES` (`User`, `Coleccion`, `Estado`) VALUES
+	('user', 'C', 'Completada parcialmente');   
+   
+INSERT INTO `CROMOS_ALBUMES` (`CromoID`, `AlbumUser`, `AlbumColeccion`) VALUES
+	(11, 'user', 'C'),
+	(12, 'user', 'C'),
+	(13, 'user', 'C'),
+	(14, 'user', 'C'),
+	(15, 'user', 'C'),
+	(16, 'user', 'C'),
+	(17, 'user', 'C'),
+	(18, 'user', 'C'),
+	(19, 'user', 'C');    
     
 #INSERTAR LAS PREGUNTAS    
 INSERT INTO `PREGUNTAS` (`Pregunta`,`Respuesta`) VALUES
@@ -154,8 +170,7 @@ INSERT INTO `PREGUNTAS` (`Pregunta`,`Respuesta`) VALUES
 ('¿Cuánto suman los ángulos de un triángulo?', '180'),
 ('¿Cuánto suman los ángulos de un cuadrado?', '360'),
 ('Si tengo 25 manzanas y le doy a mi mejor amigo el 20% de ellas. ¿Cuántas manzanas le he dado?', '5'),
-('Si en una carrera adelanto al que va segundo… ¿en qué posición estaba antes y en cuál estoy 
-ahora?', 'Segundo'),
+('Si en una carrera adelanto al que va segundo… ¿en qué posición estaba antes y en cuál estoy ahora?', 'Segundo'),
 ('¿Cuántos kilos son una tonelada?', '1000'),
 ('¿Cuál es la capital de Italia?', 'Roma'),
 ('En un texto narrativo, ¿cómo se denomina al personaje principal?', 'Protagonista'),
@@ -179,18 +194,17 @@ ahora?', 'Segundo'),
 ('¿Antes de que el monte Everest fuera descubierto, cuál era la montaña más alta?', 'El Everest'),
 ('¿Cuál es la cosa que aunque se diga no puede ser nunca escuchada?', 'El silencio'),
 ('En una habitación hay cuatro esquinas, y en cada uno de ellos hay un gato. Cada uno de los gatos tiene enfrente a otros tres. ¿Cuántos gatos hay?', '4'),
-('Si son las cinco menos cinco y sólo faltan cinco para las cinco… ¿Cuántas veces dije cinco sin contar el último cinco?', 'Cinco'),
+('Si son las cinco menos cinco y sólo faltan cinco para las cinco… ¿Cuántas veces dije cinco sin contar el último cinco?', '5'),
 ('¿Es posible pinchar un globo sin que se escape el aire y sin que haga ruido?', 'Sí'),       
 ('Blanco es, la gallina lo pone, con aceite se fríe y con pan se come. ¿Qué es?', 'El huevo'),('Van hacia arriba, van hacia abajo, siempre de arriba a abajo y de abajo a arriba, pero nunca se mueven de su sitio. ¿De qué estamos hablando?', 'Escalera'),
-('Algo tuyo que te pertenece, que casi no usas, pero que los demás utilizan casi a diario por 
-ti. ¿Qué es?', 'Tu nombre'),
+('Algo tuyo que te pertenece, que casi no usas, pero que los demás utilizan casi a diario por ti. ¿Qué es?', 'Nombre'),
 ('¿Cómo se llama un polígono de 6 lados?', 'Hexágono'),
 ('¿Cómo se llama el conjunto de montañas que forman una unidad?', 'Cordillera'),
-('¿Cómo se llaman los animales que solo se alimentan de vegetales y plantas?', 'Hervívoros'), 
+('¿Cómo se llaman los animales que solo se alimentan de vegetales y plantas?', 'Herbívoros'), 
 ('¿Es lo mismo multiplicar 3x4 que 4x3?', 'Sí');
     
 #INSERTAR LAS ECUACIONES
-INSERT INTO `ECUACIONES` (`Ecuacion`,`x`) VALUES 
+INSERT INTO `ECUACIONES` (`Ecuacion`,`Respuesta`) VALUES 
 	('2x-34=-20', '7'),        
 	('4x+3=3x+5', '2'),        
 	('x-8=2x-11', '3'),        
@@ -218,13 +232,13 @@ INSERT INTO `ECUACIONES` (`Ecuacion`,`x`) VALUES
 	('2[3(x+5)-9]=-3(2x-4)', '0'),
 	('2(3x+2)=4[2x-5(x-2)]', '2'),
 	('3(12-x)-4x=2(11-x)+9x', '1');
-    
+        
 CREATE TRIGGER actualizarEstadoAlbum
 	AFTER INSERT ON CROMOS FOR EACH ROW
 	UPDATE ALBUMES SET Estado = 'Completada parcialmente' WHERE (Estado = 'Finalizada' AND Coleccion = NEW.Coleccion);
     
-CREATE TRIGGER actualizarEstadoColeccion
+CREATE TRIGGER actualizarEstadoColeccionInsert
 	AFTER INSERT ON CROMOS_ALBUMES FOR EACH ROW
     UPDATE COLECCIONES SET Estado = 'Agotada' WHERE (SELECT SUM(Cantidad) FROM CROMOS WHERE Coleccion = NEW.AlbumColeccion) = 0 AND Nombre = NEW.AlbumColeccion;
-
-
+    
+    
