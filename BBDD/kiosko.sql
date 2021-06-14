@@ -241,4 +241,8 @@ CREATE TRIGGER actualizarEstadoColeccionInsert
 	AFTER INSERT ON CROMOS_ALBUMES FOR EACH ROW
     UPDATE COLECCIONES SET Estado = 'Agotada' WHERE (SELECT SUM(Cantidad) FROM CROMOS WHERE Coleccion = NEW.AlbumColeccion) = 0 AND Nombre = NEW.AlbumColeccion;
     
+CREATE TRIGGER reducirCantidad
+	AFTER INSERT ON CROMOS_ALBUMES FOR EACH ROW
+    UPDATE CROMOS SET Cantidad = ((SELECT Cantidad FROM CROMOS WHERE ID = NEW.ID)-1) WHERE ID = NEW.ID;
+    
     

@@ -1,0 +1,11 @@
+USUARIO ESTANDAR 1:
+	user: user
+	pass: user
+
+USUARIO ESTANDAR2:
+	user: user2
+	pass: user2
+
+USUARIO ADMINISTRADOR:
+	user: admin
+	pass: admin

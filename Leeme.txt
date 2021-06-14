@@ -1,0 +1,34 @@
+PRACTICA EN GRUPO - KIOSKO DE CROMOS
+Diego Simon Gonzalez - 09816725A
+Marcos Ferreras Rodriguez - 71475391Q
+Alejandro Perez Fernandez - 71476401Z
+Santiago Valbuena Rubio - 02770768G
+Angel Lopez Arias - 54130259N
+Carlos Diez Gutierrez - 71960934Y
+
+NOTA: Se puede acceder a la aplicacion web via protocolo seguro https://kiosko.casasoladerueda.es
+
+La tecnología que he seleccionado para el lado del servidor es Node.js.
+
+Para poder ejecutar la práctica es necesario instalar npm y Node.js en el equipo (npm suele instalarse automáticamente al instalar Node)
+
+Además, hay que instalar los siguientes módulos de Node.js:
+	-express
+	-bcrypt
+	-mime-types
+	-mysql
+	-express-session
+	-express-fileupload
+	-svg-captcha
+	-katex
+
+La instalación de estos módulos se realiza de la siguiente manera:
+	$npm install express bcrypt mime-types mysql express-session express-fileupload svg-captcha katex
+
+
+El servidor se ejecuta así desde el directorio raiz:
+	$node ./server/server.js
+
+Una vez el servidor está corriendo, se puede acceder a la pagina mediante localhost:8000.
+
+Al repositorio completo se puede acceder via https://github.com/Carencias/KioscoCarente
