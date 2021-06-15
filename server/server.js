@@ -7,7 +7,7 @@ const PUNTOS_PASATIEMPO = 15;
 const PUNTOS_ECUACION = 10;
 
 
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const express = require("express");
 var mime = require('mime-types');
 const mysql = require("mysql");
