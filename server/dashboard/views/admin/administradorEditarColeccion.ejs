@@ -107,10 +107,20 @@
                     <% }); %>
                 
     </div>
-    <div class="text-center" style="padding-bottom: 83px;"><button class="btn btn-primary text-center" type="button" onclick="borrarColeccion()" style="background: var(--bs-danger);border-style: none;width: 380.719px;height: 66px;margin-top: 34px;">BORRAR COLECCIÓN</button></div>
+    <div class="text-center" style="padding-bottom: 83px;"><button class="btn btn-primary text-center" type="button" onclick="return confirmarBorrarColeccion()" style="background: var(--bs-danger);border-style: none;width: 380.719px;height: 66px;margin-top: 34px;">BORRAR COLECCIÓN</button></div>
     <div class="text-center text-white copyright py-4 fixed-bottom">
         <div class="container"><small>Copyright ©&nbsp;Carentes 2021</small></div>
     </div>
+    <script>
+      function confirmarBorrarColeccion(){
+          if(confirm("¿Desea borrar esta colección?")){
+            borrarColeccion();
+              return true;
+          }else{
+              return false;
+          }
+      }
+  </script>
     <script src="/dashboard/assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="/dashboard/assets/js/bs-init.js"></script>
     <script src="/dashboard/assets/js/freelancer.js"></script>
