@@ -93,10 +93,10 @@
                         </div>
                 
                         <div class="text-center"><a class="btn btn-primary" role="button"
-                            style="margin: 10px;background: var(--bs-teal);" href=<%= "editarCromo?IDCromo=" + cromo.ID %>>EDITAR</a><button
-                            class="btn btn-primary" type="button"
-                            style="margin: 10px;background: var(--bs-danger);border-color: rgb(234,140,140);" onclick=<%= "eliminarCromo("+ cromo.ID+ ")" %>>ELIMINAR</button></div>
-                      </div>
+                          style="margin: 10px;background: var(--bs-teal);" href=<%= "editarCromo?IDCromo=" + cromo.ID %>>EDITAR</a><button
+                          class="btn btn-primary" type="button"
+                          style="margin: 10px;background: var(--bs-danger);border-color: rgb(234,140,140);" onclick=<%= "confirmarBorrarCromo("+ cromo.ID+ ")" %>>ELIMINAR</button></div>
+                    </div>
                 
                       <% if(i%3===2){ %>
                 
@@ -120,6 +120,16 @@
               return false;
           }
       }
+
+      function confirmarBorrarCromo(id){
+          if(confirm("¿Desea borrar este cromo?")){
+             eliminarCromo(id)
+              return true;
+          }else{
+              return false;
+          }
+      }
+
   </script>
     <script src="/dashboard/assets/bootstrap/js/bootstrap.min.js"></script>
     <script src="/dashboard/assets/js/bs-init.js"></script>
