@@ -14,7 +14,8 @@ Para poder ejecutar la práctica es necesario instalar npm y Node.js en el equip
 
 Además, hay que instalar los siguientes módulos de Node.js:
 	-express
-	-bcrypt
+	-bcryptjs
+	-ejs
 	-mime-types
 	-mysql
 	-express-session
