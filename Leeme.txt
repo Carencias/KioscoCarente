@@ -23,7 +23,7 @@ Además, hay que instalar los siguientes módulos de Node.js:
 	-katex
 
 La instalación de estos módulos se realiza de la siguiente manera:
-	$npm install express bcrypt mime-types mysql express-session express-fileupload svg-captcha katex
+	$npm install express bcryptjs mime-types mysql express-session express-fileupload svg-captcha katex ejs
 
 
 El servidor se ejecuta así desde el directorio raiz:
