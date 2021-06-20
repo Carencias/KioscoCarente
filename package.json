@@ -1,0 +1,27 @@
+{
+  "name": "kioscocarente",
+  "version": "1.0.0",
+  "description": "Kiosco de Cromos para Aplicaciones Web - Universidad de Leon",
+  "main": "server/server.js",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Carencias/KioscoCarente.git"
+  },
+  "author": "Carencias",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Carencias/KioscoCarente/issues"
+  },
+  "homepage": "https://github.com/Carencias/KioscoCarente#readme",
+  "dependencies": {
+    "express":"^4.17.1", 
+    "bcryptjs":"^2.4.3",
+    "mime-types": "^2.1.31",
+    "mysql": "^2.18.1", 
+    "express-session":"^1.17.2",
+    "express-fileupload":"^1.2.1",
+    "svg-captcha": "^1.4.0",
+    "katex":"^0.13.11",
+    "ejs":"^3.1.6"
+  }
+}
