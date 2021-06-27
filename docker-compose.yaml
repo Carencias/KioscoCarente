@@ -1,0 +1,22 @@
+version: "3.7"
+services:
+    app:
+        image: dsimog01/kioscocarente:4.0
+        ports:
+            - 8000:8000
+        environment:
+            MYSQL_HOST: mysql
+            MYSQL_PORT: 3306
+            MYSQL_USER: root
+            MYSQL_PASS: secret
+            MYSQL_DB: nombreBD
+    mysql:
+        image: mysql:5.7
+        environment:
+            MYSQL_ROOT_PASSWORD: secret
+            MYSQL_DATABASE: nombreBD
+        volumes:
+            - db-data:/var/lib/mysql
+            - ./BBDD:/docker-entrypoint-initdb.d
+volumes:
+    db-data:
